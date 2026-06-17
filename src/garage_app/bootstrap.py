@@ -35,6 +35,7 @@ from garage_app.application.snapshot_service import SnapshotService
 from garage_app.application.settings_service import SettingsService
 from garage_app.application.audit_service import AuditService
 from garage_app.application.db_management_service import DbManagementService
+from garage_app.application.analytics_service import AnalyticsService
 
 
 @dataclass
@@ -57,6 +58,7 @@ class AppContext:
     settings_service: SettingsService
     audit_service: AuditService
     db_management_service: DbManagementService
+    analytics_service: AnalyticsService
 
 
 def bootstrap() -> AppContext:
@@ -105,4 +107,14 @@ def bootstrap() -> AppContext:
         settings_service=SettingsService(settings),
         audit_service=audit_svc,
         db_management_service=DbManagementService(sf, settings, audit_svc),
+        analytics_service=AnalyticsService(
+            client_repo=client_repo,
+            vehicule_repo=vehicule_repo,
+            dossier_repo=dossier_repo,
+            facture_repo=facture_repo,
+            piece_repo=piece_repo,
+            fournisseur_repo=fournisseur_repo,
+            commande_repo=commande_repo,
+            credit_repo=credit_repo,
+        ),
     )

@@ -206,6 +206,26 @@ class MainWindow(QMainWindow):
         m.addAction(self._action("Créances clients", self._open_credits, "",
                                   Permission.VIEW_FACTURES))
 
+        # — Rapports —
+        m = mb.addMenu("&Rapports")
+        m.addAction(self._action("CA Mensuel…", self._open_rapport_mensuel, "",
+                                  Permission.VIEW_FACTURES))
+        m.addAction(self._action("Stock Valorisé", self._open_rapport_stock, "",
+                                  Permission.VIEW_STOCK))
+        m.addAction(self._action("Alertes Stock", self._open_rapport_alertes, "",
+                                  Permission.VIEW_STOCK))
+        m.addAction(self._action("Créances Clients", self._open_rapport_creances, "",
+                                  Permission.VIEW_FACTURES))
+        m.addSeparator()
+        m.addAction(self._action("Fiche Client…", self._open_fiche_client, "",
+                                  Permission.VIEW_CLIENTS))
+        m.addAction(self._action("Fiche Réparation…", self._open_fiche_reparation, "",
+                                  Permission.VIEW_DOSSIERS))
+        m.addAction(self._action("Fiche Stock (Pièce)…", self._open_fiche_stock, "",
+                                  Permission.VIEW_STOCK))
+        m.addAction(self._action("Fiche Fournisseur…", self._open_fiche_fournisseur, "",
+                                  Permission.VIEW_STOCK))
+
         # — Administration —
         m = mb.addMenu("&Administration")
         m.addAction(self._action("Société", self._open_societe, "", Permission.MANAGE_SOCIETE))
@@ -335,3 +355,80 @@ class MainWindow(QMainWindow):
     def _open_settings(self) -> None:
         from garage_app.gui.admin.settings_window import SettingsWindow
         self._registry.open_or_activate(SettingsWindow, self._ctx, self._session)
+
+    # ── Report openers ────────────────────────────────────────────────────────
+
+    def _open_rapport_mensuel(self) -> None:
+        from PyQt6.QtWidgets import QDialog
+        from garage_app.gui.reports.rapport_mensuel_window import AnneeDialog, RapportMensuelWindow
+        dlg = AnneeDialog(self)
+        if dlg.exec() == QDialog.DialogCode.Accepted:
+            sub = RapportMensuelWindow(self._ctx, self._session, dlg.annee)
+            self._mdi.addSubWindow(sub)
+            sub.show()
+
+    def _open_rapport_stock(self) -> None:
+        from garage_app.gui.reports.rapport_stock_window import RapportStockWindow
+        sub = RapportStockWindow(self._ctx, self._session)
+        self._mdi.addSubWindow(sub)
+        sub.show()
+
+    def _open_rapport_alertes(self) -> None:
+        from garage_app.gui.reports.rapport_alertes_window import RapportAlertesWindow
+        sub = RapportAlertesWindow(self._ctx, self._session)
+        self._mdi.addSubWindow(sub)
+        sub.show()
+
+    def _open_rapport_creances(self) -> None:
+        from garage_app.gui.reports.rapport_creances_window import RapportCreancesWindow
+        sub = RapportCreancesWindow(self._ctx, self._session)
+        self._mdi.addSubWindow(sub)
+        sub.show()
+
+    def _open_fiche_client(self) -> None:
+        from garage_app.gui.reports.fiche_client_window import FicheClientWindow
+        from garage_app.gui.dialogs.entity_selector_dialog import EntitySelectorDialog
+        clients = self._ctx.client_service.list_clients(self._session)
+        items = [(c.id, f"{c.nom} {c.prenom}".strip()) for c in clients]
+        dlg = EntitySelectorDialog("Choisir un client", items, self)
+        from PyQt6.QtWidgets import QDialog
+        if dlg.exec() == QDialog.DialogCode.Accepted and dlg.selected_id:
+            sub = FicheClientWindow(self._ctx, self._session, dlg.selected_id)
+            self._mdi.addSubWindow(sub)
+            sub.show()
+
+    def _open_fiche_reparation(self) -> None:
+        from garage_app.gui.reports.fiche_reparation_window import FicheReparationWindow
+        from garage_app.gui.dialogs.entity_selector_dialog import EntitySelectorDialog
+        dossiers = self._ctx.dossier_service.list_dossiers(self._session)
+        items = [(d.id, f"Dossier {str(d.id)[:8]} — {d.statut.value}") for d in dossiers]
+        dlg = EntitySelectorDialog("Choisir un dossier", items, self)
+        from PyQt6.QtWidgets import QDialog
+        if dlg.exec() == QDialog.DialogCode.Accepted and dlg.selected_id:
+            sub = FicheReparationWindow(self._ctx, self._session, dlg.selected_id)
+            self._mdi.addSubWindow(sub)
+            sub.show()
+
+    def _open_fiche_stock(self) -> None:
+        from garage_app.gui.reports.fiche_stock_window import FicheStockWindow
+        from garage_app.gui.dialogs.entity_selector_dialog import EntitySelectorDialog
+        pieces = self._ctx.stock_service.list_pieces(self._session)
+        items = [(p.id, f"{p.reference_constructeur} — {p.designation}") for p in pieces]
+        dlg = EntitySelectorDialog("Choisir une pièce", items, self)
+        from PyQt6.QtWidgets import QDialog
+        if dlg.exec() == QDialog.DialogCode.Accepted and dlg.selected_id:
+            sub = FicheStockWindow(self._ctx, self._session, dlg.selected_id)
+            self._mdi.addSubWindow(sub)
+            sub.show()
+
+    def _open_fiche_fournisseur(self) -> None:
+        from garage_app.gui.reports.fiche_fournisseur_window import FicheFournisseurWindow
+        from garage_app.gui.dialogs.entity_selector_dialog import EntitySelectorDialog
+        fournisseurs = self._ctx.fournisseur_service.list_fournisseurs(self._session)
+        items = [(f.id, f.raison_sociale) for f in fournisseurs]
+        dlg = EntitySelectorDialog("Choisir un fournisseur", items, self)
+        from PyQt6.QtWidgets import QDialog
+        if dlg.exec() == QDialog.DialogCode.Accepted and dlg.selected_id:
+            sub = FicheFournisseurWindow(self._ctx, self._session, dlg.selected_id)
+            self._mdi.addSubWindow(sub)
+            sub.show()

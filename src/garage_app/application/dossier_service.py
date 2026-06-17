@@ -104,5 +104,8 @@ class DossierService:
 
     @require_permission(Permission.VIEW_DOSSIERS)
     def list_open(self, session: UserSession) -> list[DossierReparation]:
-        with self._sf.get_session():
-            return self._repo.find_open()
+        return self._repo.find_open()
+
+    @require_permission(Permission.VIEW_DOSSIERS)
+    def list_dossiers(self, session: UserSession) -> list[DossierReparation]:
+        return self._repo.find_all()
