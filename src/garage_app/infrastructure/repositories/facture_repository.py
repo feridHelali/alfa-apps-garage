@@ -6,9 +6,9 @@ from decimal import Decimal
 
 from sqlalchemy.orm import Session
 
-from garage_app.domain.facturation.facture import Facture, LigneFacture
+from garage_app.domain.facturation.facture import Facture, LigneFacture, Paiement, StatutFacture
 from garage_app.domain.facturation.repositories import FactureRepository
-from garage_app.infrastructure.db.models.facture_model import FactureModel, LigneFactureModel
+from garage_app.infrastructure.db.models.facture_model import FactureModel, LigneFactureModel, PaiementModel
 
 
 class SqlAlchemyFactureRepository(FactureRepository):
@@ -23,12 +23,31 @@ class SqlAlchemyFactureRepository(FactureRepository):
         m = self._s.query(FactureModel).filter_by(dossier_id=str(dossier_id)).first()
         return self._to_domain(m) if m else None
 
+    def find_by_client(self, client_id: uuid.UUID) -> list[Facture]:
+        rows = self._s.query(FactureModel).filter_by(client_id=str(client_id)).all()
+        return [self._to_domain(m) for m in rows]
+
+    def find_by_statut(self, statut: StatutFacture) -> list[Facture]:
+        rows = (
+            self._s.query(FactureModel)
+            .filter(FactureModel.statut == statut.value)
+            .order_by(FactureModel.date_emission.desc())
+            .all()
+        )
+        return [self._to_domain(m) for m in rows]
+
     def find_impayees(self) -> list[Facture]:
-        rows = self._s.query(FactureModel).filter_by(statut_paiement="en_attente").all()
+        rows = (
+            self._s.query(FactureModel)
+            .filter(FactureModel.statut.in_(["emise", "partiellement_payee"]))
+            .order_by(FactureModel.date_emission.desc())
+            .all()
+        )
         return [self._to_domain(m) for m in rows]
 
     def find_all(self) -> list[Facture]:
-        return [self._to_domain(m) for m in self._s.query(FactureModel).all()]
+        rows = self._s.query(FactureModel).order_by(FactureModel.date_emission.desc()).all()
+        return [self._to_domain(m) for m in rows]
 
     def next_numero(self) -> str:
         year = datetime.now(timezone.utc).year
@@ -38,17 +57,34 @@ class SqlAlchemyFactureRepository(FactureRepository):
     def save(self, f: Facture) -> None:
         m = self._s.get(FactureModel, str(f.id))
         if m:
-            m.statut_paiement = f.statut_paiement
-            m.mode_paiement = f.mode_paiement
+            m.statut = f.statut.value
+            m.solde_restant = float(f.solde_restant)
+            m.notes = f.notes
+            # sync paiements
+            existing_ids = {p.id for p in m.paiements}
+            for paiement in f.paiements:
+                if str(paiement.id) not in existing_ids:
+                    m.paiements.append(PaiementModel(
+                        id=str(paiement.id),
+                        facture_id=str(f.id),
+                        montant=float(paiement.montant),
+                        mode=paiement.mode,
+                        reference=paiement.reference,
+                        date_paiement=paiement.date_paiement,
+                    ))
         else:
             m = FactureModel(
                 id=str(f.id),
                 dossier_id=str(f.dossier_id),
+                client_id=str(f.client_id),
                 numero=f.numero,
                 montant_ht=float(f.montant_ht.amount),
                 taux_tva=float(f.taux_tva),
                 montant_ttc=float(f.montant_ttc.amount),
-                statut_paiement=f.statut_paiement,
+                solde_restant=float(f.solde_restant),
+                statut=f.statut.value,
+                est_flotte=f.est_flotte,
+                notes=f.notes,
             )
             for l in f.lignes:
                 m.lignes.append(LigneFactureModel(
@@ -56,6 +92,15 @@ class SqlAlchemyFactureRepository(FactureRepository):
                     designation=l.designation,
                     quantite=l.quantite,
                     prix_unitaire=float(l.prix_unitaire),
+                ))
+            for p in f.paiements:
+                m.paiements.append(PaiementModel(
+                    id=str(p.id),
+                    facture_id=str(f.id),
+                    montant=float(p.montant),
+                    mode=p.mode,
+                    reference=p.reference,
+                    date_paiement=p.date_paiement,
                 ))
             self._s.add(m)
 
@@ -68,14 +113,26 @@ class SqlAlchemyFactureRepository(FactureRepository):
     def _to_domain(m: FactureModel) -> Facture:
         f = Facture(id=uuid.UUID(m.id))
         f.dossier_id = uuid.UUID(m.dossier_id) if m.dossier_id else f.dossier_id
+        f.client_id = uuid.UUID(m.client_id) if m.client_id else f.client_id
         f.numero = m.numero
-        f.taux_tva = Decimal(str(m.taux_tva))
-        f.statut_paiement = m.statut_paiement
-        f.mode_paiement = m.mode_paiement
-        for l in m.lignes:
+        f.taux_tva = Decimal(str(m.taux_tva or 19))
+        f.est_flotte = bool(m.est_flotte)
+        f.notes = m.notes or ""
+        try:
+            f.statut = StatutFacture(m.statut)
+        except ValueError:
+            f.statut = StatutFacture.BROUILLON
+        for l in (m.lignes or []):
             f.lignes.append(LigneFacture(
                 designation=l.designation,
                 quantite=l.quantite,
                 prix_unitaire=Decimal(str(l.prix_unitaire)),
             ))
+        for p in (m.paiements or []):
+            pmt = Paiement(id=uuid.UUID(p.id))
+            pmt.montant = Decimal(str(p.montant))
+            pmt.mode = p.mode
+            pmt.reference = p.reference or ""
+            pmt.date_paiement = p.date_paiement if isinstance(p.date_paiement, datetime) else datetime.now()
+            f.paiements.append(pmt)
         return f

@@ -16,9 +16,15 @@ class TestMoney:
         with pytest.raises(ValueError):
             Money(Decimal("-1"))
 
-    def test_format_fr(self):
-        m = Money.of("1234.56")
+    def test_format_fr_eur(self):
+        m = Money.of("1234.56", "EUR")
         assert "€" in m.format("fr")
+
+    def test_format_fr_tnd(self):
+        m = Money.of("1234.567")   # default TND
+        result = m.format("fr")
+        assert "DT" in result
+        assert "1 234" in result   # thousands separator
 
     def test_multiply(self):
         m = Money.of("10") * 3

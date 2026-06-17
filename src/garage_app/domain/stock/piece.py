@@ -13,6 +13,7 @@ class Piece(AggregateRoot):
     reference_constructeur: str = ""
     designation: str = ""
     categorie: str = ""
+    emplacement: str = ""
     prix_achat: Decimal = Decimal("0")
     prix_vente: Decimal = Decimal("0")
     quantite_stock: int = 0
@@ -32,6 +33,20 @@ class Piece(AggregateRoot):
                 f"Stock insuffisant: {self.quantite_stock} disponible(s), {quantite} demandé(s)."
             )
         self.quantite_stock -= quantite
+        if self.quantite_stock <= self.seuil_alerte:
+            self._raise_event(StockAlerteDeclenchee(piece_id=self.id, quantite=self.quantite_stock))
+
+    def ajuster_stock(self, nouvelle_quantite: int) -> None:
+        from garage_app.domain.stock.events import InventaireAjuste
+        if nouvelle_quantite < 0:
+            raise ValueError("Le stock ne peut pas être négatif.")
+        ancienne = self.quantite_stock
+        self.quantite_stock = nouvelle_quantite
+        self._raise_event(InventaireAjuste(
+            piece_id=self.id,
+            ancienne_quantite=ancienne,
+            nouvelle_quantite=nouvelle_quantite,
+        ))
         if self.quantite_stock <= self.seuil_alerte:
             self._raise_event(StockAlerteDeclenchee(piece_id=self.id, quantite=self.quantite_stock))
 

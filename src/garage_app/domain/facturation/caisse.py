@@ -20,6 +20,10 @@ class MouvementCaisse:
     horodatage: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     currency: str = "TND"
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.id, uuid.UUID):
+            self.id = uuid.UUID(str(self.id)) if self.id else uuid.uuid4()
+
 
 @dataclass
 class CreditClient:

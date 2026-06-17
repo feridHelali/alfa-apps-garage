@@ -21,6 +21,7 @@ class GarageApplication(QApplication):
         if APP_ICON.exists():
             self.setWindowIcon(QIcon(str(APP_ICON)))
         self._apply_font()
+        self.apply_stylesheet("light")   # apply Win11 theme immediately
         self._translator = QTranslator()
 
     def _apply_font(self) -> None:

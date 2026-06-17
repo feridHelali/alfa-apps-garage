@@ -1,15 +1,60 @@
 from __future__ import annotations
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction, QIcon, QKeySequence
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QAction, QIcon, QKeySequence, QPixmap, QPainter, QColor, QFont
 from PyQt6.QtWidgets import (
-    QLabel, QMainWindow, QMdiArea, QMenu, QMenuBar, QStatusBar, QToolBar,
+    QApplication, QDockWidget, QLabel, QMainWindow, QMdiArea, QMenu,
+    QPushButton, QSizePolicy, QStatusBar, QStyle, QToolBar, QToolButton, QVBoxLayout, QWidget,
 )
+from garage_app.gui.branded_mdi_area import BrandedMdiArea
 
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.permission import Permission
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.gui.window_registry import WindowRegistry
+
+
+def _std_icon(name: QStyle.StandardPixmap) -> QIcon:
+    return QApplication.style().standardIcon(name)
+
+
+def _color_icon(hex_color: str, char: str, size: int = 32) -> QIcon:
+    """Create a simple colored square icon with a character label."""
+    px = QPixmap(size, size)
+    px.fill(QColor(hex_color))
+    painter = QPainter(px)
+    painter.setPen(QColor("#ffffff"))
+    f = QFont("Segoe UI", int(size * 0.45), QFont.Weight.Bold)
+    painter.setFont(f)
+    painter.drawText(px.rect(), Qt.AlignmentFlag.AlignCenter, char)
+    painter.end()
+    return QIcon(px)
+
+
+class _NavButton(QToolButton):
+    """Sidebar navigation button — icon on top, label below."""
+
+    def __init__(self, label: str, icon: QIcon, slot) -> None:
+        super().__init__()
+        self.setIcon(icon)
+        self.setIconSize(QSize(28, 28))
+        self.setText(label)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        self.setFixedHeight(60)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setStyleSheet("""
+            QToolButton {
+                border: none;
+                border-radius: 6px;
+                padding: 4px 2px;
+                font-size: 10px;
+                color: #1A1A1A;
+                background: transparent;
+            }
+            QToolButton:hover  { background: rgba(0,0,0,0.06); }
+            QToolButton:pressed{ background: rgba(0,0,0,0.10); }
+        """)
+        self.clicked.connect(slot)
 
 
 class MainWindow(QMainWindow):
@@ -18,6 +63,7 @@ class MainWindow(QMainWindow):
         self._ctx = ctx
         self._session = session
         self._setup_ui()
+        self._build_sidebar()
         self._build_menu()
         self._build_toolbar()
         self._build_status_bar()
@@ -27,9 +73,13 @@ class MainWindow(QMainWindow):
     def _setup_ui(self) -> None:
         self.setWindowTitle("Gestion Réparation Voiture — Alfa Computers Apps")
         self.resize(1366, 768)
-        self._mdi = QMdiArea()
+        self._mdi = BrandedMdiArea()
         self._mdi.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self._mdi.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        # Repaint watermark when last sub-window closes
+        self._mdi.subWindowActivated.connect(
+            lambda _: self._mdi.viewport().update()
+        )
         self.setCentralWidget(self._mdi)
         self._registry = WindowRegistry(self._mdi)
 
@@ -45,6 +95,76 @@ class MainWindow(QMainWindow):
             action.setEnabled(False)
         action.triggered.connect(slot)
         return action
+
+    # ── Sidebar ─────────────────────────────────────────────────────────────
+
+    def _build_sidebar(self) -> None:
+        dock = QDockWidget()
+        dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
+        dock.setTitleBarWidget(QWidget())   # hide title bar
+        dock.setFixedWidth(84)
+
+        container = QWidget()
+        container.setStyleSheet("""
+            QWidget { background: #F3F3F3; border-right: 1px solid #E0E0E0; }
+        """)
+        layout = QVBoxLayout(container)
+        layout.setContentsMargins(4, 8, 4, 8)
+        layout.setSpacing(2)
+
+        # ── Brand label ─────────────────────────────────────────────────────
+        brand = QLabel("Alfa\nComputers")
+        brand.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        brand.setStyleSheet("font-size: 9px; color: #0067C0; font-weight: 700; padding-bottom: 6px; background: transparent; border: none;")
+        layout.addWidget(brand)
+
+        sp = QStyle.StandardPixmap
+
+        def btn(label: str, icon: QIcon, slot, perm: Permission | None = None) -> None:
+            if perm and not self._can(perm):
+                return
+            b = _NavButton(label, icon, slot)
+            layout.addWidget(b)
+
+        # Reception
+        btn("Clients",    _color_icon("#0067C0", "C"),  self._open_clients,      Permission.VIEW_CLIENTS)
+        btn("Rendez-v.",  _color_icon("#1876CA", "R"),  self._open_rdv,          Permission.VIEW_RENDEZ_VOUS)
+
+        layout.addSpacing(6)
+
+        # Atelier
+        btn("Dossiers",   _color_icon("#107C10", "D"),  self._open_dossiers,     Permission.VIEW_DOSSIERS)
+
+        layout.addSpacing(6)
+
+        # Stock
+        btn("Stock",      _color_icon("#D83B01", "S"),  self._open_pieces,       Permission.VIEW_STOCK)
+        btn("Fourniss.",  _color_icon("#A4262C", "F"),  self._open_fournisseurs, Permission.MANAGE_STOCK)
+
+        layout.addSpacing(6)
+
+        # Facturation
+        btn("Factures",   _color_icon("#5C2D91", "F"),  self._open_factures,     Permission.VIEW_FACTURES)
+        btn("Caisse",     _color_icon("#00796B", "Ca"), self._open_caisse,        Permission.MANAGE_CAISSE)
+        btn("Créances",   _color_icon("#4A148C", "Cr"), self._open_credits,       Permission.VIEW_FACTURES)
+
+        layout.addSpacing(6)
+
+        # Admin
+        btn("Société",    _color_icon("#323130", "Ste"), self._open_societe,     Permission.MANAGE_SOCIETE)
+        btn("BDD",        _color_icon("#004578", "DB"),  self._open_db_mgmt,     Permission.MANAGE_SNAPSHOTS)
+        btn("Journal",    _color_icon("#004578", "Log"), self._open_audit,       Permission.MANAGE_USERS)
+
+        layout.addStretch()
+
+        # Logged-in user
+        user_lbl = QLabel(self._session.full_name.split()[0])
+        user_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        user_lbl.setStyleSheet("font-size: 9px; color: #5D5D5D; padding-top: 4px; background: transparent; border: none;")
+        layout.addWidget(user_lbl)
+
+        dock.setWidget(container)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock)
 
     # ── Menu bar ─────────────────────────────────────────────────────────────
 
@@ -81,6 +201,10 @@ class MainWindow(QMainWindow):
         m = mb.addMenu("Fa&cturation")
         m.addAction(self._action("Factures", self._open_factures, "Ctrl+F",
                                   Permission.VIEW_FACTURES))
+        m.addAction(self._action("Caisse", self._open_caisse, "",
+                                  Permission.MANAGE_CAISSE))
+        m.addAction(self._action("Créances clients", self._open_credits, "",
+                                  Permission.VIEW_FACTURES))
 
         # — Administration —
         m = mb.addMenu("&Administration")
@@ -88,8 +212,11 @@ class MainWindow(QMainWindow):
         m.addAction(self._action("Utilisateurs", self._open_users, "", Permission.MANAGE_USERS))
         m.addAction(self._action("Modèles de rapports", self._open_reports, "",
                                   Permission.MANAGE_REPORTS))
-        m.addAction(self._action("Snapshots BDD", self._open_snapshots, "",
+        m.addSeparator()
+        m.addAction(self._action("Gestion de la base de données", self._open_db_mgmt, "",
                                   Permission.MANAGE_SNAPSHOTS))
+        m.addAction(self._action("Journal d'audit", self._open_audit, "",
+                                  Permission.MANAGE_USERS))
         m.addSeparator()
         m.addAction(self._action("Paramètres", self._open_settings, "", Permission.MANAGE_SETTINGS))
 
@@ -105,6 +232,7 @@ class MainWindow(QMainWindow):
     def _build_toolbar(self) -> None:
         tb = self.addToolBar("Principal")
         tb.setMovable(False)
+        tb.setIconSize(QSize(16, 16))
         if self._can(Permission.VIEW_CLIENTS):
             tb.addAction(self._action("Clients", self._open_clients))
         if self._can(Permission.VIEW_DOSSIERS):
@@ -118,10 +246,24 @@ class MainWindow(QMainWindow):
 
     def _build_status_bar(self) -> None:
         sb = QStatusBar()
+        self._status_msg = QLabel("Prêt")
+        sb.addWidget(self._status_msg, 1)
         role_label = QLabel(f"  {self._session.full_name}  [{self._session.role.upper()}]  ")
         sb.addPermanentWidget(role_label)
         self.setStatusBar(sb)
-        sb.showMessage("Prêt", 3000)
+        # Update status bar when active MDI sub-window changes
+        self._mdi.subWindowActivated.connect(self._on_subwindow_activated)
+
+    def _on_subwindow_activated(self, sub) -> None:
+        if sub is None:
+            self._status_msg.setText("Prêt")
+            return
+        widget = sub.widget()
+        if hasattr(widget, "status_info"):
+            self._status_msg.setText(widget.status_info())
+        else:
+            title = sub.windowTitle()
+            self._status_msg.setText(title if title else "Prêt")
 
     # ── Window openers ───────────────────────────────────────────────────────
 
@@ -161,6 +303,14 @@ class MainWindow(QMainWindow):
         from garage_app.gui.facturation.facture_list_window import FactureListWindow
         self._registry.open_or_activate(FactureListWindow, self._ctx, self._session)
 
+    def _open_caisse(self) -> None:
+        from garage_app.gui.facturation.caisse_window import CaisseWindow
+        self._registry.open_or_activate(CaisseWindow, self._ctx, self._session)
+
+    def _open_credits(self) -> None:
+        from garage_app.gui.facturation.credit_clients_window import CreditClientsWindow
+        self._registry.open_or_activate(CreditClientsWindow, self._ctx, self._session)
+
     def _open_societe(self) -> None:
         from garage_app.gui.admin.societe_window import SocieteWindow
         self._registry.open_or_activate(SocieteWindow, self._ctx, self._session)
@@ -173,9 +323,14 @@ class MainWindow(QMainWindow):
         from garage_app.gui.reports.report_list_window import ReportListWindow
         self._registry.open_or_activate(ReportListWindow, self._ctx, self._session)
 
-    def _open_snapshots(self) -> None:
-        from garage_app.gui.admin.snapshot_window import SnapshotWindow
-        self._registry.open_or_activate(SnapshotWindow, self._ctx, self._session)
+    def _open_db_mgmt(self) -> None:
+        from garage_app.gui.admin.db_management_window import DbManagementWindow
+        self._registry.open_or_activate(DbManagementWindow, self._ctx.db_management_service,
+                                         self._session)
+
+    def _open_audit(self) -> None:
+        from garage_app.gui.admin.audit_log_window import AuditLogWindow
+        self._registry.open_or_activate(AuditLogWindow, self._ctx.audit_service, self._session)
 
     def _open_settings(self) -> None:
         from garage_app.gui.admin.settings_window import SettingsWindow

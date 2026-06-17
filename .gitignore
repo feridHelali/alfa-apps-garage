@@ -8,3 +8,44 @@ wheels/
 
 # Virtual environments
 .venv
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# App data dir
+.garage_reparation/
+
+# PyInstaller
+*.spec.bak
+dist/
+build/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type checking / linting
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Inno Setup output
+installer/Output/
+
+# Compiled translations
+resources/i18n/*.qm

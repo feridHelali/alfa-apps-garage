@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Type
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMdiArea, QMdiSubWindow
 
 
@@ -19,10 +20,12 @@ class WindowRegistry:
             existing.showNormal()
             return
         widget = window_cls(*args, **kwargs)
-        sub = self._area.addSubWindow(widget)
-        sub.setAttribute(
-            sub.WA_DeleteOnClose if hasattr(sub, "WA_DeleteOnClose") else sub.widgetResizable, False  # type: ignore[attr-defined]
-        )
+        # If the widget is already a QMdiSubWindow (e.g. SocieteWindow), add directly
+        if isinstance(widget, QMdiSubWindow):
+            sub = self._area.addSubWindow(widget)
+        else:
+            sub = self._area.addSubWindow(widget)
+        sub.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         sub.destroyed.connect(lambda: self._open.pop(window_cls, None))
         self._open[window_cls] = sub
         sub.show()

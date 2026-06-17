@@ -28,5 +28,25 @@ class TemplateLoader:
 
     @staticmethod
     def to_json(template: ReportTemplate) -> str:
-        import dataclasses
-        return json.dumps(dataclasses.asdict(template), ensure_ascii=False, indent=2)
+        def _element_dict(e: Element) -> dict:
+            return {
+                "type": e.type, "x": e.x, "y": e.y, "w": e.w, "h": e.h,
+                "value": e.value, "font_size": e.font_size,
+                "bold": e.bold, "align": e.align,
+            }
+
+        def _band_dict(b: Band) -> dict:
+            return {
+                "type": b.type, "height": b.height,
+                "datasource": b.datasource,
+                "elements": [_element_dict(e) for e in b.elements],
+            }
+
+        payload = {
+            "templateId": template.template_id,
+            "title": template.title,
+            "paperSize": template.paper_size,
+            "orientation": template.orientation,
+            "bands": [_band_dict(b) for b in template.bands],
+        }
+        return json.dumps(payload, ensure_ascii=False, indent=2)

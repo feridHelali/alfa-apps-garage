@@ -20,6 +20,7 @@ class Permission(StrEnum):
     VIEW_FACTURES = auto()
     MANAGE_FACTURES = auto()
     RECORD_PAYMENT = auto()
+    MANAGE_CAISSE = auto()
     # Administration
     MANAGE_USERS = auto()
     MANAGE_SOCIETE = auto()
@@ -37,6 +38,7 @@ ROLE_PERMISSIONS: dict[str, frozenset[Permission]] = {
         Permission.APPROVE_DEVIS, Permission.VALIDATE_QUALITY,
         Permission.VIEW_STOCK, Permission.MANAGE_STOCK,
         Permission.VIEW_FACTURES, Permission.MANAGE_FACTURES, Permission.RECORD_PAYMENT,
+        Permission.MANAGE_CAISSE,
         Permission.MANAGE_REPORTS, Permission.MANAGE_SETTINGS,
     }),
     "technicien": frozenset({
