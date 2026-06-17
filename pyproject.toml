@@ -1,7 +1,46 @@
 [project]
-name = "68-gestion-reparation-voiture-mahmoud-baklouti"
+name = "garage-reparation-voiture"
 version = "0.1.0"
-description = "Add your description here"
+description = "Système de gestion d'un garage de réparation automobile — Alfa Computers Apps"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "PyQt6>=6.7.0",
+    "sqlalchemy>=2.0.36",
+    "bcrypt>=4.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-qt>=4.4.0",
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
+]
+build = [
+    "pyinstaller>=6.10.0",
+]
+
+[build-system]
+requires = ["setuptools>=74", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <!-- Background -->
+  <rect width="300" height="100" fill="#ffffff" rx="6"/>
+
+  <!-- Monitor icon -->
+  <rect x="10" y="15" width="52" height="38" rx="3" fill="none" stroke="#0055a5" stroke-width="3"/>
+  <rect x="20" y="22" width="32" height="24" fill="#0055a5" opacity="0.15"/>
+  <!-- Screen glow lines -->
+  <line x1="24" y1="28" x2="44" y2="28" stroke="#0055a5" stroke-width="2" opacity="0.6"/>
+  <line x1="24" y1="33" x2="40" y2="33" stroke="#0055a5" stroke-width="1.5" opacity="0.4"/>
+  <line x1="24" y1="38" x2="36" y2="38" stroke="#0055a5" stroke-width="1.5" opacity="0.4"/>
+  <!-- Stand -->
+  <rect x="30" y="53" width="12" height="5" fill="#0055a5" opacity="0.7"/>
+  <rect x="25" y="58" width="22" height="3" rx="1" fill="#0055a5" opacity="0.7"/>
+
+  <!-- Alpha symbol -->
+  <text x="70" y="48" font-family="Georgia, serif" font-size="42" font-weight="bold"
+        fill="#0055a5" letter-spacing="-1">α</text>
+
+  <!-- Company name -->
+  <text x="102" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="18"
+        font-weight="700" fill="#1a1a1a" letter-spacing="0.5">Alfa Computers</text>
+
+  <!-- Tagline -->
+  <text x="103" y="58" font-family="'Segoe UI', Arial, sans-serif" font-size="11"
+        fill="#0055a5" letter-spacing="2" font-weight="400">APPS</text>
+
+  <!-- Separator line -->
+  <line x1="102" y1="62" x2="270" y2="62" stroke="#d4d0c8" stroke-width="1"/>
+
+  <!-- Sub tagline -->
+  <text x="103" y="75" font-family="'Segoe UI', Arial, sans-serif" font-size="9"
+        fill="#808080" letter-spacing="1">Solutions de Gestion sur Mesure</text>
+</svg>

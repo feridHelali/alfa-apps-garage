@@ -1,0 +1,117 @@
+{
+  "roles": [
+    {
+      "name": "superadmin",
+      "label": "Super Administrateur",
+      "permissions": "view_clients,manage_clients,view_rendez_vous,manage_rendez_vous,view_dossiers,create_dossier,manage_dossier,approve_devis,validate_quality,view_stock,manage_stock,view_factures,manage_factures,record_payment,manage_users,manage_societe,manage_reports,manage_snapshots,manage_settings"
+    },
+    {
+      "name": "admin",
+      "label": "Administrateur",
+      "permissions": "view_clients,manage_clients,view_rendez_vous,manage_rendez_vous,view_dossiers,create_dossier,manage_dossier,approve_devis,validate_quality,view_stock,manage_stock,view_factures,manage_factures,record_payment,manage_reports,manage_settings"
+    },
+    {
+      "name": "technicien",
+      "label": "Technicien",
+      "permissions": "view_clients,view_rendez_vous,view_dossiers,manage_dossier,validate_quality,view_stock,view_factures"
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "password": "Admin@2025!",
+      "full_name": "Super Administrateur",
+      "role": "superadmin"
+    }
+  ],
+  "societe": {
+    "raison_sociale": "Mon Garage Auto",
+    "siret": "",
+    "adresse": "1 rue de la Mécanique, 75000 Paris",
+    "telephone": "01 00 00 00 00",
+    "email": "contact@mongarage.fr",
+    "logo_path": "",
+    "licence_key": "DEMO-0000-0000-0000",
+    "taux_tva_defaut": 20.0
+  },
+  "settings": {
+    "language": "fr",
+    "theme": "light"
+  },
+  "report_templates": [
+    {
+      "name": "invoice_v1",
+      "category": "facturation",
+      "body": {
+        "templateId": "invoice_v1",
+        "title": {"fr": "Facture", "en": "Invoice"},
+        "paperSize": "A4",
+        "orientation": "portrait",
+        "bands": [
+          {
+            "type": "header",
+            "height": 60,
+            "elements": [
+              {"type": "image",  "x": 10, "y": 5,  "w": 80, "h": 40, "value": "{logo}"},
+              {"type": "text",   "x": 200, "y": 5, "w": 100, "h": 20, "value": "FACTURE", "font_size": 18, "bold": true, "align": "right"},
+              {"type": "field",  "x": 200, "y": 28, "w": 100, "h": 14, "value": "N° {numero}", "align": "right"},
+              {"type": "field",  "x": 200, "y": 42, "w": 100, "h": 14, "value": "Date : {date_emission}", "align": "right"}
+            ]
+          },
+          {
+            "type": "detail",
+            "height": 18,
+            "datasource": "lignes",
+            "elements": [
+              {"type": "field", "x": 10,  "y": 2, "w": 220, "h": 14, "value": "{designation}"},
+              {"type": "field", "x": 230, "y": 2, "w": 30,  "h": 14, "value": "{quantite}", "align": "center"},
+              {"type": "field", "x": 260, "y": 2, "w": 40,  "h": 14, "value": "{prix_unitaire}", "align": "right"},
+              {"type": "field", "x": 300, "y": 2, "w": 45,  "h": 14, "value": "{montant}",       "align": "right"}
+            ]
+          },
+          {
+            "type": "footer",
+            "height": 50,
+            "elements": [
+              {"type": "line",  "x": 10, "y": 5,  "w": 290, "h": 1},
+              {"type": "field", "x": 250, "y": 10, "w": 50, "h": 14, "value": "HT : {montant_ht}", "align": "right"},
+              {"type": "field", "x": 250, "y": 24, "w": 50, "h": 14, "value": "TVA : {montant_tva}", "align": "right"},
+              {"type": "field", "x": 240, "y": 38, "w": 60, "h": 14, "value": "TTC : {montant_ttc}", "bold": true, "align": "right"}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "bon_reception_v1",
+      "category": "reception",
+      "body": {
+        "templateId": "bon_reception_v1",
+        "title": {"fr": "Bon de Réception", "en": "Reception Form"},
+        "paperSize": "A4",
+        "orientation": "portrait",
+        "bands": [
+          {
+            "type": "header",
+            "height": 80,
+            "elements": [
+              {"type": "text",  "x": 10, "y": 5,  "w": 290, "h": 24, "value": "BON DE RÉCEPTION VÉHICULE", "font_size": 16, "bold": true, "align": "center"},
+              {"type": "field", "x": 10, "y": 35, "w": 140, "h": 14, "value": "Client : {client_nom}"},
+              {"type": "field", "x": 10, "y": 52, "w": 140, "h": 14, "value": "Véhicule : {vehicule}"},
+              {"type": "field", "x": 160, "y": 35, "w": 140, "h": 14, "value": "Date : {date_depot}", "align": "right"},
+              {"type": "field", "x": 160, "y": 52, "w": 140, "h": 14, "value": "Kilométrage : {kilometrage}", "align": "right"}
+            ]
+          },
+          {
+            "type": "footer",
+            "height": 60,
+            "elements": [
+              {"type": "text", "x": 10,  "y": 20, "w": 120, "h": 14, "value": "Signature client :"},
+              {"type": "text", "x": 180, "y": 20, "w": 120, "h": 14, "value": "Signature réceptionniste :"}
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
