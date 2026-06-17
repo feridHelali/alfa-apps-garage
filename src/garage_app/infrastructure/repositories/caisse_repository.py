@@ -4,49 +4,74 @@ import uuid
 from datetime import date, datetime, timezone
 from decimal import Decimal
 
-from sqlalchemy.orm import Session
-
 from garage_app.domain.facturation.caisse import MouvementCaisse, SessionCaisse
 from garage_app.domain.facturation.repositories import CaisseRepository
 from garage_app.infrastructure.db.models.facture_model import MouvementCaisseModel, SessionCaisseModel
+from garage_app.infrastructure.db.session import SessionFactory
 
 
 class SqlAlchemyCaisseRepository(CaisseRepository):
-    def __init__(self, session: Session) -> None:
-        self._s = session
+    def __init__(self, sf: SessionFactory) -> None:
+        self._sf = sf
 
     def get_by_id(self, entity_id: uuid.UUID) -> SessionCaisse | None:
-        m = self._s.get(SessionCaisseModel, str(entity_id))
-        return self._to_domain(m) if m else None
+        with self._sf.get_session() as s:
+            m = s.get(SessionCaisseModel, str(entity_id))
+            return self._to_domain(m) if m else None
 
     def find_all(self) -> list[SessionCaisse]:
-        rows = self._s.query(SessionCaisseModel).order_by(SessionCaisseModel.ouvert_le.desc()).all()
-        return [self._to_domain(m) for m in rows]
+        with self._sf.get_session() as s:
+            rows = s.query(SessionCaisseModel).order_by(SessionCaisseModel.ouvert_le.desc()).all()
+            return [self._to_domain(m) for m in rows]
 
     def find_session_active(self) -> SessionCaisse | None:
-        m = self._s.query(SessionCaisseModel).filter_by(statut="ouverte").first()
-        return self._to_domain(m) if m else None
+        with self._sf.get_session() as s:
+            m = s.query(SessionCaisseModel).filter_by(statut="ouverte").first()
+            return self._to_domain(m) if m else None
 
     def find_by_date(self, jour: date) -> list[SessionCaisse]:
-        rows = (
-            self._s.query(SessionCaisseModel)
-            .filter(SessionCaisseModel.ouvert_le >= datetime.combine(jour, datetime.min.time()))
-            .filter(SessionCaisseModel.ouvert_le < datetime.combine(jour, datetime.max.time()))
-            .all()
-        )
-        return [self._to_domain(m) for m in rows]
+        with self._sf.get_session() as s:
+            rows = (
+                s.query(SessionCaisseModel)
+                .filter(SessionCaisseModel.ouvert_le >= datetime.combine(jour, datetime.min.time()))
+                .filter(SessionCaisseModel.ouvert_le < datetime.combine(jour, datetime.max.time()))
+                .all()
+            )
+            return [self._to_domain(m) for m in rows]
 
     def save(self, sc: SessionCaisse) -> None:
-        m = self._s.get(SessionCaisseModel, str(sc.id))
-        if m:
-            m.statut = sc.statut
-            m.ferme_le = sc.ferme_le
-            m.solde_fermeture_reel = float(sc.solde_fermeture_reel) if sc.solde_fermeture_reel is not None else None
-            # sync new mouvements only
-            existing_ids = {mv.id for mv in m.mouvements}
-            for mv in sc.mouvements:
-                if str(mv.id) not in existing_ids:
-                    m.mouvements.append(MouvementCaisseModel(
+        with self._sf.get_session() as s:
+            m = s.get(SessionCaisseModel, str(sc.id))
+            if m:
+                m.statut = sc.statut
+                m.ferme_le = sc.ferme_le
+                m.solde_fermeture_reel = float(sc.solde_fermeture_reel) if sc.solde_fermeture_reel is not None else None
+                existing_ids = {mv.id for mv in m.mouvements}
+                for mv in sc.mouvements:
+                    if str(mv.id) not in existing_ids:
+                        m.mouvements.append(MouvementCaisseModel(
+                            id=str(mv.id),
+                            session_id=str(sc.id),
+                            type=mv.type,
+                            montant=float(mv.montant),
+                            motif=mv.motif,
+                            reference=mv.reference,
+                            horodatage=mv.horodatage,
+                            currency=mv.currency,
+                        ))
+            else:
+                new_m = SessionCaisseModel(
+                    id=str(sc.id),
+                    ouvert_par=str(sc.ouvert_par),
+                    solde_ouverture=float(sc.solde_ouverture),
+                    currency=sc.currency,
+                    statut=sc.statut,
+                    ouvert_le=sc.ouvert_le,
+                )
+                s.add(new_m)
+                s.flush()
+                for mv in sc.mouvements:
+                    s.add(MouvementCaisseModel(
                         id=str(mv.id),
                         session_id=str(sc.id),
                         type=mv.type,
@@ -56,33 +81,12 @@ class SqlAlchemyCaisseRepository(CaisseRepository):
                         horodatage=mv.horodatage,
                         currency=mv.currency,
                     ))
-        else:
-            new_m = SessionCaisseModel(
-                id=str(sc.id),
-                ouvert_par=str(sc.ouvert_par),
-                solde_ouverture=float(sc.solde_ouverture),
-                currency=sc.currency,
-                statut=sc.statut,
-                ouvert_le=sc.ouvert_le,
-            )
-            self._s.add(new_m)
-            self._s.flush()
-            for mv in sc.mouvements:
-                self._s.add(MouvementCaisseModel(
-                    id=str(mv.id),
-                    session_id=str(sc.id),
-                    type=mv.type,
-                    montant=float(mv.montant),
-                    motif=mv.motif,
-                    reference=mv.reference,
-                    horodatage=mv.horodatage,
-                    currency=mv.currency,
-                ))
 
     def delete(self, entity_id: uuid.UUID) -> None:
-        m = self._s.get(SessionCaisseModel, str(entity_id))
-        if m:
-            self._s.delete(m)
+        with self._sf.get_session() as s:
+            m = s.get(SessionCaisseModel, str(entity_id))
+            if m:
+                s.delete(m)
 
     @staticmethod
     def _to_domain(m: SessionCaisseModel) -> SessionCaisse:

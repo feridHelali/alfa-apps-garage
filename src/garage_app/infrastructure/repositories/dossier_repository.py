@@ -3,8 +3,6 @@ from __future__ import annotations
 import uuid
 from decimal import Decimal
 
-from sqlalchemy.orm import Session
-
 from garage_app.domain.atelier.dossier_reparation import DossierReparation
 from garage_app.domain.atelier.ligne_diagnostic import LigneDiagnostic
 from garage_app.domain.atelier.operation_mecanique import OperationMecanique
@@ -14,77 +12,83 @@ from garage_app.domain.atelier.repositories import DossierReparationRepository
 from garage_app.infrastructure.db.models.dossier_model import (
     DossierReparationModel, LigneDiagnosticModel, OperationMecaniqueModel, PieceRequiseModel,
 )
+from garage_app.infrastructure.db.session import SessionFactory
 
 
 class SqlAlchemyDossierRepository(DossierReparationRepository):
-    def __init__(self, session: Session) -> None:
-        self._s = session
+    def __init__(self, sf: SessionFactory) -> None:
+        self._sf = sf
 
     def get_by_id(self, entity_id: uuid.UUID) -> DossierReparation | None:
-        m = self._s.get(DossierReparationModel, str(entity_id))
-        return self._to_domain(m) if m else None
+        with self._sf.get_session() as s:
+            m = s.get(DossierReparationModel, str(entity_id))
+            return self._to_domain(m) if m else None
 
     def find_all(self) -> list[DossierReparation]:
-        return [self._to_domain(m) for m in self._s.query(DossierReparationModel).all()]
+        with self._sf.get_session() as s:
+            return [self._to_domain(m) for m in s.query(DossierReparationModel).all()]
 
     def find_by_vehicule(self, vehicule_id: uuid.UUID) -> list[DossierReparation]:
-        rows = self._s.query(DossierReparationModel).filter_by(vehicule_id=str(vehicule_id)).all()
-        return [self._to_domain(m) for m in rows]
+        with self._sf.get_session() as s:
+            rows = s.query(DossierReparationModel).filter_by(vehicule_id=str(vehicule_id)).all()
+            return [self._to_domain(m) for m in rows]
 
     def find_by_statut(self, statut: StatutDossier) -> list[DossierReparation]:
-        rows = self._s.query(DossierReparationModel).filter_by(statut=statut.value).all()
-        return [self._to_domain(m) for m in rows]
+        with self._sf.get_session() as s:
+            rows = s.query(DossierReparationModel).filter_by(statut=statut.value).all()
+            return [self._to_domain(m) for m in rows]
 
     def find_open(self) -> list[DossierReparation]:
-        closed = StatutDossier.CLOTURE.value
-        rows = self._s.query(DossierReparationModel).filter(
-            DossierReparationModel.statut != closed
-        ).all()
-        return [self._to_domain(m) for m in rows]
+        with self._sf.get_session() as s:
+            rows = s.query(DossierReparationModel).filter(
+                DossierReparationModel.statut != StatutDossier.CLOTURE.value
+            ).all()
+            return [self._to_domain(m) for m in rows]
 
     def save(self, d: DossierReparation) -> None:
-        m = self._s.get(DossierReparationModel, str(d.id))
-        if not m:
-            m = DossierReparationModel(
-                id=str(d.id),
-                vehicule_id=str(d.vehicule_id),
-                client_id=str(d.client_id),
-                kilometrage_entree=d.kilometrage_entree,
-            )
-            self._s.add(m)
-        m.statut = d.statut.value
-        m.devis_id = str(d.devis_id) if d.devis_id else None
-        m.facture_id = str(d.facture_id) if d.facture_id else None
-        m.notes = d.notes
-        # children are managed via cascade; for simplicity clear+re-add
-        m.lignes_diagnostic.clear()
-        for l in d.lignes_diagnostic:
-            m.lignes_diagnostic.append(LigneDiagnosticModel(
-                id=str(l.id), dossier_id=str(d.id),
-                code_defaut=l.code_defaut, description=l.description, gravite=l.gravite.value,
-            ))
-        m.operations.clear()
-        for op in d.operations:
-            m.operations.append(OperationMecaniqueModel(
-                id=str(op.id), dossier_id=str(d.id),
-                technicien_id=str(op.technicien_id) if op.technicien_id else None,
-                code_main_oeuvre=op.code_main_oeuvre, description=op.description,
-                temps_estime=float(op.temps_estime), temps_passe=float(op.temps_passe),
-                taux_horaire=float(op.taux_horaire), statut=op.statut.value,
-            ))
-        m.pieces.clear()
-        for p in d.pieces:
-            m.pieces.append(PieceRequiseModel(
-                id=str(p.id), dossier_id=str(d.id), piece_id=str(p.piece_id),
-                reference=p.reference, designation=p.designation,
-                quantite=p.quantite, prix_unitaire=float(p.prix_unitaire),
-                statut_dispo=p.statut_dispo.value,
-            ))
+        with self._sf.get_session() as s:
+            m = s.get(DossierReparationModel, str(d.id))
+            if not m:
+                m = DossierReparationModel(
+                    id=str(d.id),
+                    vehicule_id=str(d.vehicule_id),
+                    client_id=str(d.client_id),
+                    kilometrage_entree=d.kilometrage_entree,
+                )
+                s.add(m)
+            m.statut = d.statut.value
+            m.devis_id = str(d.devis_id) if d.devis_id else None
+            m.facture_id = str(d.facture_id) if d.facture_id else None
+            m.notes = d.notes
+            m.lignes_diagnostic.clear()
+            for l in d.lignes_diagnostic:
+                m.lignes_diagnostic.append(LigneDiagnosticModel(
+                    id=str(l.id), dossier_id=str(d.id),
+                    code_defaut=l.code_defaut, description=l.description, gravite=l.gravite.value,
+                ))
+            m.operations.clear()
+            for op in d.operations:
+                m.operations.append(OperationMecaniqueModel(
+                    id=str(op.id), dossier_id=str(d.id),
+                    technicien_id=str(op.technicien_id) if op.technicien_id else None,
+                    code_main_oeuvre=op.code_main_oeuvre, description=op.description,
+                    temps_estime=float(op.temps_estime), temps_passe=float(op.temps_passe),
+                    taux_horaire=float(op.taux_horaire), statut=op.statut.value,
+                ))
+            m.pieces.clear()
+            for p in d.pieces:
+                m.pieces.append(PieceRequiseModel(
+                    id=str(p.id), dossier_id=str(d.id), piece_id=str(p.piece_id),
+                    reference=p.reference, designation=p.designation,
+                    quantite=p.quantite, prix_unitaire=float(p.prix_unitaire),
+                    statut_dispo=p.statut_dispo.value,
+                ))
 
     def delete(self, entity_id: uuid.UUID) -> None:
-        m = self._s.get(DossierReparationModel, str(entity_id))
-        if m:
-            self._s.delete(m)
+        with self._sf.get_session() as s:
+            m = s.get(DossierReparationModel, str(entity_id))
+            if m:
+                s.delete(m)
 
     @staticmethod
     def _to_domain(m: DossierReparationModel) -> DossierReparation:

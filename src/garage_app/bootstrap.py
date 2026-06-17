@@ -64,46 +64,45 @@ def bootstrap() -> AppContext:
     AppSettings.ensure_dirs()
 
     engine = create_db_engine(settings.db_path)
-    session_factory = SessionFactory(engine)
-    DatabaseInitializer(engine, session_factory).initialize()
+    sf = SessionFactory(engine)
+    DatabaseInitializer(engine, sf).initialize()
 
     event_bus = InMemoryEventBus()
 
-    audit_repo = AuditLogRepository(session_factory)
+    audit_repo = AuditLogRepository(sf)
     audit_svc = AuditService(audit_repo)
     audit_svc.log_system("Application démarrée")
 
-    with session_factory.get_session() as session:
-        user_repo = SqlAlchemyUserRepository(session)
-        client_repo = SqlAlchemyClientRepository(session)
-        vehicule_repo = SqlAlchemyVehiculeRepository(session)
-        dossier_repo = SqlAlchemyDossierRepository(session)
-        piece_repo = SqlAlchemyPieceRepository(session)
-        fournisseur_repo = SqlAlchemyFournisseurRepository(session)
-        commande_repo = SqlAlchemyCommandeRepository(session)
-        facture_repo = SqlAlchemyFactureRepository(session)
-        caisse_repo = SqlAlchemyCaisseRepository(session)
-        credit_repo = SqlAlchemyCreditRepository(session)
-        societe_repo = SqlAlchemySocieteRepository(session)
-        template_repo = SqlAlchemyReportTemplateRepository(session)
+    user_repo = SqlAlchemyUserRepository(sf)
+    client_repo = SqlAlchemyClientRepository(sf)
+    vehicule_repo = SqlAlchemyVehiculeRepository(sf)
+    dossier_repo = SqlAlchemyDossierRepository(sf)
+    piece_repo = SqlAlchemyPieceRepository(sf)
+    fournisseur_repo = SqlAlchemyFournisseurRepository(sf)
+    commande_repo = SqlAlchemyCommandeRepository(sf)
+    facture_repo = SqlAlchemyFactureRepository(sf)
+    caisse_repo = SqlAlchemyCaisseRepository(sf)
+    credit_repo = SqlAlchemyCreditRepository(sf)
+    societe_repo = SqlAlchemySocieteRepository(sf)
+    template_repo = SqlAlchemyReportTemplateRepository(sf)
 
     return AppContext(
         settings=settings,
-        session_factory=session_factory,
+        session_factory=sf,
         event_bus=event_bus,
-        auth_service=AuthService(session_factory, user_repo),
-        client_service=ClientService(session_factory, client_repo, vehicule_repo),
-        dossier_service=DossierService(session_factory, dossier_repo, event_bus),
-        stock_service=StockService(session_factory, piece_repo, event_bus),
-        fournisseur_service=FournisseurService(session_factory, fournisseur_repo),
-        commande_service=CommandeService(session_factory, commande_repo, piece_repo, event_bus),
-        facture_service=FactureService(session_factory, facture_repo, dossier_repo, event_bus),
-        caisse_service=CaisseService(session_factory, caisse_repo, event_bus, audit_svc),
-        credit_service=CreditService(session_factory, credit_repo),
-        societe_service=SocieteService(session_factory, societe_repo),
+        auth_service=AuthService(sf, user_repo),
+        client_service=ClientService(sf, client_repo, vehicule_repo),
+        dossier_service=DossierService(sf, dossier_repo, event_bus),
+        stock_service=StockService(sf, piece_repo, event_bus),
+        fournisseur_service=FournisseurService(sf, fournisseur_repo),
+        commande_service=CommandeService(sf, commande_repo, piece_repo, event_bus),
+        facture_service=FactureService(sf, facture_repo, dossier_repo, event_bus),
+        caisse_service=CaisseService(sf, caisse_repo, event_bus, audit_svc),
+        credit_service=CreditService(sf, credit_repo),
+        societe_service=SocieteService(sf, societe_repo),
         report_service=ReportService(template_repo),
         snapshot_service=SnapshotService(settings),
         settings_service=SettingsService(settings),
         audit_service=audit_svc,
-        db_management_service=DbManagementService(session_factory, settings, audit_svc),
+        db_management_service=DbManagementService(sf, settings, audit_svc),
     )
