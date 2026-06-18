@@ -427,7 +427,7 @@ class _PieceDialog(QDialog):
     def _on_piece_changed(self, idx: int) -> None:
         if 0 <= idx < len(self._pieces):
             p = self._pieces[idx]
-            self._prix.setValue(float(p.prix_vente.amount))
+            self._prix.setValue(float(p.prix_vente))
 
     @property
     def piece_requise(self) -> PieceRequise | None:
