@@ -79,9 +79,12 @@ class FactureDetailWindow(QMdiSubWindow):
         hdr = QHBoxLayout()
         self._lbl_numero = QLabel("")
         self._lbl_numero.setStyleSheet("font-size: 14pt; font-weight: 700;")
+        self._lbl_date = QLabel("")
+        self._lbl_date.setStyleSheet("font-size: 9pt; color: #5D5D5D; margin-left: 12px;")
         self._lbl_statut = QLabel("")
         self._lbl_statut.setStyleSheet("font-size: 10pt; font-weight: 600; padding: 3px 10px; border-radius: 4px;")
         hdr.addWidget(self._lbl_numero)
+        hdr.addWidget(self._lbl_date)
         hdr.addStretch()
         hdr.addWidget(self._lbl_statut)
         layout.addLayout(hdr)
@@ -141,6 +144,8 @@ class FactureDetailWindow(QMdiSubWindow):
         self._facture = f
         self.setWindowTitle(f"Facture {f.numero}")
         self._lbl_numero.setText(f"Facture N° {f.numero}")
+        date_str = f.date_emission.strftime("%d/%m/%Y") if f.date_emission else "—"
+        self._lbl_date.setText(f"Émise le {date_str}")
         label = _STATUT_LABELS.get(f.statut, f.statut)
         color = _STATUT_COLORS.get(f.statut, "#1A1A1A")
         self._lbl_statut.setText(f" {label} ")

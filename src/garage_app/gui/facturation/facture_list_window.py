@@ -54,7 +54,7 @@ class _FactureModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             return [
                 f.numero,
-                "",  # date — we don't have it in domain, use "" for now
+                f.date_emission.strftime("%d/%m/%Y") if f.date_emission else "—",
                 Money.of(f.montant_ttc.amount).format(),
                 Money.of(f.montant_paye).format(),
                 Money.of(f.solde_restant).format(),
@@ -121,7 +121,7 @@ class FactureListWindow(QMdiSubWindow):
         self._model = _FactureModel([])
         self._table_w.set_source_model(self._model)
         self._table_w.table.selectionModel().currentRowChanged.connect(self._on_select)
-        self._table_w.table.doubleClicked.connect(self._open_detail)
+        self._table_w.table.doubleClicked.connect(lambda _: self._open_detail())
         layout.addWidget(self._table_w)
 
         self.setWidget(main)

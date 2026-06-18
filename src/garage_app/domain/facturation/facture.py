@@ -70,6 +70,7 @@ class Facture(AggregateRoot):
     est_flotte: bool = False
     paiements: list[Paiement] = field(default_factory=list)
     notes: str = ""
+    date_emission: datetime | None = None
 
     # ── Computed properties ─────────────────────────────────────────────────
 

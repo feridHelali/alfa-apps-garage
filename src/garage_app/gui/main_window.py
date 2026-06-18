@@ -134,7 +134,8 @@ class MainWindow(QMainWindow):
         layout.addSpacing(6)
 
         # Atelier
-        btn("Dossiers",   _color_icon("#107C10", "D"),  self._open_dossiers,     Permission.VIEW_DOSSIERS)
+        btn("Dossiers",   _color_icon("#107C10", "D"),  self._open_dossiers,        Permission.VIEW_DOSSIERS)
+        btn("Rapide",     _color_icon("#1D7340", "⚡"), self._open_bon_travail_rapide, Permission.MANAGE_FACTURES)
 
         layout.addSpacing(6)
 
@@ -184,6 +185,8 @@ class MainWindow(QMainWindow):
         m = mb.addMenu("&Atelier")
         m.addAction(self._action("Dossiers de réparation", self._open_dossiers, "Ctrl+D",
                                   Permission.VIEW_DOSSIERS))
+        m.addAction(self._action("Bon de travail rapide…", self._open_bon_travail_rapide, "Ctrl+R",
+                                  Permission.MANAGE_FACTURES))
         m.addAction(self._action("Techniciens", self._open_techniciens, "",
                                   Permission.MANAGE_DOSSIER))
 
@@ -312,6 +315,10 @@ class MainWindow(QMainWindow):
     def _open_techniciens(self) -> None:
         from garage_app.gui.atelier.technicien_window import TechnicienWindow
         self._registry.open_or_activate(TechnicienWindow, self._ctx, self._session)
+
+    def _open_bon_travail_rapide(self) -> None:
+        from garage_app.gui.atelier.bon_travail_rapide_window import BonTravailRapideWindow
+        self._registry.open_or_activate(BonTravailRapideWindow, self._ctx, self._session)
 
     def _open_pieces(self) -> None:
         from garage_app.gui.stock.piece_catalog_window import PieceCatalogWindow

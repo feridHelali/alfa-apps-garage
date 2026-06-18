@@ -125,6 +125,7 @@ class SqlAlchemyFactureRepository(FactureRepository):
         f.taux_tva = Decimal(str(m.taux_tva or 19))
         f.est_flotte = bool(m.est_flotte)
         f.notes = m.notes or ""
+        f.date_emission = m.date_emission if isinstance(m.date_emission, datetime) else None
         try:
             f.statut = StatutFacture(m.statut)
         except ValueError:
