@@ -5,6 +5,14 @@ from typing import Any, Type
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMdiArea, QMdiSubWindow
 
+_SUB_FLAGS = (
+    Qt.WindowType.SubWindow
+    | Qt.WindowType.WindowTitleHint
+    | Qt.WindowType.WindowSystemMenuHint
+    | Qt.WindowType.WindowMinMaxButtonsHint
+    | Qt.WindowType.WindowCloseButtonHint
+)
+
 
 class WindowRegistry:
     """Ensures only one instance per sub-window type is open at a time."""
@@ -20,11 +28,8 @@ class WindowRegistry:
             existing.showNormal()
             return
         widget = window_cls(*args, **kwargs)
-        # If the widget is already a QMdiSubWindow (e.g. SocieteWindow), add directly
-        if isinstance(widget, QMdiSubWindow):
-            sub = self._area.addSubWindow(widget)
-        else:
-            sub = self._area.addSubWindow(widget)
+        sub = self._area.addSubWindow(widget)
+        sub.setWindowFlags(_SUB_FLAGS)
         sub.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         sub.destroyed.connect(lambda: self._open.pop(window_cls, None))
         self._open[window_cls] = sub

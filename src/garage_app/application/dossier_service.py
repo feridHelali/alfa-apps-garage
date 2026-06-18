@@ -102,6 +102,94 @@ class DossierService:
         self._bus.publish_all(dossier.pull_events())
         return dossier
 
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def supprimer_ligne_diagnostic(
+        self, session: UserSession, dossier_id: uuid.UUID, ligne_id: uuid.UUID
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        dossier.lignes_diagnostic = [l for l in dossier.lignes_diagnostic if l.id != ligne_id]
+        self._repo.save(dossier)
+        return dossier
+
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def supprimer_piece(
+        self, session: UserSession, dossier_id: uuid.UUID, piece_id: uuid.UUID
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        dossier.pieces = [p for p in dossier.pieces if p.id != piece_id]
+        self._repo.save(dossier)
+        return dossier
+
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def ajouter_operation(
+        self, session: UserSession, dossier_id: uuid.UUID, operation: OperationMecanique
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        dossier.ajouter_operation(operation)
+        self._repo.save(dossier)
+        return dossier
+
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def ajouter_piece(
+        self, session: UserSession, dossier_id: uuid.UUID, piece: PieceRequise
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        dossier.ajouter_piece(piece)
+        self._repo.save(dossier)
+        return dossier
+
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def demarrer_operation(
+        self, session: UserSession, dossier_id: uuid.UUID, operation_id: uuid.UUID
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        op = next((o for o in dossier.operations if o.id == operation_id), None)
+        if not op:
+            raise ValueError("Opération introuvable.")
+        op.demarrer()
+        self._repo.save(dossier)
+        return dossier
+
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def terminer_operation(
+        self,
+        session: UserSession,
+        dossier_id: uuid.UUID,
+        operation_id: uuid.UUID,
+        temps_passe: Decimal,
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        op = next((o for o in dossier.operations if o.id == operation_id), None)
+        if not op:
+            raise ValueError("Opération introuvable.")
+        op.terminer(temps_passe)
+        self._repo.save(dossier)
+        return dossier
+
+    @require_permission(Permission.MANAGE_DOSSIER)
+    def terminer_reparation(
+        self, session: UserSession, dossier_id: uuid.UUID
+    ) -> DossierReparation:
+        dossier = self._repo.get_by_id(dossier_id)
+        if not dossier:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        dossier.terminer_reparation()
+        self._repo.save(dossier)
+        self._bus.publish_all(dossier.pull_events())
+        return dossier
+
     @require_permission(Permission.VIEW_DOSSIERS)
     def list_open(self, session: UserSession) -> list[DossierReparation]:
         return self._repo.find_open()

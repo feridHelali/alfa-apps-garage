@@ -38,7 +38,7 @@ def _on_logged_in(app: QApplication, ctx, session, splash=None) -> None:  # type
     app.main_window = window  # type: ignore[attr-defined]
     if splash:
         splash.finish(window)
-    window.show()
+    window.showMaximized()
 
 
 if __name__ == "__main__":

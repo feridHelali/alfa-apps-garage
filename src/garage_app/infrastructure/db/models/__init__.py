@@ -12,6 +12,7 @@ from garage_app.infrastructure.db.models.facture_model import (
     DevisModel, FactureModel, LigneFactureModel, PaiementModel,
     SessionCaisseModel, MouvementCaisseModel, CreditClientModel,
 )
+from garage_app.infrastructure.db.models.rendez_vous_model import RendezVousModel
 from garage_app.infrastructure.db.models.report_template_model import ReportTemplateModel
 from garage_app.infrastructure.db.models.settings_model import AppSettingsModel
 from garage_app.infrastructure.db.models.snapshot_model import SnapshotModel
@@ -19,7 +20,7 @@ from garage_app.infrastructure.db.models.audit_log_model import AuditLogModel
 
 __all__ = [
     "UserModel", "RoleModel", "SocieteModel",
-    "ClientModel", "VehiculeModel",
+    "ClientModel", "VehiculeModel", "RendezVousModel",
     "DossierReparationModel", "LigneDiagnosticModel", "OperationMecaniqueModel", "PieceRequiseModel",
     "FournisseurModel", "PieceModel",
     "CommandeFournisseurModel", "LigneCommandeModel", "MouvementStockModel",

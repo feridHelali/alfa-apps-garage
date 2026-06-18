@@ -19,6 +19,7 @@ from garage_app.infrastructure.repositories.caisse_repository import SqlAlchemyC
 from garage_app.infrastructure.repositories.credit_repository import SqlAlchemyCreditRepository
 from garage_app.infrastructure.repositories.societe_repository import SqlAlchemySocieteRepository
 from garage_app.infrastructure.repositories.report_template_repository import SqlAlchemyReportTemplateRepository
+from garage_app.infrastructure.repositories.rendez_vous_repository import SqlAlchemyRendezVousRepository
 from garage_app.infrastructure.repositories.audit_log_repository import AuditLogRepository
 from garage_app.application.auth_service import AuthService
 from garage_app.application.client_service import ClientService
@@ -35,6 +36,7 @@ from garage_app.application.snapshot_service import SnapshotService
 from garage_app.application.settings_service import SettingsService
 from garage_app.application.audit_service import AuditService
 from garage_app.application.db_management_service import DbManagementService
+from garage_app.application.rendez_vous_service import RendezVousService
 from garage_app.application.analytics_service import AnalyticsService
 
 
@@ -56,6 +58,7 @@ class AppContext:
     report_service: ReportService
     snapshot_service: SnapshotService
     settings_service: SettingsService
+    rendez_vous_service: RendezVousService
     audit_service: AuditService
     db_management_service: DbManagementService
     analytics_service: AnalyticsService
@@ -76,6 +79,7 @@ def bootstrap() -> AppContext:
     audit_svc.log_system("Application démarrée")
 
     user_repo = SqlAlchemyUserRepository(sf)
+    rdv_repo = SqlAlchemyRendezVousRepository(sf)
     client_repo = SqlAlchemyClientRepository(sf)
     vehicule_repo = SqlAlchemyVehiculeRepository(sf)
     dossier_repo = SqlAlchemyDossierRepository(sf)
@@ -105,6 +109,7 @@ def bootstrap() -> AppContext:
         report_service=ReportService(template_repo),
         snapshot_service=SnapshotService(settings),
         settings_service=SettingsService(settings),
+        rendez_vous_service=RendezVousService(rdv_repo, event_bus),
         audit_service=audit_svc,
         db_management_service=DbManagementService(sf, settings, audit_svc),
         analytics_service=AnalyticsService(
