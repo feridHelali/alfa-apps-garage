@@ -105,11 +105,11 @@ class AuthService:
 
     @require_permission(Permission.MANAGE_USERS)
     def deactivate_user(self, session: UserSession, user_id) -> None:
+        if str(user_id) == str(session.user_id):
+            raise ValueError("Impossible de désactiver votre propre compte.")
         user = self._repo.get_by_id(user_id)
         if not user:
             raise ValueError("Utilisateur introuvable.")
-        if str(user_id) == str(session.user_id):
-            raise ValueError("Impossible de désactiver votre propre compte.")
         user.is_active = False
         self._repo.save(user)
 
