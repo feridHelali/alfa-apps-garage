@@ -202,6 +202,28 @@ class AnalyticsService:
             "commandes": commandes,
         }
 
+    # ── Carnet de Route ──────────────────────────────────────────────────────
+
+    @require_permission(Permission.VIEW_DOSSIERS)
+    def carnet_de_route(self, session: UserSession, vehicule_id: uuid.UUID) -> dict:
+        vehicule = self._vehicules.get_by_id(vehicule_id)
+        if not vehicule:
+            raise ValueError("Véhicule introuvable.")
+        client = self._clients.get_by_id(vehicule.client_id)
+        dossiers = self._dossiers.find_by_vehicule(vehicule_id)
+        km_max = max((d.kilometrage_entree for d in dossiers), default=0)
+        total_pieces = sum(len(d.pieces) for d in dossiers)
+        total_ops = sum(len(d.operations) for d in dossiers)
+        return {
+            "vehicule": vehicule,
+            "client": client,
+            "dossiers": dossiers,
+            "nb_interventions": len(dossiers),
+            "km_max": km_max,
+            "total_pieces": total_pieces,
+            "total_ops": total_ops,
+        }
+
     # ── Fiche fournisseur ─────────────────────────────────────────────────────
 
     @require_permission(Permission.VIEW_STOCK)

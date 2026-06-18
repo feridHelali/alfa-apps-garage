@@ -14,6 +14,15 @@ _SUB_FLAGS = (
 )
 
 
+def open_sub(mdi: QMdiArea, widget: QMdiSubWindow) -> QMdiSubWindow:
+    """Add a sub-window with standard title-bar buttons and return it."""
+    sub = mdi.addSubWindow(widget)
+    sub.setWindowFlags(_SUB_FLAGS)
+    sub.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+    sub.show()
+    return sub
+
+
 class WindowRegistry:
     """Ensures only one instance per sub-window type is open at a time."""
 
@@ -28,9 +37,6 @@ class WindowRegistry:
             existing.showNormal()
             return
         widget = window_cls(*args, **kwargs)
-        sub = self._area.addSubWindow(widget)
-        sub.setWindowFlags(_SUB_FLAGS)
-        sub.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        sub = open_sub(self._area, widget)
         sub.destroyed.connect(lambda: self._open.pop(window_cls, None))
         self._open[window_cls] = sub
-        sub.show()

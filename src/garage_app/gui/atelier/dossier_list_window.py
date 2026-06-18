@@ -11,6 +11,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.atelier.dossier_reparation import DossierReparation
 from garage_app.domain.atelier.statut_dossier import StatutDossier
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.window_registry import open_sub
 
 
 class _DossierModel(QAbstractTableModel):
@@ -96,6 +97,4 @@ class DossierListWindow(QMdiSubWindow):
         from PyQt6.QtWidgets import QApplication
         mdi = self.mdiArea()
         if mdi:
-            win = DossierWindow(self._ctx, self._session, dossier)
-            sub = mdi.addSubWindow(win)
-            sub.show()
+            open_sub(mdi, DossierWindow(self._ctx, self._session, dossier))

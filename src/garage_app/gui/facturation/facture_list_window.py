@@ -150,13 +150,10 @@ class FactureListWindow(QMdiSubWindow):
         if not self._current:
             return
         from garage_app.gui.facturation.facture_detail_window import FactureDetailWindow
-        from garage_app.gui.window_registry import WindowRegistry
+        from garage_app.gui.window_registry import open_sub
         mdi = self.mdiArea()
         if mdi:
-            # Open a new detail sub-window (not singleton — one per facture)
-            detail = FactureDetailWindow(self._ctx, self._session, self._current.id)
-            sub = mdi.addSubWindow(detail)
-            sub.show()
+            open_sub(mdi, FactureDetailWindow(self._ctx, self._session, self._current.id))
 
     def _annuler(self) -> None:
         if not self._current:
