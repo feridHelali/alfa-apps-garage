@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime
 from decimal import Decimal
 
 from garage_app.domain.shared.aggregate_root import AggregateRoot
@@ -31,6 +32,7 @@ class DossierReparation(AggregateRoot):
     devis_id: uuid.UUID | None = None
     facture_id: uuid.UUID | None = None
     notes: str = ""
+    created_at: datetime | None = None
 
     # ── Invariants ──────────────────────────────────────────────────────────
 

@@ -202,6 +202,34 @@ class AnalyticsService:
             "commandes": commandes,
         }
 
+    # ── Parc véhicules ────────────────────────────────────────────────────────
+
+    @require_permission(Permission.VIEW_CLIENTS)
+    def parc_vehicules(self, session: UserSession) -> list[dict]:
+        all_vehicules = self._vehicules.find_all()
+        all_clients = {str(c.id): c for c in self._clients.find_all()}
+        result = []
+        for v in all_vehicules:
+            client = all_clients.get(str(v.client_id))
+            client_nom = f"{client.nom} {client.prenom}".strip() if client else "—"
+            client_tel = client.telephone if client else ""
+            dossiers = self._dossiers.find_by_vehicule(v.id)
+            dates = [d.created_at for d in dossiers if d.created_at]
+            premiere_visite = min(dates) if dates else None
+            derniere_visite = max(dates) if dates else None
+            km_max = max((d.kilometrage_entree for d in dossiers), default=0)
+            result.append({
+                "vehicule": v,
+                "client_nom": client_nom,
+                "client_tel": client_tel,
+                "nb_dossiers": len(dossiers),
+                "premiere_visite": premiere_visite,
+                "derniere_visite": derniere_visite,
+                "km_max": km_max,
+            })
+        result.sort(key=lambda x: x["client_nom"])
+        return result
+
     # ── Carnet de Route ──────────────────────────────────────────────────────
 
     @require_permission(Permission.VIEW_DOSSIERS)

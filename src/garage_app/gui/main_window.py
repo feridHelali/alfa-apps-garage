@@ -128,6 +128,7 @@ class MainWindow(QMainWindow):
 
         # Reception
         btn("Clients",    _color_icon("#0067C0", "C"),  self._open_clients,      Permission.VIEW_CLIENTS)
+        btn("Véhicules",  _color_icon("#0055a5", "V"),  self._open_vehicules,    Permission.VIEW_CLIENTS)
         btn("Rendez-v.",  _color_icon("#1876CA", "R"),  self._open_rdv,          Permission.VIEW_RENDEZ_VOUS)
 
         layout.addSpacing(6)
@@ -174,6 +175,7 @@ class MainWindow(QMainWindow):
         # — Réception —
         m = mb.addMenu("&Réception")
         m.addAction(self._action("Clients", self._open_clients, "Ctrl+K", Permission.VIEW_CLIENTS))
+        m.addAction(self._action("Véhicules", self._open_vehicules, "Ctrl+V", Permission.VIEW_CLIENTS))
         m.addAction(self._action("Rendez-vous", self._open_rdv, "", Permission.VIEW_RENDEZ_VOUS))
         m.addSeparator()
         m.addAction(self._action("&Quitter", self.close, "Alt+F4"))
@@ -294,6 +296,10 @@ class MainWindow(QMainWindow):
     def _open_clients(self) -> None:
         from garage_app.gui.planification.client_window import ClientWindow
         self._registry.open_or_activate(ClientWindow, self._ctx, self._session)
+
+    def _open_vehicules(self) -> None:
+        from garage_app.gui.planification.vehicule_list_window import VehiculeListWindow
+        self._registry.open_or_activate(VehiculeListWindow, self._ctx, self._session)
 
     def _open_rdv(self) -> None:
         from garage_app.gui.planification.rendez_vous_window import RendezVousWindow

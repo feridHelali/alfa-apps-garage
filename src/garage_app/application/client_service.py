@@ -45,3 +45,13 @@ class ClientService:
     def add_vehicule(self, session: UserSession, vehicule: Vehicule) -> None:
         with self._sf.get_session():
             self._vehicules.save(vehicule)
+
+    @require_permission(Permission.MANAGE_CLIENTS)
+    def update_vehicule(self, session: UserSession, vehicule: Vehicule) -> None:
+        with self._sf.get_session():
+            self._vehicules.save(vehicule)
+
+    @require_permission(Permission.MANAGE_CLIENTS)
+    def delete_vehicule(self, session: UserSession, vehicule_id: uuid.UUID) -> None:
+        with self._sf.get_session():
+            self._vehicules.delete(vehicule_id)

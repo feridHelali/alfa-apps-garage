@@ -102,6 +102,7 @@ class SqlAlchemyDossierRepository(DossierReparationRepository):
         )
         d.devis_id = uuid.UUID(m.devis_id) if m.devis_id else None
         d.facture_id = uuid.UUID(m.facture_id) if m.facture_id else None
+        d.created_at = m.created_at
         for l in m.lignes_diagnostic:
             ld = LigneDiagnostic(id=uuid.UUID(l.id))
             ld.code_defaut = l.code_defaut
