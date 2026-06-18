@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import base64
+from pathlib import Path
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtPrintSupport import QPrinter, QPrintDialog, QPrintPreviewDialog
@@ -7,6 +10,16 @@ from PyQt6.QtWidgets import (
     QHBoxLayout, QLabel, QMdiSubWindow, QPushButton, QTextBrowser,
     QVBoxLayout, QWidget,
 )
+
+_LOGO_PATH = Path(__file__).parents[4] / "assets" / "brand" / "alfa_computers_logo.svg"
+
+
+def _logo_uri() -> str:
+    try:
+        data = base64.b64encode(_LOGO_PATH.read_bytes()).decode()
+        return f"data:image/svg+xml;base64,{data}"
+    except Exception:
+        return ""
 
 
 _BASE_CSS = """
@@ -93,12 +106,24 @@ tr:last-child td { border-bottom: none; }
 """
 
 
-def build_html(title: str, subtitle: str, body: str) -> str:
+def build_html(title: str, subtitle: str, body: str, icon_svg_b64: str = "") -> str:
+    logo_uri = _logo_uri()
+    logo_html = (
+        f'<img src="{logo_uri}" '
+        'style="height:34px; float:right; margin-top:2px; margin-left:12px; opacity:0.92;">'
+        if logo_uri else ""
+    )
+    icon_html = (
+        f'<img src="data:image/svg+xml;base64,{icon_svg_b64}" '
+        'style="width:42px; height:42px; float:right; margin-left:8px; margin-top:2px;">'
+        if icon_svg_b64 else ""
+    )
     return f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8">
 <style>{_BASE_CSS}</style>
 </head><body>
 <div class="header">
+  {logo_html}{icon_html}
   <div class="subtitle">Alfa Computers Apps — Gestion Réparation Voiture</div>
   <h1>{title}</h1>
   <div class="subtitle">{subtitle}</div>

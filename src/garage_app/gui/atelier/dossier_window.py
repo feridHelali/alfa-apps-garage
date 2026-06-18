@@ -566,6 +566,15 @@ class DossierWindow(QMdiSubWindow):
         self._btn_advance = QPushButton("Avancer →")
         self._btn_advance.clicked.connect(self._advance_state)
         header.addWidget(self._btn_advance)
+
+        self._btn_facture = QPushButton("Générer Facture…")
+        self._btn_facture.setStyleSheet(
+            "background:#107C10; color:white; font-weight:bold; padding:4px 14px; border-radius:4px;"
+        )
+        self._btn_facture.clicked.connect(self._generate_facture)
+        self._btn_facture.setVisible(False)
+        header.addWidget(self._btn_facture)
+
         layout.addLayout(header)
 
         # Tabs
@@ -600,9 +609,9 @@ class DossierWindow(QMdiSubWindow):
             f"MO : {self._dossier.montant_main_oeuvre.format()}  |  "
             f"Pièces : {self._dossier.montant_pieces.format()}"
         )
-        # Hide advance button when no further transitions exist
         terminal = self._dossier.statut in (StatutDossier.PRET, StatutDossier.CLOTURE)
         self._btn_advance.setVisible(not terminal)
+        self._btn_facture.setVisible(self._dossier.statut == StatutDossier.PRET)
 
     def _on_tab_changed(self) -> None:
         sender = self.sender()
@@ -641,5 +650,45 @@ class DossierWindow(QMdiSubWindow):
                 )
             self._reload_all_tabs()
             self._notif.show_message("Statut mis à jour.", "success")
+        except Exception as e:
+            self._notif.show_message(str(e), "error")
+
+    def _generate_facture(self) -> None:
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Générer la facture")
+        dlg.setMinimumWidth(360)
+        form = QFormLayout(dlg)
+        info = QLabel(
+            f"<b>Total HT : {self._dossier.montant_total_ht.format()}</b><br>"
+            f"Main d'œuvre : {self._dossier.montant_main_oeuvre.format()}&nbsp;&nbsp;"
+            f"Pièces : {self._dossier.montant_pieces.format()}"
+        )
+        info.setStyleSheet("padding:6px; background:#f0f4ff; border-radius:4px;")
+        form.addRow(info)
+        tva_spin = QDoubleSpinBox()
+        tva_spin.setRange(0, 30)
+        tva_spin.setValue(19.0)
+        tva_spin.setDecimals(1)
+        tva_spin.setSuffix(" %")
+        form.addRow("Taux TVA :", tva_spin)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        btns.accepted.connect(dlg.accept)
+        btns.rejected.connect(dlg.reject)
+        form.addRow(btns)
+        if dlg.exec() != QDialog.DialogCode.Accepted:
+            return
+        try:
+            taux = Decimal(str(tva_spin.value()))
+            facture = self._ctx.facture_service.generer_facture(self._session, self._dossier.id, taux)
+            self._dossier = self._ctx.dossier_service.get_dossier(self._session, self._dossier.id)
+            self._reload_all_tabs()
+            from garage_app.gui.reports.facture_report_window import FactureReportWindow
+            from garage_app.gui.window_registry import open_sub
+            mdi = self.mdiArea()
+            if mdi:
+                open_sub(mdi, FactureReportWindow(self._ctx, self._session, facture))
+            self._notif.show_message(f"Facture N° {facture.numero} générée avec succès.", "success")
         except Exception as e:
             self._notif.show_message(str(e), "error")

@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+import base64
 import uuid
 from datetime import datetime
 
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.gui.reports.report_viewer_window import ReportViewerWindow, build_html
+
+# Car SVG illustration for the carnet de route header
+_CAR_SVG = base64.b64encode(b"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <path fill="white" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+</svg>""").decode()
 
 
 def _render(data: dict) -> str:
@@ -87,6 +93,7 @@ def _render(data: dict) -> str:
         f"Carnet de Route — {v.immatriculation}",
         f"{veh_label}  |  Propriétaire : {client_nom}  |  Généré le {datetime.now().strftime('%d/%m/%Y %H:%M')}",
         body,
+        icon_svg_b64=_CAR_SVG,
     )
 
 

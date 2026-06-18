@@ -32,6 +32,7 @@ where = ["src"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-v --tb=short"
+qt_api = "pyqt6"
 
 [tool.ruff]
 line-length = 100

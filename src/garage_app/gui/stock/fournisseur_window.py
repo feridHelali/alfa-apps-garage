@@ -120,6 +120,11 @@ class FournisseurWindow(QMdiSubWindow):
                 self._ctx.fournisseur_service.update_fournisseur(self._session, f)
             else:
                 self._ctx.fournisseur_service.create_fournisseur(self._session, f)
+            # Keep current pointing at saved record so next save updates, not creates
+            self._current = f
+            self._detail.load(f)
+            self._btn_toggle.setEnabled(True)
+            self._btn_toggle.setText("Désactiver" if f.est_actif else "Réactiver")
             self._load()
         except Exception as e:
             QMessageBox.critical(self, "Erreur", str(e))

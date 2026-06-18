@@ -191,6 +191,13 @@ class DossierService:
         return dossier
 
     @require_permission(Permission.VIEW_DOSSIERS)
+    def get_dossier(self, session: UserSession, dossier_id: uuid.UUID) -> DossierReparation:
+        d = self._repo.get_by_id(dossier_id)
+        if not d:
+            raise ValueError(f"Dossier {dossier_id} introuvable.")
+        return d
+
+    @require_permission(Permission.VIEW_DOSSIERS)
     def list_open(self, session: UserSession) -> list[DossierReparation]:
         return self._repo.find_open()
 
