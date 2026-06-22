@@ -1,15 +1,37 @@
 import sys
 
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QMessageBox
 
 from garage_app.bootstrap import bootstrap
 from garage_app.gui.app import GarageApplication
 from garage_app.gui.auth.login_window import LoginWindow
+from garage_app.gui.licence_dialog import LicenceDialog, is_activated
 from garage_app.gui.splash_screen import SplashScreen
+
+
+def _check_licence(app: QApplication) -> bool:
+    """Return True if a valid licence is present; prompt activation otherwise."""
+    if is_activated():
+        return True
+
+    dlg = LicenceDialog()
+    if dlg.exec() == LicenceDialog.DialogCode.Accepted:
+        return True
+
+    QMessageBox.critical(
+        None,
+        "Activation requise",
+        "Le logiciel n'a pas pu être activé.\n"
+        "Contactez Alfa Computers Apps pour obtenir une clé de licence.",
+    )
+    return False
 
 
 def main() -> None:
     app = GarageApplication(sys.argv)
+
+    if not _check_licence(app):
+        sys.exit(1)
 
     splash = SplashScreen()
     splash.show()

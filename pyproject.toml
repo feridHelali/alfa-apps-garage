@@ -1,6 +1,6 @@
 [project]
 name = "garage-reparation-voiture"
-version = "0.1.0"
+version = "1.0.0"
 description = "Système de gestion d'un garage de réparation automobile — Alfa Computers Apps"
 readme = "README.md"
 requires-python = ">=3.12"
