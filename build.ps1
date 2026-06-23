@@ -3,22 +3,22 @@
 # Alfa Computers Apps
 #
 # Usage:
-#   .\build.ps1                          # x64 only, version from pyproject.toml
-#   .\build.ps1 -Arch both               # x64 + x86
-#   .\build.ps1 -Arch x86 -Version 1.0.0
+#   .\build.ps1                          # x64, version from pyproject.toml
+#   .\build.ps1 -Version 1.0.0
 #   .\build.ps1 -SkipAssets              # skip SVG -> ICO/BMP step
+#
+# Note: x86 is not supported -- PyQt6 / Qt6 dropped 32-bit entirely.
 #
 # Prerequisites:
 #   - Python 3.13 x64 in PATH (or via py launcher)
-#   - Python 3.13 x86 for -Arch x86 or -Arch both  (py -3.13-32)
 #   - pyinstaller in the venv / pip install pyinstaller
 #   - Inno Setup 6  (ISCC in PATH or default install paths)
 #   - UPX optional  (speeds up EXE compression)
 # =============================================================================
 
 param(
-    [ValidateSet("x64", "x86", "both")]
-    [string]$Arch    = "both",
+    [ValidateSet("x64")]
+    [string]$Arch    = "x64",
 
     [string]$Version = "",         # default: read from pyproject.toml
 
@@ -52,21 +52,18 @@ function Find-Iscc {
     return $null
 }
 
-function Find-Python([string]$bits) {
+function Find-Python {
     # Returns [PSCustomObject]@{Exe=...; Tag=...} or $null.
     # PSCustomObject avoids PowerShell's single-element array unwrapping.
-    if ($bits -eq "64") {
-        $venvPy = Join-Path $PSScriptRoot ".venv\Scripts\python.exe"
-        if (Test-Path $venvPy) {
-            return [PSCustomObject]@{ Exe = $venvPy; Tag = $null }
-        }
+    $venvPy = Join-Path $PSScriptRoot ".venv\Scripts\python.exe"
+    if (Test-Path $venvPy) {
+        return [PSCustomObject]@{ Exe = $venvPy; Tag = $null }
     }
-    $pyTag = if ($bits -eq "32") { "-3.13-32" } else { "-3.13-64" }
     $pyCmd = Get-Command py -ErrorAction SilentlyContinue
     if ($pyCmd) {
-        & py $pyTag -c "import sys; print(sys.version)" 2>$null | Out-Null
+        & py -3.13-64 -c "import sys; print(sys.version)" 2>$null | Out-Null
         if ($LASTEXITCODE -eq 0) {
-            return [PSCustomObject]@{ Exe = "py"; Tag = $pyTag }
+            return [PSCustomObject]@{ Exe = "py"; Tag = "-3.13-64" }
         }
     }
     return $null
@@ -105,7 +102,7 @@ Write-Step "0" "Preparing assets..."
 if ($SkipAssets) {
     Write-Warn "Skipped (-SkipAssets)."
 } else {
-    $py64 = Find-Python "64"
+    $py64 = Find-Python
     if (-not $py64) {
         Write-Warn "Python x64 not found -- skipping asset + licence generation."
     } else {
@@ -129,51 +126,41 @@ if ($SkipAssets) {
 }
 
 # ---------------------------------------------------------------------------
-# Step 1: Determine architectures to build
-# ---------------------------------------------------------------------------
-$archs = if ($Arch -eq "both") { @("x64", "x86") } else { @($Arch) }
-
-# ---------------------------------------------------------------------------
-# Step 2: Clean old dist/build (if requested)
+# Step 1: Clean old dist/build (if requested)
 # ---------------------------------------------------------------------------
 if ($Clean) {
     Write-Step "1" "Cleaning dist\ and build\ ..."
-    foreach ($a in $archs) {
-        if (Test-Path "dist\$a")  { Remove-Item -Recurse -Force "dist\$a"  }
-        if (Test-Path "build\$a") { Remove-Item -Recurse -Force "build\$a" }
-    }
+    if (Test-Path "dist\x64")  { Remove-Item -Recurse -Force "dist\x64"  }
+    if (Test-Path "build\x64") { Remove-Item -Recurse -Force "build\x64" }
     Write-OK "Done."
 }
 
 # ---------------------------------------------------------------------------
-# Step 3: PyInstaller per architecture
+# Step 2: PyInstaller
 # ---------------------------------------------------------------------------
 $builtArchs = @()
 
-foreach ($a in $archs) {
+foreach ($a in @("x64")) {
     Write-Step "PyInstaller" "Building $a ..."
 
-    $bits = if ($a -eq "x64") { "64" } else { "32" }
-    $interpreter = Find-Python $bits
+    $interpreter = Find-Python
     if (-not $interpreter) {
-        Write-Warn "Python $bits-bit not found -- skipping $a build."
-        continue
+        throw "Python x64 not found -- install Python 3.13 x64 or create the .venv."
     }
 
-    # Verify the interpreter is actually the right bitness
+    # Verify the interpreter is 64-bit
     if ($interpreter.Exe -eq "py") {
         $detectedBits = ((& py $interpreter.Tag -c "import struct; print(struct.calcsize('P')*8)") -join "").Trim()
     } else {
         $detectedBits = ((& $interpreter.Exe -c "import struct; print(struct.calcsize('P')*8)") -join "").Trim()
     }
-    if ($detectedBits -ne $bits) {
-        Write-Warn "Interpreter reports ${detectedBits}-bit, expected ${bits}-bit -- skipping $a."
-        continue
+    if ($detectedBits -ne "64") {
+        throw "Interpreter reports ${detectedBits}-bit -- expected 64-bit. Check your Python installation."
     }
 
-    $distPath    = "dist\$a"
-    $distOutPath = "dist\$a\GarageReparation"
-    $buildPath   = "build\$a"
+    $distPath    = "dist\x64"
+    $distOutPath = "dist\x64\GarageReparation"
+    $buildPath   = "build\x64"
 
     # Remove previous output folder so PyInstaller never hits a locked-file error
     if (Test-Path $distOutPath) {
