@@ -53,27 +53,30 @@ function Find-Iscc {
 }
 
 function Find-Python([string]$bits) {
-    # Prefer project venv for x64 (most reliable -- matches dev environment)
+    # Returns [PSCustomObject]@{Exe=...; Tag=...} or $null.
+    # PSCustomObject avoids PowerShell's single-element array unwrapping.
     if ($bits -eq "64") {
         $venvPy = Join-Path $PSScriptRoot ".venv\Scripts\python.exe"
-        if (Test-Path $venvPy) { return @($venvPy) }
+        if (Test-Path $venvPy) {
+            return [PSCustomObject]@{ Exe = $venvPy; Tag = $null }
+        }
     }
-    # Try py launcher (works when multiple Python versions are registered)
     $pyTag = if ($bits -eq "32") { "-3.13-32" } else { "-3.13-64" }
     $pyCmd = Get-Command py -ErrorAction SilentlyContinue
     if ($pyCmd) {
         & py $pyTag -c "import sys; print(sys.version)" 2>$null | Out-Null
-        if ($LASTEXITCODE -eq 0) { return @("py", $pyTag) }
+        if ($LASTEXITCODE -eq 0) {
+            return [PSCustomObject]@{ Exe = "py"; Tag = $pyTag }
+        }
     }
     return $null
 }
 
-function Invoke-Python([string[]]$interpreter, [string[]]$scriptArgs) {
-    if ($interpreter[0] -eq "py") {
-        $allArgs = @($interpreter[1]) + $scriptArgs
-        & py @allArgs | Out-Host
+function Invoke-Python($interpreter, [string[]]$scriptArgs) {
+    if ($interpreter.Exe -eq "py") {
+        & py $interpreter.Tag @scriptArgs | Out-Host
     } else {
-        & $interpreter[0] @scriptArgs | Out-Host
+        & $interpreter.Exe @scriptArgs | Out-Host
     }
     return $LASTEXITCODE
 }
@@ -158,10 +161,10 @@ foreach ($a in $archs) {
     }
 
     # Verify the interpreter is actually the right bitness
-    if ($interpreter[0] -eq "py") {
-        $detectedBits = ((& py $interpreter[1] -c "import struct; print(struct.calcsize('P')*8)") -join "").Trim()
+    if ($interpreter.Exe -eq "py") {
+        $detectedBits = ((& py $interpreter.Tag -c "import struct; print(struct.calcsize('P')*8)") -join "").Trim()
     } else {
-        $detectedBits = ((& $interpreter[0] -c "import struct; print(struct.calcsize('P')*8)") -join "").Trim()
+        $detectedBits = ((& $interpreter.Exe -c "import struct; print(struct.calcsize('P')*8)") -join "").Trim()
     }
     if ($detectedBits -ne $bits) {
         Write-Warn "Interpreter reports ${detectedBits}-bit, expected ${bits}-bit -- skipping $a."
