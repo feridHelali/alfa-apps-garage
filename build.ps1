@@ -171,8 +171,18 @@ foreach ($a in $archs) {
         continue
     }
 
-    $distPath  = "dist\$a"
-    $buildPath = "build\$a"
+    $distPath    = "dist\$a"
+    $distOutPath = "dist\$a\GarageReparation"
+    $buildPath   = "build\$a"
+
+    # Remove previous output folder so PyInstaller never hits a locked-file error
+    if (Test-Path $distOutPath) {
+        try {
+            Remove-Item -Recurse -Force $distOutPath -ErrorAction Stop
+        } catch {
+            throw "Cannot delete $distOutPath -- close GarageReparation.exe and retry. ($($_.Exception.Message))"
+        }
+    }
 
     New-Item -ItemType Directory -Force $distPath  | Out-Null
     New-Item -ItemType Directory -Force $buildPath | Out-Null
