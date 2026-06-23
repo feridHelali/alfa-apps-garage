@@ -136,6 +136,7 @@ version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "bcrypt" },
+    { name = "pyinstaller" },
     { name = "pyqt6" },
     { name = "sqlalchemy" },
 ]
@@ -155,6 +156,7 @@ dev = [
 requires-dist = [
     { name = "bcrypt", specifier = ">=4.2.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11.0" },
+    { name = "pyinstaller", specifier = ">=6.21.0" },
     { name = "pyinstaller", marker = "extra == 'build'", specifier = ">=6.10.0" },
     { name = "pyqt6", specifier = ">=6.7.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.0" },

@@ -43,12 +43,12 @@ function Write-Fail([string]$msg) { Write-Host "  ✗ $msg" -ForegroundColor Red
 function Find-Iscc {
     $fromPath = (Get-Command iscc -ErrorAction SilentlyContinue)?.Source
     if ($fromPath) { return $fromPath }
-    @(
+    foreach ($p in @(
         "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
         "C:\Program Files\Inno Setup 6\ISCC.exe",
         "C:\Program Files (x86)\Inno Setup 6\iscc.exe",
         "C:\Program Files\Inno Setup 6\iscc.exe"
-    ) | ForEach-Object { if (Test-Path $_) { return $_ } }
+    )) { if (Test-Path $p) { return $p } }
     return $null
 }
 
@@ -166,7 +166,11 @@ foreach ($a in $archs) {
     }
 
     # Verify the interpreter is actually the right bitness
-    $detectedBits = Invoke-Python $interpreter @("-c", "import struct; print(struct.calcsize('P')*8)") 2>&1
+    if ($interpreter[0] -eq "py") {
+        $detectedBits = (& py $interpreter[1] -c "import struct; print(struct.calcsize('P')*8)" 2>&1).Trim()
+    } else {
+        $detectedBits = (& $interpreter[0] -c "import struct; print(struct.calcsize('P')*8)" 2>&1).Trim()
+    }
     if ($detectedBits -ne $bits) {
         Write-Warn "Interpreter reports ${detectedBits}-bit, expected ${bits}-bit — skipping $a."
         continue
@@ -214,11 +218,8 @@ if ($SkipInstaller) {
         foreach ($a in $builtArchs) {
             Write-Host "  Building $a installer…" -ForegroundColor White
 
-            $rc = & $iscc `
-                "installer\setup.iss" `
-                "/DAppVersion=$Version" `
-                "/DArch=$a"
-            if ($rc -ne 0) { throw "Inno Setup $a failed (exit $rc)" }
+            & $iscc "installer\setup.iss" "/DAppVersion=$Version" "/DArch=$a"
+            if ($LASTEXITCODE -ne 0) { throw "Inno Setup $a failed (exit $LASTEXITCODE)" }
 
             $outFile = "installer\Output\GarageReparationSetup_${Version}_${a}.exe"
             if (Test-Path $outFile) {
