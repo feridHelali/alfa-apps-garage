@@ -155,10 +155,8 @@ begin
 end;
 
 function HexChar(N: Byte): Char;
-const
-  HEX: String = '0123456789ABCDEF';
 begin
-  Result := HEX[N + 1];
+  Result := '0123456789ABCDEF'[N + 1];
 end;
 
 function DWordToHex8(D: LongWord): String;

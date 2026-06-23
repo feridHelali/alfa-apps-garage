@@ -53,17 +53,25 @@ function Find-Iscc {
 }
 
 function Find-Python([string]$bits) {
-    # Try py launcher first (most reliable)
+    # Prefer project venv (most reliable — matches dev environment)
+    if ($bits -eq "64") {
+        $venvPy = Join-Path $PSScriptRoot ".venv\Scripts\python.exe"
+        if (Test-Path $venvPy) { return @($venvPy) }
+    }
+    # Try py launcher (works when multiple Python versions are registered)
     $pyTag = if ($bits -eq "32") { "-3.13-32" } else { "-3.13-64" }
     $py = (Get-Command py -ErrorAction SilentlyContinue)?.Source
     if ($py) {
         $out = & py $pyTag -c "import sys; print(sys.version)" 2>&1
         if ($LASTEXITCODE -eq 0) { return @("py", $pyTag) }
     }
-    # Fallback: plain python (only valid for x64 builds)
-    if ($bits -eq "64") {
-        $python = (Get-Command python -ErrorAction SilentlyContinue)?.Source
-        if ($python) { return @($python) }
+    # Fallback for x86: registered 32-bit Python 3.13
+    if ($bits -eq "32") {
+        $py32 = (Get-Command py -ErrorAction SilentlyContinue)?.Source
+        if ($py32) {
+            $out = & py "-3.13-32" -c "import sys; print(sys.version)" 2>&1
+            if ($LASTEXITCODE -eq 0) { return @("py", "-3.13-32") }
+        }
     }
     return $null
 }
