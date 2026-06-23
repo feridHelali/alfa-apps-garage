@@ -71,9 +71,9 @@ function Find-Python([string]$bits) {
 function Invoke-Python([string[]]$interpreter, [string[]]$scriptArgs) {
     if ($interpreter[0] -eq "py") {
         $allArgs = @($interpreter[1]) + $scriptArgs
-        & py @allArgs
+        & py @allArgs | Out-Host
     } else {
-        & $interpreter[0] @scriptArgs
+        & $interpreter[0] @scriptArgs | Out-Host
     }
     return $LASTEXITCODE
 }
