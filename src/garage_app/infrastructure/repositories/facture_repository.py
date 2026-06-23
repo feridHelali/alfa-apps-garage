@@ -57,8 +57,18 @@ class SqlAlchemyFactureRepository(FactureRepository):
     def next_numero(self) -> str:
         with self._sf.get_session() as s:
             year = datetime.now(timezone.utc).year
-            count = s.query(FactureModel).count() + 1
-            return f"F{year}-{count:04d}"
+            prefix = f"F{year}-"
+            rows = s.query(FactureModel.numero).filter(
+                FactureModel.numero.like(f"{prefix}%")
+            ).all()
+            nums = []
+            for (num,) in rows:
+                try:
+                    nums.append(int(num[len(prefix):]))
+                except (ValueError, TypeError):
+                    pass
+            n = (max(nums) + 1) if nums else 1
+            return f"{prefix}{n:04d}"
 
     def save(self, f: Facture) -> None:
         with self._sf.get_session() as s:
@@ -84,6 +94,7 @@ class SqlAlchemyFactureRepository(FactureRepository):
                     dossier_id=str(f.dossier_id),
                     client_id=str(f.client_id),
                     numero=f.numero,
+                    date_emission=f.date_emission or datetime.now(timezone.utc),
                     montant_ht=float(f.montant_ht.amount),
                     taux_tva=float(f.taux_tva),
                     montant_ttc=float(f.montant_ttc.amount),

@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtGui import QPixmap, QFont
+from PyQt6.QtCore import pyqtSignal, Qt, QRectF
+from PyQt6.QtGui import QPixmap, QFont, QPainter
+from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtWidgets import (
     QDialog, QDialogButtonBox, QFormLayout, QLabel,
     QLineEdit, QMessageBox, QVBoxLayout, QWidget,
@@ -22,7 +23,7 @@ class LoginWindow(QDialog):
         super().__init__(parent)
         self._auth = auth_service
         self.setWindowTitle("Connexion — Gestion Réparation Voiture")
-        self.setFixedSize(360, 420)
+        self.setFixedSize(380, 440)
         self.setWindowFlag(Qt.WindowType.WindowContextHelpButtonHint, False)
         self._build_ui()
 
@@ -31,10 +32,18 @@ class LoginWindow(QDialog):
         layout.setSpacing(16)
         layout.setContentsMargins(32, 32, 32, 32)
 
-        # Brand logo
+        # Brand logo — render SVG at crisp 220×72 px
         logo_label = QLabel()
         if _LOGO.exists():
-            pix = QPixmap(str(_LOGO)).scaledToWidth(180, Qt.TransformationMode.SmoothTransformation)
+            renderer = QSvgRenderer(str(_LOGO))
+            logo_w, logo_h = 220, 72
+            pix = QPixmap(logo_w, logo_h)
+            pix.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(pix)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+            renderer.render(painter, QRectF(0, 0, logo_w, logo_h))
+            painter.end()
             logo_label.setPixmap(pix)
         else:
             logo_label.setText("Alfa Computers Apps")

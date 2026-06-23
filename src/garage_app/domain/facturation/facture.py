@@ -109,6 +109,7 @@ class Facture(AggregateRoot):
         if not self.lignes:
             raise ValueError("La facture doit contenir au moins une ligne.")
         self.statut = StatutFacture.EMISE
+        self.date_emission = datetime.now()
         self._raise_event(FactureEmise(facture_id=self.id, montant_ttc=self.montant_ttc.amount))
 
     def enregistrer_paiement(self, montant: Decimal, mode: str, reference: str = "") -> None:
