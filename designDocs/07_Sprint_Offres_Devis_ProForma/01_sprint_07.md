@@ -1,6 +1,22 @@
 # Sprint 07 — Offres Commerciales, Devis & Facture Proforma
 
-**Statut :** Planifié
+**Statut :** En cours (implémentation partielle — 2026-06-25)
+
+## Avancement
+
+| Livrable | Statut |
+|---|---|
+| Permissions VIEW/MANAGE/CONVERT_DEVIS, VIEW/MANAGE_PROFORMA | ✅ Terminé |
+| Domain: `Devis`, `LigneDevis`, `FactureProforma`, `LigneProforma`, events, repos ABC | ✅ Terminé |
+| Infrastructure: migrations devis table, `LigneDevisModel`, `FactureProformaModel`, `LigneProformaModel` | ✅ Terminé |
+| Repositories: `SqlAlchemyDevisRepository`, `SqlAlchemyProformaRepository` | ✅ Terminé |
+| Application: `DevisService` (CRUD + transitions + convert → proforma + convert → dossier) | ✅ Terminé |
+| Bootstrap wiring + `NumerotationService` types devis/proforma | ✅ Terminé |
+| GUI: `DevisListWindow`, `DevisFormWindow`, `ProformaViewerWindow`, `ProformaListWindow` | ✅ Terminé |
+| Menu Atelier → Devis (Ctrl+W), Facturation → Proforma | ✅ Terminé |
+| Guide ch. 8 — Devis & Proforma | ✅ Terminé |
+| Tests domaine | ❌ Non implémenté |
+| Report Designer — types devis/proforma | ❌ Différé |
 **Dépend de :** Sprint 05 (Numérotation, Report Designer), Sprint 03 (Facturation)
 
 ---

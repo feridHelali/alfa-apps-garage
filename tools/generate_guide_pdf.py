@@ -123,7 +123,8 @@ def main() -> None:
     print("  Converting to PDF via Qt…")
     from PyQt6.QtWidgets import QApplication, QTextBrowser
     from PyQt6.QtPrintSupport import QPrinter
-    from PyQt6.QtGui import QPageLayout, QPageSize, QMarginsF
+    from PyQt6.QtGui import QPageLayout, QPageSize
+    from PyQt6.QtCore import QMarginsF
 
     app = QApplication.instance() or QApplication(sys.argv)
 
