@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 170" style="font-family:'Segoe UI',Arial,sans-serif;">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6Z" fill="#555"/>
+    </marker>
+  </defs>
+  <!-- Main flow -->
+  <rect x="5" y="20" width="90" height="30" rx="4" fill="#6c757d"/>
+  <text x="50" y="39" text-anchor="middle" fill="white" font-weight="bold" font-size="10">BROUILLON</text>
+  <line x1="95" y1="35" x2="115" y2="35" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="115" y="20" width="75" height="30" rx="4" fill="#0055a5"/>
+  <text x="152" y="39" text-anchor="middle" fill="white" font-weight="bold" font-size="10">ÉMISE</text>
+  <line x1="190" y1="35" x2="210" y2="35" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="210" y="12" width="100" height="46" rx="4" fill="#ffc107"/>
+  <text x="260" y="29" text-anchor="middle" fill="#333" font-weight="bold" font-size="9">PARTIELLEMENT</text>
+  <text x="260" y="47" text-anchor="middle" fill="#333" font-weight="bold" font-size="9">PAYÉE</text>
+  <line x1="310" y1="35" x2="330" y2="35" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="330" y="20" width="75" height="30" rx="4" fill="#198754"/>
+  <text x="367" y="39" text-anchor="middle" fill="white" font-weight="bold" font-size="10">PAYÉE ✓</text>
+  <!-- Direct ÉMISE → PAYÉE shortcut (below) -->
+  <path d="M152,50 L152,75 L367,75 L367,50" stroke="#198754" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <text x="260" y="90" text-anchor="middle" fill="#198754" font-size="8.5" font-style="italic">paiement total direct</text>
+  <!-- ANNULÉE branch (below) -->
+  <path d="M152,50 L152,118" stroke="#dc3545" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <rect x="108" y="118" width="88" height="30" rx="4" fill="#dc3545"/>
+  <text x="152" y="137" text-anchor="middle" fill="white" font-weight="bold" font-size="10">ANNULÉE</text>
+  <path d="M50,50 L50,133 L108,133" stroke="#dc3545" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <text x="26" y="105" fill="#dc3545" font-size="8.5" transform="rotate(-90,26,105)">brouillon</text>
+  <!-- Legend -->
+  <text x="250" y="162" text-anchor="middle" fill="#888" font-size="8.5" font-style="italic">Cycle de vie d'une Facture Client — Alfa Computers Apps</text>
+</svg>

@@ -1,7 +1,37 @@
 # Sprint 05 — Numérotation, Factures Achat, Charges, Multi-Dossier, i18n AR/RTL & Report Designer
 
-**Statut :** Planifié
+**Statut :** Terminé (partiel)
 **Dépend de :** Sprint 03 (Facturation), Sprint 02 (Stock & Fournisseurs)
+**Terminé le :** 2026-06-24
+
+## Résumé d'implémentation
+
+### Fonctionnalités livrées
+
+| # | Feature | Statut | Fichiers clés |
+|---|---|---|---|
+| 1 | Numérotation configurable | ✅ Terminé | `application/numerotation_service.py`, `gui/admin/numerotation_window.py` |
+| 2 | Factures Fournisseurs (FactureAchat) | ✅ Terminé | `domain/stock/facture_achat.py`, `gui/stock/facture_achat_window.py` |
+| 3 | Charges du Garage | ✅ Terminé | `domain/facturation/charge_garage.py`, `gui/facturation/charge_window.py` |
+| 4 | Multi-Dossier / DossierManager | ✅ Terminé | `dossier_manager.py`, `gui/dossier_selector_dialog.py` |
+| 5 | Sidebar responsive | ✅ Terminé | `gui/main_window.py` — mode compact <1400px |
+| 6 | Arabe & RTL (i18n) | ❌ Différé Sprint 06+ | — |
+| 7 | Report Designer | ✅ Terminé | `tools/report_engine/html_template*.py`, `gui/reports/report_designer_window.py` |
+
+### Corrections post-sprint
+
+- `date_emission NOT NULL` — contrainte SQLite forcée via `server_default=func.now()`
+- `next_numero MAX()` — correction de la requête utilisant `MAX(numero_seq)` au lieu de `COUNT`
+- Login SVG logo — chargement via `resource_path()` dans `gui/auth/login_window.py`
+- `resource_path()` helper — corrige tous les `__file__.parents[N]` pour le bundle PyInstaller frozen
+- Seed trigger — `seed_runner.py` conditionnel au premier lancement uniquement
+- `_DEFAULT_COLONNES` aliasing — `__post_init__` crée des copies fraîches de `ColonneConfig`
+- `from_dict()` mutation — copie défensive `data = dict(data)` avant `pop("colonnes")`
+
+### Non livré (différé)
+
+- Arabe/RTL i18n (Feature 6) — complexité de retournement Qt layout, report Sprint 06+
+- Bilan Charges vs CA graphique — report Sprint 06 (affiché en mode tableau uniquement)
 
 ---
 

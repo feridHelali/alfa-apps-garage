@@ -24,6 +24,15 @@ _COLUMN_MIGRATIONS = [
     ("factures", "est_flotte",    "ALTER TABLE factures ADD COLUMN est_flotte INTEGER NOT NULL DEFAULT 0"),
     ("factures", "notes",         "ALTER TABLE factures ADD COLUMN notes TEXT NOT NULL DEFAULT ''"),
     ("paiements", "reference",    "ALTER TABLE paiements ADD COLUMN reference TEXT NOT NULL DEFAULT ''"),
+    # Sprint 07 — devis commerciaux enrichment
+    ("devis", "client_id",       "ALTER TABLE devis ADD COLUMN client_id TEXT NOT NULL DEFAULT ''"),
+    ("devis", "vehicule_id",     "ALTER TABLE devis ADD COLUMN vehicule_id TEXT"),
+    ("devis", "date_expiration", "ALTER TABLE devis ADD COLUMN date_expiration TEXT"),
+    ("devis", "notes_client",    "ALTER TABLE devis ADD COLUMN notes_client TEXT NOT NULL DEFAULT ''"),
+    ("devis", "notes_internes",  "ALTER TABLE devis ADD COLUMN notes_internes TEXT NOT NULL DEFAULT ''"),
+    ("devis", "proforma_id",     "ALTER TABLE devis ADD COLUMN proforma_id TEXT"),
+    ("devis", "created_by",      "ALTER TABLE devis ADD COLUMN created_by TEXT NOT NULL DEFAULT ''"),
+    ("devis", "updated_at",      "ALTER TABLE devis ADD COLUMN updated_at TEXT NOT NULL DEFAULT ''"),
 ]
 
 

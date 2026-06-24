@@ -1,7 +1,20 @@
 # Sprint 06 — Guide Utilisateur Intégré & Générateur de Documentation
 
-**Statut :** Planifié
+**Statut :** En cours
 **Dépend de :** Sprint 05 (Report Designer, base fonctionnelle complète)
+**Démarré le :** 2026-06-24
+
+## Avancement
+
+| Livrable | Statut |
+|---|---|
+| 3 diagrammes SVG (state machine, facture lifecycle, module overview) | ✅ Terminé |
+| 8 fichiers Markdown guide (`resources/guide/fr/`) | ✅ Terminé |
+| `MarkdownRenderer` stdlib pure (`tools/guide_generator/md_renderer.py`) | ✅ Terminé |
+| `GuideWindow` — MDI sub-window QListWidget + QTextBrowser + Print | ✅ Terminé |
+| Menu `&Aide → Guide utilisateur…` (F1) dans `main_window.py` | ✅ Terminé |
+| Auto-génération depuis code source (permissions, états) | ❌ Différé |
+| Export PDF autonome | ❌ Différé |
 
 ---
 

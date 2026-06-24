@@ -264,6 +264,9 @@ class MainWindow(QMainWindow):
                                   Permission.MANAGE_FACTURES))
         m.addAction(self._action("Techniciens", self._open_techniciens, "",
                                   Permission.MANAGE_DOSSIER))
+        m.addSeparator()
+        m.addAction(self._action("Devis commerciaux…", self._open_devis, "Ctrl+W",
+                                  Permission.VIEW_DEVIS))
 
         # — Stock —
         m = mb.addMenu("&Stock")
@@ -290,6 +293,9 @@ class MainWindow(QMainWindow):
         m.addSeparator()
         m.addAction(self._action("Charges du garage", self._open_charges, "",
                                   Permission.MANAGE_SETTINGS))
+        m.addSeparator()
+        m.addAction(self._action("Factures proforma…", self._open_proformas, "",
+                                  Permission.VIEW_PROFORMA))
 
         # — Rapports —
         m = mb.addMenu("&Rapports")
@@ -340,6 +346,9 @@ class MainWindow(QMainWindow):
         m.addAction(self._action("Mosaïque", self._mdi.tileSubWindows))
         m.addSeparator()
         m.addAction(self._action("Fermer tout", self._mdi.closeAllSubWindows))
+
+        m = mb.addMenu("&Aide")
+        m.addAction(self._action("Guide utilisateur…", self._open_guide, "F1"))
 
     # ── Toolbar ──────────────────────────────────────────────────────────────
 
@@ -556,6 +565,21 @@ class MainWindow(QMainWindow):
     def _open_report_designer(self) -> None:
         from garage_app.gui.reports.report_designer_window import ReportDesignerWindow
         self._registry.open_or_activate(ReportDesignerWindow, self._ctx, self._session)
+
+    def _open_devis(self) -> None:
+        from garage_app.gui.devis.devis_list_window import DevisListWindow
+        self._registry.open_or_activate(DevisListWindow, self._ctx, self._session)
+
+    def _open_proformas(self) -> None:
+        from garage_app.gui.devis.devis_list_window import DevisListWindow
+        # Open the devis list filtered to proformas — for now reuse DevisListWindow
+        # A dedicated ProformaListWindow can be built in Sprint 07b
+        from garage_app.gui.devis.proforma_list_window import ProformaListWindow
+        self._registry.open_or_activate(ProformaListWindow, self._ctx, self._session)
+
+    def _open_guide(self) -> None:
+        from garage_app.gui.help.guide_window import GuideWindow
+        self._registry.open_or_activate(GuideWindow, self._ctx, self._session)
 
     def _open_nouveau_dossier(self) -> None:
         from garage_app.dossier_manager import DossierManager

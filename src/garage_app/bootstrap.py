@@ -44,6 +44,10 @@ from garage_app.application.audit_service import AuditService
 from garage_app.application.db_management_service import DbManagementService
 from garage_app.application.rendez_vous_service import RendezVousService
 from garage_app.application.analytics_service import AnalyticsService
+from garage_app.infrastructure.repositories.devis_repository import (
+    SqlAlchemyDevisRepository, SqlAlchemyProformaRepository,
+)
+from garage_app.application.devis_service import DevisService
 
 
 @dataclass
@@ -71,6 +75,7 @@ class AppContext:
     audit_service: AuditService
     db_management_service: DbManagementService
     analytics_service: AnalyticsService
+    devis_service: DevisService
 
 
 def bootstrap(db_path: str | None = None) -> AppContext:
@@ -105,6 +110,8 @@ def bootstrap(db_path: str | None = None) -> AppContext:
     settings_repo = AppSettingsRepository(sf)
     facture_achat_repo = FactureAchatRepository(sf)
     charge_repo = ChargeGarageRepository(sf)
+    devis_repo = SqlAlchemyDevisRepository(sf)
+    proforma_repo = SqlAlchemyProformaRepository(sf)
 
     numerotation_svc = NumerotationService(sf)
 
@@ -141,4 +148,5 @@ def bootstrap(db_path: str | None = None) -> AppContext:
             commande_repo=commande_repo,
             credit_repo=credit_repo,
         ),
+        devis_service=DevisService(sf, devis_repo, proforma_repo, event_bus, numerotation_svc),
     )

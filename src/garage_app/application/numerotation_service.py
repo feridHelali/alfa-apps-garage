@@ -9,7 +9,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.infrastructure.db.models.settings_model import AppSettingsModel
 from garage_app.infrastructure.db.session import SessionFactory
 
-TYPES_DOC = ["facture", "dossier", "bon_travail", "facture_achat"]
+TYPES_DOC = ["facture", "dossier", "bon_travail", "facture_achat", "devis", "proforma"]
 
 
 @dataclass

@@ -13,6 +13,12 @@ class Permission(StrEnum):
     MANAGE_DOSSIER = auto()
     APPROVE_DEVIS = auto()
     VALIDATE_QUALITY = auto()
+    # Devis commerciaux & Proforma
+    VIEW_DEVIS = auto()
+    MANAGE_DEVIS = auto()
+    CONVERT_DEVIS = auto()
+    VIEW_PROFORMA = auto()
+    MANAGE_PROFORMA = auto()
     # Stock
     VIEW_STOCK = auto()
     MANAGE_STOCK = auto()
@@ -36,6 +42,8 @@ ROLE_PERMISSIONS: dict[str, frozenset[Permission]] = {
         Permission.VIEW_RENDEZ_VOUS, Permission.MANAGE_RENDEZ_VOUS,
         Permission.VIEW_DOSSIERS, Permission.CREATE_DOSSIER, Permission.MANAGE_DOSSIER,
         Permission.APPROVE_DEVIS, Permission.VALIDATE_QUALITY,
+        Permission.VIEW_DEVIS, Permission.MANAGE_DEVIS, Permission.CONVERT_DEVIS,
+        Permission.VIEW_PROFORMA, Permission.MANAGE_PROFORMA,
         Permission.VIEW_STOCK, Permission.MANAGE_STOCK,
         Permission.VIEW_FACTURES, Permission.MANAGE_FACTURES, Permission.RECORD_PAYMENT,
         Permission.MANAGE_CAISSE,
@@ -46,6 +54,8 @@ ROLE_PERMISSIONS: dict[str, frozenset[Permission]] = {
         Permission.VIEW_RENDEZ_VOUS,
         Permission.VIEW_DOSSIERS, Permission.MANAGE_DOSSIER,
         Permission.VALIDATE_QUALITY,
+        Permission.VIEW_DEVIS,
+        Permission.VIEW_PROFORMA,
         Permission.VIEW_STOCK,
         Permission.VIEW_FACTURES,
     }),

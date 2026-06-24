@@ -19,6 +19,9 @@ from garage_app.infrastructure.db.models.snapshot_model import SnapshotModel
 from garage_app.infrastructure.db.models.audit_log_model import AuditLogModel
 from garage_app.infrastructure.db.models.facture_achat_model import FactureAchatModel, LigneAchatModel
 from garage_app.infrastructure.db.models.charge_garage_model import ChargeGarageModel
+from garage_app.infrastructure.db.models.devis_model import (
+    LigneDevisModel, FactureProformaModel, LigneProformaModel,
+)
 
 __all__ = [
     "UserModel", "RoleModel", "SocieteModel",
@@ -30,4 +33,5 @@ __all__ = [
     "SessionCaisseModel", "MouvementCaisseModel", "CreditClientModel",
     "ReportTemplateModel", "AppSettingsModel", "SnapshotModel", "AuditLogModel",
     "FactureAchatModel", "LigneAchatModel", "ChargeGarageModel",
+    "LigneDevisModel", "FactureProformaModel", "LigneProformaModel",
 ]

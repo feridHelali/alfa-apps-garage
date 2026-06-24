@@ -1,0 +1,572 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:10pt;margin:20px 40px;color:#222;}
+h1{font-size:18pt;color:#0055a5;border-bottom:3px solid #0055a5;padding-bottom:6px;
+   margin-top:30px;page-break-before:always;}
+h1:first-of-type{page-break-before:avoid;}
+h2{font-size:13pt;color:#0055a5;border-bottom:1px solid #aac4e8;padding-bottom:3px;margin-top:20px;}
+h3{font-size:11pt;color:#333;margin-top:14px;}
+code{background:#f0f0f0;padding:1px 4px;border-radius:2px;font-family:Consolas,monospace;font-size:9pt;}
+pre{background:#f0f0f0;padding:8px;border-left:3px solid #0055a5;font-size:9pt;overflow:auto;}
+blockquote{border-left:4px solid #aaa;margin:8px 0;padding:4px 12px;background:#fafafa;color:#555;}
+table{border-collapse:collapse;width:100%;margin:8px 0;}
+th{background:#0055a5;color:white;padding:5px 8px;text-align:left;font-size:9pt;}
+td{padding:4px 8px;border-bottom:1px solid #ddd;font-size:9pt;}
+tr:nth-child(even) td{background:#f4f2ee;}
+ul,ol{margin-left:18px;line-height:1.6;}
+hr{border:none;border-top:1px solid #ccc;margin:16px 0;}
+img{max-width:100%;display:block;margin:10px auto;}
+.cover{text-align:center;padding:80px 0 40px;border-bottom:2px solid #0055a5;margin-bottom:40px;}
+.cover h1{font-size:26pt;border:none;page-break-before:avoid;}
+.cover .subtitle{font-size:14pt;color:#555;margin-top:8px;}
+.cover .brand{font-size:11pt;color:#0055a5;margin-top:30px;font-style:italic;}
+.toc{margin:20px 0;padding:16px;background:#f5f5f5;border-left:4px solid #0055a5;}
+.toc h2{border:none;margin:0 0 8px;}
+.toc ul{margin-left:16px;}
+.toc li{line-height:1.8;}
+</style>
+</head><body>
+<div class="cover">
+  <div style="font-size:13pt;color:#0055a5;font-weight:bold;">Alfa Computers Apps</div>
+  <div style="font-size:10pt;color:#888;font-style:italic;">Solutions de Gestion sur Mesure</div>
+  <h1 style="margin-top:30px;">Guide Utilisateur</h1>
+  <div class="subtitle">Gestion Réparation Voiture</div>
+  <div class="brand">Version 1.0.0 — Juin 2026</div>
+</div>
+
+<div class="toc">
+<h2>Table des matières</h2>
+<ul>
+<li>Introduction</li>
+<li>1. Réception — Clients, Véhicules et Rendez-vous</li>
+<li>2. Atelier — Dossiers de Réparation</li>
+<li>3. Stock — Pièces et Fournisseurs</li>
+<li>4. Facturation — Factures, Caisse et Créances</li>
+<li>5. Administration</li>
+<li>6. Rapports et Concepteur de Documents</li>
+<li>7. Questions Fréquentes (FAQ)</li>
+<li>8. Devis Commerciaux et Factures Proforma</li>
+</ul>
+</div>
+
+
+<h1>Guide Utilisateur — Gestion Réparation Voiture</h1>
+<p><b>Alfa Computers Apps</b> — Solutions de Gestion sur Mesure</p>
+<hr/>
+<h2>Bienvenue</h2>
+<p><b>Gestion Réparation Voiture</b> est un logiciel de gestion intégré conçu pour les garages automobiles tunisiens. Il couvre l'ensemble du cycle de vie d'une réparation, de la prise en charge du véhicule jusqu'à la facturation et l'encaissement.</p>
+<p style="text-align:center;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NjAgMjQwIiBzdHlsZT0iZm9udC1mYW1pbHk6J1NlZ29lIFVJJyxBcmlhbCxzYW5zLXNlcmlmOyI+CiAgPCEtLSBDZW50cmFsIGJyYW5kIC0tPgogIDxyZWN0IHg9IjE3MCIgeT0iNSIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIzOCIgcng9IjYiIGZpbGw9IiMwMDU1YTUiLz4KICA8dGV4dCB4PSIyODAiIHk9IjIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTEiPkdlc3Rpb24gUsOpcGFyYXRpb24gVm9pdHVyZTwvdGV4dD4KICA8dGV4dCB4PSIyODAiIHk9IjM1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuOCkiIGZvbnQtc2l6ZT0iOSI+QWxmYSBDb21wdXRlcnMgQXBwczwvdGV4dD4KICA8IS0tIENvbm5lY3RvciBsaW5lcyB0byBtb2R1bGVzIC0tPgogIDxsaW5lIHgxPSIxNzAiIHkxPSI0MyIgeDI9IjcwIiB5Mj0iODAiIHN0cm9rZT0iI2FhYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8bGluZSB4MT0iMjMwIiB5MT0iNDMiIHgyPSIxODUiIHkyPSI4MCIgc3Ryb2tlPSIjYWFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxsaW5lIHgxPSIzMzAiIHkxPSI0MyIgeDI9IjM3NSIgeTI9IjgwIiBzdHJva2U9IiNhYWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPGxpbmUgeDE9IjM5MCIgeTE9IjQzIiB4Mj0iNDkwIiB5Mj0iODAiIHN0cm9rZT0iI2FhYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8IS0tIE1vZHVsZSAxOiBSw6ljZXB0aW9uIC0tPgogIDxyZWN0IHg9IjUiIHk9IjgwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjcwIiByeD0iNSIgZmlsbD0iI0UzRjJGRCIgc3Ryb2tlPSIjMDA2N0MwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDx0ZXh0IHg9IjcwIiB5PSI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNjdDMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTAiPlLDiUNFUFRJT048L3RleHQ+CiAgPHRleHQgeD0iNzAiIHk9IjExMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSI5Ij5DbGllbnRzIMK3IFbDqWhpY3VsZXM8L3RleHQ+CiAgPHRleHQgeD0iNzAiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSI5Ij5SZW5kZXotdm91czwvdGV4dD4KICA8dGV4dCB4PSI3MCIgeT0iMTQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2IiBmb250LXNpemU9IjguNSIgZm9udC1zdHlsZT0iaXRhbGljIj5DdHJsK0sgwrcgQ3RybCtWPC90ZXh0PgogIDwhLS0gTW9kdWxlIDI6IEF0ZWxpZXIgLS0+CiAgPHJlY3QgeD0iMTQzIiB5PSI4MCIgd2lkdGg9IjEzMCIgaGVpZ2h0PSI3MCIgcng9IjUiIGZpbGw9IiNFOEY1RTkiIHN0cm9rZT0iIzEwN0MxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8dGV4dCB4PSIyMDgiIHk9Ijk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTA3QzEwIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxMCI+QVRFTElFUjwvdGV4dD4KICA8dGV4dCB4PSIyMDgiIHk9IjExMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSI5Ij5Eb3NzaWVycyByw6lwYXJhdGlvbjwvdGV4dD4KICA8dGV4dCB4PSIyMDgiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSI5Ij5Cb24gZGUgdHJhdmFpbDwvdGV4dD4KICA8dGV4dCB4PSIyMDgiIHk9IjE0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1zaXplPSI4LjUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+Q3RybCtEIMK3IEN0cmwrUjwvdGV4dD4KICA8IS0tIE1vZHVsZSAzOiBTdG9jayAtLT4KICA8cmVjdCB4PSIyODEiIHk9IjgwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjcwIiByeD0iNSIgZmlsbD0iI0ZCRTlFNyIgc3Ryb2tlPSIjRDgzQjAxIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDx0ZXh0IHg9IjM0NiIgeT0iOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNEODNCMDEiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEwIj5TVE9DSzwvdGV4dD4KICA8dGV4dCB4PSIzNDYiIHk9IjExMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSI5Ij5DYXRhbG9ndWUgcGnDqGNlczwvdGV4dD4KICA8dGV4dCB4PSIzNDYiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSI5Ij5Gb3Vybmlzc2V1cnMgwrcgQWNoYXRzPC90ZXh0PgogIDx0ZXh0IHg9IjM0NiIgeT0iMTQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2IiBmb250LXNpemU9IjguNSIgZm9udC1zdHlsZT0iaXRhbGljIj5DdHJsK1A8L3RleHQ+CiAgPCEtLSBNb2R1bGUgNDogRmFjdHVyYXRpb24gLS0+CiAgPHJlY3QgeD0iNDE5IiB5PSI4MCIgd2lkdGg9IjEzNSIgaGVpZ2h0PSI3MCIgcng9IjUiIGZpbGw9IiNFREU3RjYiIHN0cm9rZT0iIzVDMkQ5MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8dGV4dCB4PSI0ODYiIHk9Ijk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNUMyRDkxIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxMCI+RkFDVFVSQVRJT048L3RleHQ+CiAgPHRleHQgeD0iNDg2IiB5PSIxMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiIGZvbnQtc2l6ZT0iOSI+RmFjdHVyZXMgwrcgQ2Fpc3NlPC90ZXh0PgogIDx0ZXh0IHg9IjQ4NiIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzMzIiBmb250LXNpemU9IjkiPkNyw6lhbmNlcyDCtyBDaGFyZ2VzPC90ZXh0PgogIDx0ZXh0IHg9IjQ4NiIgeT0iMTQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2IiBmb250LXNpemU9IjguNSIgZm9udC1zdHlsZT0iaXRhbGljIj5DdHJsK0Y8L3RleHQ+CiAgPCEtLSBCb3R0b206IEFkbWluaXN0cmF0aW9uIC0tPgogIDxsaW5lIHgxPSIyODAiIHkxPSI0MyIgeDI9IjI4MCIgeTI9IjE2NSIgc3Ryb2tlPSIjYWFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxyZWN0IHg9IjE3MCIgeT0iMTY1IiB3aWR0aD0iMjIwIiBoZWlnaHQ9IjY1IiByeD0iNSIgZmlsbD0iI0Y1RjVGNSIgc3Ryb2tlPSIjMzIzMTMwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDx0ZXh0IHg9IjI4MCIgeT0iMTgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzIzMTMwIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxMCI+QURNSU5JU1RSQVRJT048L3RleHQ+CiAgPHRleHQgeD0iMjgwIiB5PSIxOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiIGZvbnQtc2l6ZT0iOSI+U29jacOpdMOpIMK3IFV0aWxpc2F0ZXVycyDCtyBOdW3DqXJvdGF0aW9uPC90ZXh0PgogIDx0ZXh0IHg9IjI4MCIgeT0iMjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzMzIiBmb250LXNpemU9IjkiPk11bHRpLWRvc3NpZXIgwrcgU25hcHNob3RzIMK3IEF1ZGl0PC90ZXh0PgogIDx0ZXh0IHg9IjI4MCIgeT0iMjIzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzMzIiBmb250LXNpemU9IjkiPkNvbmNlcHRldXIgZGUgZG9jdW1lbnRzIMK3IFJhcHBvcnRzPC90ZXh0Pgo8L3N2Zz4K" alt="Vue d'ensemble des modules" style="max-width:100%;"/></p>
+<hr/>
+<h2>Les modules de l'application</h2>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Module</th><th>Accès</th><th>Description</th></tr></thead><tbody><tr><td><b>Réception</b></td><td>Menu Réception</td><td>Clients, véhicules, rendez-vous</td></tr><tr><td><b>Atelier</b></td><td>Menu Atelier</td><td>Dossiers de réparation, bons de travail</td></tr><tr><td><b>Stock</b></td><td>Menu Stock</td><td>Catalogue pièces, fournisseurs, achats</td></tr><tr><td><b>Facturation</b></td><td>Menu Facturation</td><td>Factures, caisse, créances, charges</td></tr><tr><td><b>Rapports</b></td><td>Menu Rapports</td><td>Tous les rapports et analyses</td></tr><tr><td><b>Administration</b></td><td>Menu Administration</td><td>Société, utilisateurs, paramètres</td></tr></tbody></table>
+<hr/>
+<h2>Rôles et accès</h2>
+<p>L'application distingue trois profils d'utilisateurs :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Rôle</th><th>Accès</th></tr></thead><tbody><tr><td><b>Technicien</b></td><td>Dossiers, stock (lecture), bons de travail</td></tr><tr><td><b>Admin</b></td><td>Tous les modules sauf gestion DB</td></tr><tr><td><b>Superadmin</b></td><td>Accès total — gestion DB, audit, snapshots</td></tr></tbody></table>
+<blockquote>
+<p><b>Conseil</b> : Créez un compte <code>admin</code> pour chaque gérant de garage. Le <code>superadmin</code> est réservé aux interventions techniques et à la gestion des sauvegardes.</p></blockquote>
+<hr/>
+<h2>Connexion</h2>
+<p>Au démarrage, l'écran de connexion apparaît :</p>
+<ol><li>Saisissez votre <b>identifiant</b> (ex : <code>admin</code>)</li><li>Saisissez votre <b>mot de passe</b></li><li>Cliquez sur <b>Se connecter</b> ou appuyez sur <code>Entrée</code></li></ol>
+<p><b>Identifiants par défaut à la première installation :</b></p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Utilisateur</th><th>Mot de passe</th><th>Rôle</th></tr></thead><tbody><tr><td><code>admin</code></td><td><code>Admin@2025!</code></td><td>admin</td></tr><tr><td><code>superadmin</code></td><td><code>SuperAdmin@2025!</code></td><td>superadmin</td></tr></tbody></table>
+<blockquote>
+<p><b>Attention</b> : Changez les mots de passe par défaut dès la première utilisation via <b>Administration → Utilisateurs</b>.</p></blockquote>
+<hr/>
+<h2>Navigation</h2>
+<h3>La barre latérale (sidebar)</h3>
+<p>La sidebar à gauche donne accès direct aux modules principaux :</p>
+<ul><li>Cliquez sur un bouton pour ouvrir la fenêtre correspondante</li><li>Le bouton <b>◀/▶</b> en haut réduit ou agrandit la sidebar</li><li>Sur écran 15" (1366×768), le mode compact s'active automatiquement</li></ul>
+<h3>Les fenêtres MDI</h3>
+<p>L'application utilise une interface MDI (<i>Multiple Document Interface</i>) : plusieurs fenêtres peuvent être ouvertes simultanément dans l'espace de travail central.</p>
+<ul><li>Menu Fenêtres → Cascade** : réorganise les fenêtres en cascade</li><li>Menu Fenêtres → Mosaïque** : dispose les fenêtres côte à côte</li><li>Menu Fenêtres → Fermer tout** : ferme toutes les fenêtres ouvertes</li></ul>
+<h3>La barre de menus</h3>
+<p>Chaque menu regroupe les fonctions d'un module :</p>
+<ul><li>Réception** — Clients, Véhicules, Rendez-vous</li><li>Atelier** — Dossiers, Bons de travail</li><li>Stock** — Catalogue, Fournisseurs, Commandes, Achats</li><li>Facturation** — Factures, Caisse, Créances, Charges</li><li>Rapports** — Tous les rapports disponibles</li><li>Administration** — Société, Utilisateurs, Paramètres, Numérotation</li><li>Aide** — Ce guide, à propos</li></ul>
+<hr/>
+<h2>Raccourcis clavier</h2>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Raccourci</th><th>Action</th></tr></thead><tbody><tr><td><code>Ctrl+K</code></td><td>Ouvrir la liste des clients</td></tr><tr><td><code>Ctrl+V</code></td><td>Ouvrir la liste des véhicules</td></tr><tr><td><code>Ctrl+D</code></td><td>Ouvrir les dossiers de réparation</td></tr><tr><td><code>Ctrl+R</code></td><td>Bon de travail rapide</td></tr><tr><td><code>Ctrl+P</code></td><td>Catalogue pièces</td></tr><tr><td><code>Ctrl+F</code></td><td>Liste des factures</td></tr><tr><td><code>Alt+F4</code></td><td>Quitter l'application</td></tr></tbody></table>
+<hr/>
+<h2>Monnaie</h2>
+<p>L'application utilise le <b>Dinar Tunisien (DT)</b> avec 3 décimales (millimes).</p>
+<p>Format : <code>1 234,567 DT</code></p>
+<p>Les devises EUR, USD et CAD sont également supportées pour les imports.</p>
+<hr/>
+<h2>Premier démarrage — liste de contrôle</h2>
+<ul><li>[ ] Changer les mots de passe par défaut (Administration → Utilisateurs)</li><li>[ ] Saisir les informations de la société (Administration → Société)</li><li>[ ] Configurer la numérotation des documents (Administration → Numérotation)</li><li>[ ] Créer les utilisateurs du garage (techniciens, réceptionnistes)</li><li>[ ] Saisir le catalogue de pièces initial (Stock → Catalogue)</li><li>[ ] Enregistrer les fournisseurs habituels (Stock → Fournisseurs)</li></ul>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>1. Réception — Clients, Véhicules et Rendez-vous</h1>
+<hr/>
+<h2>1.1 Gestion des clients</h2>
+<h3>Accéder à la liste des clients</h3>
+<ul><li>Menu <b>Réception → Clients</b> ou <code>Ctrl+K</code></li><li>Bouton <b>Clients</b> dans la sidebar</li></ul>
+<h3>Créer un nouveau client</h3>
+<ol><li>Cliquez sur <b>+ Nouveau client</b></li><li>Remplissez les champs :</li></ol>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Champ</th><th>Obligatoire</th><th>Exemple</th></tr></thead><tbody><tr><td>Nom</td><td>Oui</td><td>Ben Salah</td></tr><tr><td>Prénom</td><td>Oui</td><td>Karim</td></tr><tr><td>Téléphone</td><td>Oui</td><td>55 123 456</td></tr><tr><td>Email</td><td>Non</td><td>karim@email.com</td></tr><tr><td>Adresse</td><td>Non</td><td>Rue de la République, Tunis</td></tr><tr><td>Notes</td><td>Non</td><td>Client fidèle depuis 2022</td></tr></tbody></table>
+<ol><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<h3>Rechercher un client</h3>
+<ul><li>Utilisez la barre de recherche en haut de la liste</li><li>La recherche s'effectue sur le nom, le prénom et le téléphone</li></ul>
+<h3>Modifier un client</h3>
+<ol><li>Double-cliquez sur le client dans la liste, ou sélectionnez-le et cliquez <b>Modifier</b></li><li>Effectuez les modifications</li><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<blockquote>
+<p><b>Conseil</b> : Un client peut avoir plusieurs véhicules. La fiche client affiche la liste de tous ses véhicules et l'historique complet des réparations.</p></blockquote>
+<hr/>
+<h2>1.2 Gestion des véhicules</h2>
+<h3>Accéder aux véhicules</h3>
+<ul><li>Menu <b>Réception → Véhicules</b> ou <code>Ctrl+V</code></li><li>Depuis la fiche client, onglet <b>Véhicules</b></li></ul>
+<h3>Enregistrer un véhicule</h3>
+<ol><li>Depuis la liste des véhicules, cliquez sur <b>+ Nouveau</b></li><li>Sélectionnez le <b>client propriétaire</b></li><li>Remplissez les informations :</li></ol>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Champ</th><th>Obligatoire</th><th>Exemple</th></tr></thead><tbody><tr><td>Immatriculation</td><td>Oui</td><td>123 TU 4567</td></tr><tr><td>Marque</td><td>Oui</td><td>Volkswagen</td></tr><tr><td>Modèle</td><td>Oui</td><td>Golf VI</td></tr><tr><td>Année</td><td>Non</td><td>2018</td></tr><tr><td>VIN</td><td>Non</td><td>WVWZZZ1KZ8W100001</td></tr><tr><td>Kilométrage actuel</td><td>Non</td><td>87 500</td></tr><tr><td>Carburant</td><td>Non</td><td>Essence</td></tr><tr><td>Couleur</td><td>Non</td><td>Gris métallisé</td></tr></tbody></table>
+<ol><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<h3>Historique d'un véhicule</h3>
+<p>La fiche véhicule affiche tous les dossiers de réparation associés, avec la date, le kilométrage et le montant de chaque intervention.</p>
+<blockquote>
+<p><b>Conseil</b> : Le <b>Carnet de Route</b> (Menu Rapports → Carnet de Route…) génère un rapport complet de l'historique d'entretien d'un véhicule — idéal à remettre au client lors de la vente du véhicule.</p></blockquote>
+<hr/>
+<h2>1.3 Rendez-vous</h2>
+<h3>Prendre un rendez-vous</h3>
+<ul><li>Menu <b>Réception → Rendez-vous</b></li></ul>
+<ol><li>Cliquez sur <b>+ Nouveau rendez-vous</b></li><li>Sélectionnez le <b>client</b> et son <b>véhicule</b></li><li>Choisissez la <b>date et l'heure</b></li><li>Saisissez le <b>motif</b> (ex : vidange + filtre)</li><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<h3>Convertir un rendez-vous en dossier</h3>
+<p>Lorsque le client se présente :</p>
+<ol><li>Ouvrez le rendez-vous</li><li>Cliquez sur <b>Créer un dossier de réparation</b></li><li>Le dossier est pré-rempli avec les informations du client, du véhicule et du motif</li></ol>
+<hr/>
+<h2>1.4 Rapport — Fiche Client</h2>
+<p>Le rapport <b>Fiche Client</b> (Menu Rapports → Fiche Client…) affiche :</p>
+<ul><li>Informations du client</li><li>Liste de ses véhicules</li><li>Historique complet des dossiers et factures</li><li>Total des montants facturés et payés</li><li>Créances éventuelles</li></ul>
+<blockquote>
+<p><b>Conseil</b> : Imprimez la Fiche Client lors du premier contact pour un suivi personnalisé.</p></blockquote>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>2. Atelier — Dossiers de Réparation</h1>
+<hr/>
+<h2>2.1 Cycle de vie d'un dossier</h2>
+<p>Un dossier de réparation suit un cycle d'états défini. Chaque étape représente l'avancement réel du travail dans le garage.</p>
+<p style="text-align:center;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODAgMTcwIiBzdHlsZT0iZm9udC1mYW1pbHk6J1NlZ29lIFVJJyxBcmlhbCxzYW5zLXNlcmlmOyI+CiAgPGRlZnM+CiAgICA8bWFya2VyIGlkPSJhcnIiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjYiIHJlZlg9IjciIHJlZlk9IjMiIG9yaWVudD0iYXV0byI+CiAgICAgIDxwYXRoIGQ9Ik0wLDAgTDgsMyBMMCw2WiIgZmlsbD0iIzU1NSIvPgogICAgPC9tYXJrZXI+CiAgICA8bWFya2VyIGlkPSJhcnJsIiBtYXJrZXJXaWR0aD0iOCIgbWFya2VySGVpZ2h0PSI2IiByZWZYPSIxIiByZWZZPSIzIiBvcmllbnQ9ImF1dG8iPgogICAgICA8cGF0aCBkPSJNOCwwIEwwLDMgTDgsNloiIGZpbGw9IiM1NTUiLz4KICAgIDwvbWFya2VyPgogIDwvZGVmcz4KICA8IS0tIFJvdyAxIC0tPgogIDxyZWN0IHg9IjUiIHk9IjIwIiB3aWR0aD0iNjUiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjMTA3QzEwIi8+CiAgPHRleHQgeD0iMzciIHk9IjM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTAiPkNSw4nDiTwvdGV4dD4KICA8bGluZSB4MT0iNzAiIHkxPSIzNSIgeDI9Ijg4IiB5Mj0iMzUiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSIxLjUiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDxyZWN0IHg9Ijg4IiB5PSIyMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIzMCIgcng9IjQiIGZpbGw9IiMwZDZlZmQiLz4KICA8dGV4dCB4PSIxMzgiIHk9IjM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTAiPkRJQUdOT1NUSUM8L3RleHQ+CiAgPGxpbmUgeDE9IjE4OCIgeTE9IjM1IiB4Mj0iMjA2IiB5Mj0iMzUiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSIxLjUiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDxyZWN0IHg9IjIwNiIgeT0iMTIiIHdpZHRoPSIxMDgiIGhlaWdodD0iNDYiIHJ4PSI0IiBmaWxsPSIjRDgzQjAxIi8+CiAgPHRleHQgeD0iMjYwIiB5PSIzMSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjkuNSI+QVRURU5URTwvdGV4dD4KICA8dGV4dCB4PSIyNjAiIHk9IjQ3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iOS41Ij5ERVZJUzwvdGV4dD4KICA8bGluZSB4MT0iMzE0IiB5MT0iMzUiIHgyPSIzMzIiIHkyPSIzNSIgc3Ryb2tlPSIjNTU1IiBzdHJva2Utd2lkdGg9IjEuNSIgbWFya2VyLWVuZD0idXJsKCNhcnIpIi8+CiAgPHJlY3QgeD0iMzMyIiB5PSIyMCIgd2lkdGg9IjkwIiBoZWlnaHQ9IjMwIiByeD0iNCIgZmlsbD0iI2ZkN2UxNCIvPgogIDx0ZXh0IHg9IjM3NyIgeT0iMzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxMCI+RU4gQ09VUlM8L3RleHQ+CiAgPCEtLSBEb3duIGNvbm5lY3RvciAtLT4KICA8cGF0aCBkPSJNNDIyLDUwIEw0MjIsMTE1IiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMS41IiBmaWxsPSJub25lIiBtYXJrZXItZW5kPSJ1cmwoI2FycikiLz4KICA8IS0tIFJvdyAyIChyaWdodOKGkmxlZnQpIC0tPgogIDxyZWN0IHg9IjMzMiIgeT0iMTE1IiB3aWR0aD0iOTAiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjMGRjYWYwIi8+CiAgPHRleHQgeD0iMzc3IiB5PSIxMzQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMwYTJhMzAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEwIj5RVUFMSVTDiTwvdGV4dD4KICA8bGluZSB4MT0iMzMyIiB5MT0iMTMwIiB4Mj0iMzA4IiB5Mj0iMTMwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMS41IiBtYXJrZXItZW5kPSJ1cmwoI2FycmwpIi8+CiAgPHJlY3QgeD0iMjA4IiB5PSIxMTUiIHdpZHRoPSI5NiIgaGVpZ2h0PSIzMCIgcng9IjQiIGZpbGw9IiMxOTg3NTQiLz4KICA8dGV4dCB4PSIyNTYiIHk9IjEzNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEwIj5QUsOKVDwvdGV4dD4KICA8bGluZSB4MT0iMjA4IiB5MT0iMTMwIiB4Mj0iMTg1IiB5Mj0iMTMwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMS41IiBtYXJrZXItZW5kPSJ1cmwoI2FycmwpIi8+CiAgPHJlY3QgeD0iODIiIHk9IjExNSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIzMCIgcng9IjQiIGZpbGw9IiMzNDNhNDAiLz4KICA8dGV4dCB4PSIxMzIiIHk9IjEzNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEwIj5DTMOUVFVSw4k8L3RleHQ+CiAgPCEtLSBMYWJlbHMgLS0+CiAgPHRleHQgeD0iMjQwIiB5PSIxNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM4ODgiIGZvbnQtc2l6ZT0iOC41IiBmb250LXN0eWxlPSJpdGFsaWMiPkN5Y2xlIGRlIHZpZSBkJ3VuIERvc3NpZXIgZGUgUsOpcGFyYXRpb24g4oCUIEFsZmEgQ29tcHV0ZXJzIEFwcHM8L3RleHQ+Cjwvc3ZnPgo=" alt="Cycle de vie d'un dossier" style="max-width:100%;"/></p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>État</th><th>Couleur</th><th>Description</th></tr></thead><tbody><tr><td><b>CRÉÉ</b></td><td>Vert</td><td>Dossier ouvert à la réception du véhicule</td></tr><tr><td><b>DIAGNOSTIC</b></td><td>Bleu</td><td>Technicien en cours de diagnostic</td></tr><tr><td><b>ATTENTE DEVIS</b></td><td>Orange</td><td>En attente d'accord du client sur le devis</td></tr><tr><td><b>EN COURS</b></td><td>Orange vif</td><td>Travaux en cours</td></tr><tr><td><b>QUALITÉ</b></td><td>Cyan</td><td>Contrôle qualité avant restitution</td></tr><tr><td><b>PRÊT</b></td><td>Vert foncé</td><td>Véhicule prêt, client prévenu</td></tr><tr><td><b>CLÔTURÉ</b></td><td>Gris</td><td>Réparation terminée et facturée</td></tr></tbody></table>
+<hr/>
+<h2>2.2 Créer un dossier de réparation</h2>
+<h3>Accéder aux dossiers</h3>
+<ul><li>Menu <b>Atelier → Dossiers de réparation</b> ou <code>Ctrl+D</code></li><li>Bouton <b>Dossiers</b> dans la sidebar</li></ul>
+<h3>Étapes de création</h3>
+<ol><li>Cliquez sur <b>+ Nouveau dossier</b></li><li>Sélectionnez le <b>client</b> (ou créez-en un nouveau via le bouton +)</li><li>Sélectionnez le <b>véhicule</b> du client</li><li>Saisissez le <b>kilométrage à l'entrée</b></li><li>Ajoutez une description des <b>plaintes du client</b> dans le champ notes</li><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<p>Le dossier est créé à l'état <b>CRÉÉ</b> et un numéro lui est attribué automatiquement (ex : <code>REP-0042</code>).</p>
+<blockquote>
+<p><b>Conseil</b> : Notez toujours le kilométrage à l'entrée — il sera affiché dans la fiche réparation et le carnet de route.</p></blockquote>
+<hr/>
+<h2>2.3 Avancement des travaux</h2>
+<h3>Passer au Diagnostic</h3>
+<ol><li>Ouvrez le dossier</li><li>Cliquez sur <b>Démarrer le diagnostic</b></li><li>Dans l'onglet <b>Diagnostic</b>, ajoutez les lignes de diagnostic :</li></ol>
+<p>   - Description du problème constaté    - Gravité : <code>BLOQUANT</code>, <code>À SURVEILLER</code>, <code>INFO</code></p>
+<h3>Passer en Attente de Devis</h3>
+<ol><li>Depuis l'état DIAGNOSTIC, cliquez sur <b>Attente devis</b></li><li>Le client est notifié pour accord</li></ol>
+<h3>Démarrer les travaux</h3>
+<ol><li>Une fois l'accord du client obtenu, cliquez sur <b>Démarrer les travaux</b></li><li>Le dossier passe à l'état <b>EN COURS</b></li><li>Dans l'onglet <b>Opérations</b>, ajoutez les travaux effectués :</li></ol>
+<p>   - Désignation de l'opération    - Durée estimée    - Montant de la main d'œuvre</p>
+<h3>Ajouter des pièces</h3>
+<p>Dans l'onglet <b>Pièces</b> :</p>
+<ol><li>Cliquez sur <b>+ Ajouter une pièce</b></li><li>Recherchez la pièce dans le catalogue</li><li>Indiquez la quantité</li><li>Le stock est automatiquement réservé</li></ol>
+<blockquote>
+<p><b>Conseil</b> : Si une pièce n'est pas en stock, vous pouvez créer une <b>commande fournisseur</b> directement depuis le dossier.</p></blockquote>
+<h3>Contrôle qualité</h3>
+<ol><li>Cliquez sur <b>Terminer les travaux</b></li><li>Le dossier passe en <b>QUALITÉ</b></li><li>Effectuez la vérification finale</li><li>Cliquez sur <b>Valider la qualité</b> → état <b>PRÊT</b></li><li>Prévenez le client que son véhicule est prêt</li></ol>
+<h3>Clôturer et facturer</h3>
+<ol><li>Depuis l'état <b>PRÊT</b>, cliquez sur <b>Générer la facture</b></li><li>Le dossier passe en <b>CLÔTURÉ</b></li><li>La facture est créée automatiquement avec toutes les opérations et pièces</li></ol>
+<hr/>
+<h2>2.4 Bon de travail rapide</h2>
+<p>Pour les interventions simples et rapides (vidange, gonflage, etc.) :</p>
+<ul><li>Menu <b>Atelier → Bon de travail rapide</b> ou <code>Ctrl+R</code></li><li>Bouton <b>Rapide</b> dans la sidebar</li></ul>
+<p>Le bon de travail rapide permet de créer et facturer une intervention en une seule étape, sans passer par les étapes du dossier complet.</p>
+<p><b>Champs :</b></p>
+<ul><li>Client et véhicule</li><li>Description de l'intervention</li><li>Pièces utilisées</li><li>Main d'œuvre</li><li>Bouton « Facturer directement »** : génère une facture immédiatement</li></ul>
+<hr/>
+<h2>2.5 Rapport — Fiche Réparation</h2>
+<p>Menu <b>Rapports → Fiche Réparation…</b></p>
+<p>Sélectionnez un dossier pour générer un rapport PDF complet :</p>
+<ul><li>Informations client et véhicule</li><li>Kilométrage entrée/sortie</li><li>Détail des diagnostics</li><li>Opérations effectuées avec technicien et durée</li><li>Pièces remplacées avec références</li><li>Montant total</li></ul>
+<blockquote>
+<p><b>Conseil</b> : Remettez la fiche réparation au client avec son véhicule — c'est un gage de professionnalisme et un document de traçabilité.</p></blockquote>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>3. Stock — Pièces et Fournisseurs</h1>
+<hr/>
+<h2>3.1 Catalogue de pièces</h2>
+<h3>Accéder au catalogue</h3>
+<ul><li>Menu <b>Stock → Catalogue de pièces</b> ou <code>Ctrl+P</code></li><li>Bouton <b>Stock</b> dans la sidebar</li></ul>
+<h3>Ajouter une pièce</h3>
+<ol><li>Cliquez sur <b>+ Nouvelle pièce</b></li><li>Remplissez la fiche :</li></ol>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Champ</th><th>Obligatoire</th><th>Exemple</th></tr></thead><tbody><tr><td>Référence</td><td>Oui</td><td>FILH-GOLF6-1.6</td></tr><tr><td>Désignation</td><td>Oui</td><td>Filtre à huile Golf VI 1.6 TDI</td></tr><tr><td>Catégorie</td><td>Non</td><td>Filtration</td></tr><tr><td>Fournisseur principal</td><td>Non</td><td>Auto Pièces Tunis</td></tr><tr><td>Prix d'achat</td><td>Oui</td><td>8,500 DT</td></tr><tr><td>Prix de vente HT</td><td>Oui</td><td>14,000 DT</td></tr><tr><td>TVA</td><td>Non</td><td>19%</td></tr><tr><td>Quantité en stock</td><td>Non</td><td>5</td></tr><tr><td>Stock minimum</td><td>Non</td><td>2</td></tr><tr><td>Emplacement</td><td>Non</td><td>Rayon A3</td></tr></tbody></table>
+<ol><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<blockquote>
+<p><b>Conseil</b> : Définissez un <b>stock minimum</b> pour chaque pièce courante. Une alerte visuelle (ligne rouge) apparaît dans la liste quand le stock tombe sous ce seuil.</p></blockquote>
+<h3>Rechercher et filtrer</h3>
+<ul><li>Barre de recherche : cherche sur référence et désignation</li><li>Filtre <b>Catégorie</b> : affiche uniquement les pièces d'une famille</li><li>Filtre <b>Stock faible</b> : affiche les pièces sous le seuil minimum</li></ul>
+<h3>Ajuster le stock manuellement</h3>
+<p>Pour corriger un inventaire :</p>
+<ol><li>Sélectionnez la pièce</li><li>Cliquez sur <b>Ajuster le stock</b></li><li>Entrez la nouvelle quantité et le motif (ex : inventaire physique)</li><li>L'ajustement est enregistré dans le journal de stock</li></ol>
+<hr/>
+<h2>3.2 Fournisseurs</h2>
+<h3>Ajouter un fournisseur</h3>
+<ul><li>Menu <b>Stock → Fournisseurs</b></li></ul>
+<ol><li>Cliquez sur <b>+ Nouveau fournisseur</b></li><li>Remplissez :</li></ol>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Champ</th><th>Exemple</th></tr></thead><tbody><tr><td>Nom</td><td>Auto Pièces Tunis</td></tr><tr><td>Contact</td><td>Mohamed Trabelsi</td></tr><tr><td>Téléphone</td><td>71 234 567</td></tr><tr><td>Email</td><td>contact@aptunis.tn</td></tr><tr><td>Adresse</td><td>Zone Industrielle, Tunis</td></tr><tr><td>Conditions de paiement</td><td>30 jours net</td></tr></tbody></table>
+<ol><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<h3>Fiche fournisseur</h3>
+<p>La fiche d'un fournisseur affiche :</p>
+<ul><li>Ses coordonnées complètes</li><li>Toutes ses commandes (historique)</li><li>Le montant total des achats</li><li>Les créances éventuelles</li></ul>
+<hr/>
+<h2>3.3 Commandes fournisseurs</h2>
+<h3>Créer une commande</h3>
+<ul><li>Menu <b>Stock → Commandes fournisseurs</b></li></ul>
+<ol><li>Cliquez sur <b>+ Nouvelle commande</b></li><li>Sélectionnez le <b>fournisseur</b></li><li>Ajoutez les lignes :</li></ol>
+<p>   - Sélectionnez la pièce dans le catalogue (ou saisissez manuellement)    - Indiquez la quantité commandée    - Saisissez le prix unitaire négocié</p>
+<ol><li>Cliquez sur <b>Confirmer la commande</b></li></ol>
+<h3>Réceptionner une commande</h3>
+<p>Lorsque les pièces arrivent :</p>
+<ol><li>Ouvrez la commande</li><li>Cliquez sur <b>Réceptionner</b></li><li>Vérifiez les quantités reçues (modifiables en cas de livraison partielle)</li><li>Cliquez sur <b>Valider la réception</b></li></ol>
+<p>Le stock est automatiquement mis à jour avec les quantités réceptionnées.</p>
+<hr/>
+<h2>3.4 Factures d'achat</h2>
+<p>Menu <b>Stock → Factures d'achat</b></p>
+<p>Les factures d'achat enregistrent les achats de pièces et consommables auprès des fournisseurs.</p>
+<h3>Créer une facture d'achat</h3>
+<ol><li>Cliquez sur <b>+ Nouvelle facture d'achat</b></li><li>Sélectionnez le <b>fournisseur</b> et la <b>date</b></li><li>Saisissez le <b>numéro de facture fournisseur</b></li><li>Ajoutez les lignes d'achat</li><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<blockquote>
+<p><b>Conseil</b> : Associez toujours une facture d'achat à la commande correspondante pour un suivi complet (commande → réception → facture).</p></blockquote>
+<hr/>
+<h2>3.5 Rapport — État du stock</h2>
+<p>Menu <b>Rapports → État du stock</b></p>
+<p>Génère un rapport complet :</p>
+<ul><li>Liste de toutes les pièces avec quantité actuelle</li><li>Valeur totale du stock (au prix d'achat)</li><li>Pièces sous le seuil minimum (alerte rouge)</li><li>Pièces en rupture de stock</li></ul>
+<blockquote>
+<p><b>Conseil</b> : Éditez ce rapport lors de chaque inventaire mensuel. Le rapport peut être imprimé ou exporté.</p></blockquote>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>4. Facturation — Factures, Caisse et Créances</h1>
+<hr/>
+<h2>4.1 Cycle de vie d'une facture</h2>
+<p style="text-align:center;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MDAgMTcwIiBzdHlsZT0iZm9udC1mYW1pbHk6J1NlZ29lIFVJJyxBcmlhbCxzYW5zLXNlcmlmOyI+CiAgPGRlZnM+CiAgICA8bWFya2VyIGlkPSJhcnIiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjYiIHJlZlg9IjciIHJlZlk9IjMiIG9yaWVudD0iYXV0byI+CiAgICAgIDxwYXRoIGQ9Ik0wLDAgTDgsMyBMMCw2WiIgZmlsbD0iIzU1NSIvPgogICAgPC9tYXJrZXI+CiAgPC9kZWZzPgogIDwhLS0gTWFpbiBmbG93IC0tPgogIDxyZWN0IHg9IjUiIHk9IjIwIiB3aWR0aD0iOTAiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjNmM3NTdkIi8+CiAgPHRleHQgeD0iNTAiIHk9IjM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTAiPkJST1VJTExPTjwvdGV4dD4KICA8bGluZSB4MT0iOTUiIHkxPSIzNSIgeDI9IjExNSIgeTI9IjM1IiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMS41IiBtYXJrZXItZW5kPSJ1cmwoI2FycikiLz4KICA8cmVjdCB4PSIxMTUiIHk9IjIwIiB3aWR0aD0iNzUiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjMDA1NWE1Ii8+CiAgPHRleHQgeD0iMTUyIiB5PSIzOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEwIj7DiU1JU0U8L3RleHQ+CiAgPGxpbmUgeDE9IjE5MCIgeTE9IjM1IiB4Mj0iMjEwIiB5Mj0iMzUiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSIxLjUiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDxyZWN0IHg9IjIxMCIgeT0iMTIiIHdpZHRoPSIxMDAiIGhlaWdodD0iNDYiIHJ4PSI0IiBmaWxsPSIjZmZjMTA3Ii8+CiAgPHRleHQgeD0iMjYwIiB5PSIyOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iOSI+UEFSVElFTExFTUVOVDwvdGV4dD4KICA8dGV4dCB4PSIyNjAiIHk9IjQ3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzMzIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSI5Ij5QQVnDiUU8L3RleHQ+CiAgPGxpbmUgeDE9IjMxMCIgeTE9IjM1IiB4Mj0iMzMwIiB5Mj0iMzUiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSIxLjUiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDxyZWN0IHg9IjMzMCIgeT0iMjAiIHdpZHRoPSI3NSIgaGVpZ2h0PSIzMCIgcng9IjQiIGZpbGw9IiMxOTg3NTQiLz4KICA8dGV4dCB4PSIzNjciIHk9IjM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTAiPlBBWcOJRSDinJM8L3RleHQ+CiAgPCEtLSBEaXJlY3Qgw4lNSVNFIOKGkiBQQVnDiUUgc2hvcnRjdXQgKGJlbG93KSAtLT4KICA8cGF0aCBkPSJNMTUyLDUwIEwxNTIsNzUgTDM2Nyw3NSBMMzY3LDUwIiBzdHJva2U9IiMxOTg3NTQiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIiBzdHJva2UtZGFzaGFycmF5PSI0LDMiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDx0ZXh0IHg9IjI2MCIgeT0iOTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxOTg3NTQiIGZvbnQtc2l6ZT0iOC41IiBmb250LXN0eWxlPSJpdGFsaWMiPnBhaWVtZW50IHRvdGFsIGRpcmVjdDwvdGV4dD4KICA8IS0tIEFOTlVMw4lFIGJyYW5jaCAoYmVsb3cpIC0tPgogIDxwYXRoIGQ9Ik0xNTIsNTAgTDE1MiwxMTgiIHN0cm9rZT0iI2RjMzU0NSIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDxyZWN0IHg9IjEwOCIgeT0iMTE4IiB3aWR0aD0iODgiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjZGMzNTQ1Ii8+CiAgPHRleHQgeD0iMTUyIiB5PSIxMzciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxMCI+QU5OVUzDiUU8L3RleHQ+CiAgPHBhdGggZD0iTTUwLDUwIEw1MCwxMzMgTDEwOCwxMzMiIHN0cm9rZT0iI2RjMzU0NSIgc3Ryb2tlLXdpZHRoPSIxLjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjQsMyIgbWFya2VyLWVuZD0idXJsKCNhcnIpIi8+CiAgPHRleHQgeD0iMjYiIHk9IjEwNSIgZmlsbD0iI2RjMzU0NSIgZm9udC1zaXplPSI4LjUiIHRyYW5zZm9ybT0icm90YXRlKC05MCwyNiwxMDUpIj5icm91aWxsb248L3RleHQ+CiAgPCEtLSBMZWdlbmQgLS0+CiAgPHRleHQgeD0iMjUwIiB5PSIxNjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM4ODgiIGZvbnQtc2l6ZT0iOC41IiBmb250LXN0eWxlPSJpdGFsaWMiPkN5Y2xlIGRlIHZpZSBkJ3VuZSBGYWN0dXJlIENsaWVudCDigJQgQWxmYSBDb21wdXRlcnMgQXBwczwvdGV4dD4KPC9zdmc+Cg==" alt="Cycle de vie d'une facture" style="max-width:100%;"/></p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>État</th><th>Description</th></tr></thead><tbody><tr><td><b>BROUILLON</b></td><td>Facture en cours de saisie, modifiable</td></tr><tr><td><b>ÉMISE</b></td><td>Facture finalisée, remise au client</td></tr><tr><td><b>PART. PAYÉE</b></td><td>Acompte reçu, solde restant</td></tr><tr><td><b>PAYÉE</b></td><td>Facture intégralement encaissée</td></tr><tr><td><b>ANNULÉE</b></td><td>Facture annulée (ne peut pas être modifiée)</td></tr></tbody></table>
+<hr/>
+<h2>4.2 Créer une facture</h2>
+<h3>Accéder aux factures</h3>
+<ul><li>Menu <b>Facturation → Factures</b> ou <code>Ctrl+F</code></li><li>Bouton <b>Facturation</b> dans la sidebar</li></ul>
+<h3>Création automatique depuis un dossier</h3>
+<p>Lorsqu'un dossier de réparation est clôturé, une facture est générée automatiquement avec :</p>
+<ul><li>Toutes les opérations de main d'œuvre</li><li>Toutes les pièces remplacées</li><li>La numérotation automatique configurée</li></ul>
+<h3>Création manuelle</h3>
+<ol><li>Cliquez sur <b>+ Nouvelle facture</b></li><li>Sélectionnez le <b>client</b></li><li>Ajoutez les lignes de facturation :</li></ol>
+<p>   - <b>Type</b> : Service, Pièce, ou Forfait    - <b>Désignation</b> du prestation    - <b>Quantité</b> et <b>Prix unitaire HT</b>    - <b>TVA</b> applicable</p>
+<ol><li>Vérifiez les totaux (HT, TVA, TTC)</li><li>Cliquez sur <b>Émettre la facture</b> pour la finaliser</li></ol>
+<blockquote>
+<p><b>Attention</b> : Une facture émise ne peut plus être modifiée. Vérifiez bien avant d'émettre.</p></blockquote>
+<hr/>
+<h2>4.3 Imprimer une facture</h2>
+<ol><li>Ouvrez la facture</li><li>Cliquez sur <b>Imprimer / Aperçu</b></li><li>La facture s'affiche en aperçu HTML fidèle au modèle configuré</li><li>Utilisez <b>Ctrl+P</b> dans l'aperçu pour imprimer</li></ol>
+<blockquote>
+<p><b>Conseil</b> : Le modèle de facture est personnalisable via <b>Rapports → Concepteur de documents</b>. Ajustez les couleurs, le logo, les colonnes et les mentions légales selon vos préférences.</p></blockquote>
+<hr/>
+<h2>4.4 Encaisser un paiement</h2>
+<h3>Depuis la facture</h3>
+<ol><li>Ouvrez la facture émise</li><li>Cliquez sur <b>Enregistrer un paiement</b></li><li>Saisissez :</li></ol>
+<p>   - <b>Montant</b> encaissé    - <b>Mode de paiement</b> : Espèces, Chèque, Virement, Carte    - <b>Date</b> du paiement    - <b>Référence</b> (numéro de chèque, etc.)</p>
+<ol><li>Cliquez sur <b>Valider</b></li></ol>
+<p>Si le montant est inférieur au total, la facture passe en <b>PART. PAYÉE</b>. Si le montant couvre le total, la facture passe en <b>PAYÉE</b>.</p>
+<h3>Session de caisse</h3>
+<p>Menu <b>Facturation → Caisse</b></p>
+<p>La session de caisse enregistre tous les mouvements d'espèces :</p>
+<ol><li>Cliquez sur <b>Ouvrir la caisse</b> (entrez le fond de caisse)</li><li>Enregistrez les encaissements et décaissements au fil de la journée</li><li>En fin de journée, cliquez sur <b>Clôturer la caisse</b></li><li>Saisissez le montant comptabilisé</li><li>L'écart est calculé automatiquement</li></ol>
+<hr/>
+<h2>4.5 Créances clients</h2>
+<p>Menu <b>Facturation → Créances clients</b></p>
+<p>La liste des créances affiche toutes les factures non intégralement payées :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Colonne</th><th>Description</th></tr></thead><tbody><tr><td>Client</td><td>Nom du client débiteur</td></tr><tr><td>N° Facture</td><td>Référence de la facture</td></tr><tr><td>Date</td><td>Date d'émission</td></tr><tr><td>Montant TTC</td><td>Montant total de la facture</td></tr><tr><td>Payé</td><td>Total des paiements reçus</td></tr><tr><td>Reste</td><td>Solde dû</td></tr><tr><td>Jours</td><td>Ancienneté de la créance</td></tr></tbody></table>
+<blockquote>
+<p><b>Conseil</b> : Les créances de plus de 30 jours sont mises en évidence en orange, et celles de plus de 60 jours en rouge. Relancez régulièrement les clients en retard.</p></blockquote>
+<hr/>
+<h2>4.6 Charges du garage</h2>
+<p>Menu <b>Facturation → Charges</b></p>
+<p>Enregistrez les charges opérationnelles du garage (loyer, électricité, salaires, etc.) :</p>
+<ol><li>Cliquez sur <b>+ Nouvelle charge</b></li><li>Saisissez :</li></ol>
+<p>   - <b>Catégorie</b> : Loyer, Électricité, Salaires, Assurance, Autres    - <b>Désignation</b> détaillée    - <b>Montant</b>    - <b>Date</b></p>
+<ol><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<hr/>
+<h2>4.7 Rapports Facturation</h2>
+<h3>Rapport de ventes</h3>
+<p>Menu <b>Rapports → Rapport de ventes…</b></p>
+<ul><li>Chiffre d'affaires par période (jour, semaine, mois, année)</li><li>Répartition par type de prestation</li><li>Top clients</li></ul>
+<h3>Bilan Charges vs CA</h3>
+<p>Menu <b>Rapports → Bilan mensuel…</b></p>
+<ul><li>Chiffre d'affaires du mois</li><li>Total des charges du mois</li><li>Résultat net estimé</li></ul>
+<h3>Export</h3>
+<p>Tous les rapports de facturation peuvent être :</p>
+<ul><li>Imprimés** directement</li><li>Exportés** en HTML pour archivage</li></ul>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>5. Administration</h1>
+<hr/>
+<h2>5.1 Informations de la société</h2>
+<p>Menu <b>Administration → Société</b></p>
+<p>Configurez les informations qui apparaissent sur tous vos documents (factures, bons de travail, fiches réparation) :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Champ</th><th>Exemple</th></tr></thead><tbody><tr><td>Raison sociale</td><td>Garage Ben Salah</td></tr><tr><td>Forme juridique</td><td>SARL</td></tr><tr><td>Capital</td><td>20 000,000 DT</td></tr><tr><td>Matricule fiscal</td><td>1234567/A/M/000</td></tr><tr><td>Adresse</td><td>12 Rue Ibn Khaldoun, Tunis 1001</td></tr><tr><td>Téléphone</td><td>71 123 456</td></tr><tr><td>Email</td><td>contact@garage-bensalah.tn</td></tr><tr><td>Site web</td><td>www.garage-bensalah.tn</td></tr><tr><td>RIB / IBAN</td><td>TN59 1234 5678 9012 3456 7890</td></tr><tr><td>Banque</td><td>STB — Agence Bab Bhar</td></tr><tr><td>Mentions légales</td><td>Toute facture non réglée...</td></tr></tbody></table>
+<blockquote>
+<p><b>Important</b> : Le <b>matricule fiscal</b> est obligatoire sur les factures en Tunisie. Assurez-vous de le saisir correctement.</p></blockquote>
+<hr/>
+<h2>5.2 Gestion des utilisateurs</h2>
+<p>Menu <b>Administration → Utilisateurs</b> (admin uniquement)</p>
+<h3>Créer un utilisateur</h3>
+<ol><li>Cliquez sur <b>+ Nouvel utilisateur</b></li><li>Remplissez :</li></ol>
+<p>   - <b>Nom d'utilisateur</b> (identifiant de connexion)    - <b>Nom complet</b> et <b>Prénom</b>    - <b>Mot de passe</b> (minimum 8 caractères, 1 majuscule, 1 chiffre)    - <b>Rôle</b> : Technicien, Admin, ou Superadmin</p>
+<ol><li>Cliquez sur <b>Créer</b></li></ol>
+<h3>Rôles et permissions</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Rôle</th><th>Modules accessibles</th></tr></thead><tbody><tr><td><b>Technicien</b></td><td>Réception (lecture), Atelier, Stock (lecture), Rapports dossiers</td></tr><tr><td><b>Admin</b></td><td>Tous les modules — Facturation, Utilisateurs, Société, Numérotation</td></tr><tr><td><b>Superadmin</b></td><td>Admin + Gestion DB, Journal d'audit, Snapshots</td></tr></tbody></table>
+<h3>Désactiver un utilisateur</h3>
+<p>Sélectionnez l'utilisateur et cliquez sur <b>Désactiver</b>. Un utilisateur désactivé ne peut plus se connecter, mais son historique est conservé.</p>
+<blockquote>
+<p><b>Conseil</b> : Ne supprimez jamais un utilisateur (cela pourrait rompre l'historique des dossiers). Désactivez-le simplement quand il quitte le garage.</p></blockquote>
+<hr/>
+<h2>5.3 Numérotation des documents</h2>
+<p>Menu <b>Administration → Numérotation</b></p>
+<p>Configurez le format des numéros pour chaque type de document :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Document</th><th>Format par défaut</th><th>Exemple</th></tr></thead><tbody><tr><td>Dossier réparation</td><td><code>REP-{YYYY}-{NNN}</code></td><td>REP-2026-042</td></tr><tr><td>Facture client</td><td><code>FAC-{YYYY}-{NNN}</code></td><td>FAC-2026-128</td></tr><tr><td>Facture d'achat</td><td><code>ACH-{YYYY}-{NNN}</code></td><td>ACH-2026-015</td></tr><tr><td>Bon de travail</td><td><code>BT-{YYYY}-{NNN}</code></td><td>BT-2026-003</td></tr></tbody></table>
+<p><b>Champs de format :</b></p>
+<ul><li><code>{YYYY}</code> : Année sur 4 chiffres</li><li><code>{YY}</code> : Année sur 2 chiffres</li><li><code>{MM}</code> : Mois</li><li><code>{NNN}</code> : Séquence numérique (nombre de zéros = largeur)</li></ul>
+<blockquote>
+<p><b>Important</b> : Ne modifiez pas la numérotation en cours d'exercice pour éviter les doublons.</p></blockquote>
+<hr/>
+<h2>5.4 Gestion des sauvegardes</h2>
+<p>Menu <b>Administration → Gestion de la base de données</b> (superadmin uniquement)</p>
+<h3>Créer un snapshot</h3>
+<ol><li>Cliquez sur <b>Créer un snapshot</b></li><li>Saisissez un <b>commentaire</b> descriptif (ex : "Avant migration v2.0")</li><li>Cliquez sur <b>Créer</b></li></ol>
+<p>Le snapshot est enregistré dans <code>~/.garage_reparation/snapshots/</code> avec un horodatage.</p>
+<h3>Restaurer un snapshot</h3>
+<blockquote>
+<p><b>Attention</b> : La restauration écrase toutes les données actuelles.</p></blockquote>
+<ol><li>Sélectionnez le snapshot dans la liste</li><li>Cliquez sur <b>Restaurer</b></li><li>Confirmez l'action dans la boîte de dialogue</li></ol>
+<h3>Maintenance de la base</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Action</th><th>Description</th></tr></thead><tbody><tr><td><b>VACUUM</b></td><td>Compacte la base (libère l'espace disque)</td></tr><tr><td><b>WAL Checkpoint</b></td><td>Force l'écriture du journal WAL</td></tr><tr><td><b>Vérification intégrité</b></td><td>Contrôle la cohérence de la base</td></tr></tbody></table>
+<blockquote>
+<p><b>Conseil</b> : Exécutez VACUUM une fois par mois et créez toujours un snapshot avant toute intervention technique importante.</p></blockquote>
+<hr/>
+<h2>5.5 Journal d'audit</h2>
+<p>Menu <b>Administration → Journal d'audit</b> (superadmin uniquement)</p>
+<p>Le journal d'audit enregistre <b>toutes les actions critiques</b> effectuées dans l'application :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Colonne</th><th>Description</th></tr></thead><tbody><tr><td>Date/Heure</td><td>Horodatage précis de l'action</td></tr><tr><td>Utilisateur</td><td>Qui a fait l'action</td></tr><tr><td>Catégorie</td><td>AUTH, DOSSIER, FACTURE, STOCK, DB, USER…</td></tr><tr><td>Niveau</td><td>INFO, WARNING, ERROR</td></tr><tr><td>Description</td><td>Détail de l'action</td></tr></tbody></table>
+<h3>Filtrer le journal</h3>
+<ul><li>Par <b>période</b> (de → à)</li><li>Par <b>catégorie</b></li><li>Par <b>utilisateur</b></li><li>Par <b>niveau</b> (erreurs uniquement, etc.)</li></ul>
+<blockquote>
+<p><b>Note légale</b> : Le journal d'audit est en lecture seule — il ne peut pas être modifié ni supprimé par aucun utilisateur.</p></blockquote>
+<hr/>
+<h2>5.6 Paramètres</h2>
+<p>Menu <b>Administration → Paramètres</b></p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Paramètre</th><th>Description</th></tr></thead><tbody><tr><td>Thème</td><td>Clair (défaut) — sombre (à venir)</td></tr><tr><td>Langue</td><td>Français (défaut) — Arabe (à venir)</td></tr><tr><td>Devise par défaut</td><td>TND (défaut), EUR, USD, CAD</td></tr><tr><td>Taux TVA standard</td><td>19% (Tunisie)</td></tr><tr><td>Imprimante par défaut</td><td>Sélectionner l'imprimante locale</td></tr></tbody></table>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>6. Rapports et Concepteur de Documents</h1>
+<hr/>
+<h2>6.1 Rapports disponibles</h2>
+<p>Tous les rapports sont accessibles via le menu <b>Rapports</b>.</p>
+<h3>Rapports Réception</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Rapport</th><th>Accès</th><th>Description</th></tr></thead><tbody><tr><td><b>Fiche Client</b></td><td>Rapports → Fiche Client…</td><td>Profil complet + historique du client</td></tr><tr><td><b>Carnet de Route</b></td><td>Rapports → Carnet de Route…</td><td>Historique d'entretien d'un véhicule</td></tr></tbody></table>
+<h3>Rapports Atelier</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Rapport</th><th>Accès</th><th>Description</th></tr></thead><tbody><tr><td><b>Fiche Réparation</b></td><td>Rapports → Fiche Réparation…</td><td>Rapport détaillé d'un dossier</td></tr><tr><td><b>Bon de Travail</b></td><td>Depuis le dossier</td><td>Document remis au technicien</td></tr><tr><td><b>Dossiers en cours</b></td><td>Rapports → Dossiers en cours</td><td>Tableau de bord des dossiers actifs</td></tr></tbody></table>
+<h3>Rapports Stock</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Rapport</th><th>Accès</th><th>Description</th></tr></thead><tbody><tr><td><b>État du Stock</b></td><td>Rapports → État du Stock</td><td>Inventaire complet avec alertes</td></tr><tr><td><b>Mouvements de Stock</b></td><td>Rapports → Mouvements…</td><td>Entrées/sorties par période</td></tr></tbody></table>
+<h3>Rapports Facturation</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Rapport</th><th>Accès</th><th>Description</th></tr></thead><tbody><tr><td><b>Facture Client</b></td><td>Depuis la facture</td><td>Document de facturation officiel</td></tr><tr><td><b>Rapport de Ventes</b></td><td>Rapports → Ventes…</td><td>CA par période et par type</td></tr><tr><td><b>Créances</b></td><td>Rapports → Créances</td><td>Liste des impayés</td></tr><tr><td><b>Bilan Mensuel</b></td><td>Rapports → Bilan…</td><td>CA vs Charges = Résultat net</td></tr></tbody></table>
+<hr/>
+<h2>6.2 Imprimer un rapport</h2>
+<p>Pour tout rapport :</p>
+<ol><li>Ouvrez la fenêtre du rapport (aperçu HTML)</li><li>Vérifiez le contenu</li><li>Cliquez sur <b>Imprimer</b> dans la barre d'outils du rapport</li><li>La boîte de dialogue d'impression système s'ouvre</li><li>Choisissez l'imprimante et les options</li><li>Validez</li></ol>
+<blockquote>
+<p><b>Conseil</b> : Pour créer un PDF, choisissez <b>Microsoft Print to PDF</b> ou <b>PDF Creator</b> comme imprimante.</p></blockquote>
+<hr/>
+<h2>6.3 Concepteur de Documents</h2>
+<p>Menu <b>Rapports → Concepteur de documents…</b> (admin uniquement)</p>
+<p>Le Concepteur de Documents vous permet de personnaliser l'apparence de tous vos documents imprimables sans aucune compétence en programmation.</p>
+<h3>Interface du Concepteur</h3>
+<p>Le Concepteur est divisé en <b>3 panneaux</b> :</p>
+<pre><code class="language-">┌─────────────────┬──────────────────────────┬─────────────────────┐
+│  Liste modèles  │     Éditeur (4 onglets)  │  Aperçu en direct  │
+│                 │  ┌─────┬──────┬────┬───┐ │                     │
+│  [+] Nouveau    │  │Entê.│Colon.│Tot.│Pie│ │  [rendu HTML]       │
+│  Facture client │  └─────┴──────┴────┴───┘ │                     │
+│  Fiche répar.   │                           │  Rafraîchi 500ms    │
+│  Bon de travail │                           │  après chaque       │
+│  Facture achat  │                           │  modification       │
+└─────────────────┴──────────────────────────┴─────────────────────┘</code></pre>
+<h3>Onglet En-tête</h3>
+<p>Personnalisez la partie haute du document :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Option</th><th>Description</th></tr></thead><tbody><tr><td><b>Couleur principale</b></td><td>Couleur de fond de l'en-tête (bandeau)</td></tr><tr><td><b>Afficher le logo</b></td><td>Active/désactive le logo Alfa Computers</td></tr><tr><td><b>Afficher le nom</b></td><td>Affiche la raison sociale</td></tr><tr><td><b>Afficher le slogan</b></td><td>Affiche "Solutions de Gestion sur Mesure"</td></tr></tbody></table>
+<blockquote>
+<p><b>Conseil</b> : Choisissez une couleur cohérente avec l'identité visuelle de votre garage (ex : bleu <code>#0055a5</code> pour un garage Renault, rouge pour Toyota...).</p></blockquote>
+<h3>Onglet Colonnes</h3>
+<p>Gérez les colonnes affichées dans le tableau de lignes :</p>
+<ul><li>Cocher/décocher** : affiche ou masque une colonne</li><li>Titre** : renommez l'en-tête de colonne (ex : "Désignation" → "Description de la pièce")</li><li>Largeur** : ajustez la largeur relative (en %)</li><li>Alignement** : Gauche, Centre, ou Droite</li></ul>
+<h3>Onglet Totaux</h3>
+<p>Activez ou désactivez les lignes de totaux en bas du tableau :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Option</th><th>Description</th></tr></thead><tbody><tr><td><b>Afficher HT</b></td><td>Total Hors Taxes</td></tr><tr><td><b>Afficher TVA</b></td><td>Montant de la TVA</td></tr><tr><td><b>Afficher TTC</b></td><td>Total Toutes Taxes Comprises</td></tr><tr><td><b>Afficher Payé</b></td><td>Montant déjà payé</td></tr><tr><td><b>Afficher Reste</b></td><td>Solde restant à payer</td></tr></tbody></table>
+<h3>Onglet Pied de page</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Option</th><th>Description</th></tr></thead><tbody><tr><td><b>Texte légal</b></td><td>Mentions légales (ex : matricule fiscal, conditions)</td></tr><tr><td><b>Numéro de page</b></td><td>Affiche "Page X / Y" en bas</td></tr><tr><td><b>CSS personnalisé</b></td><td>Pour les utilisateurs avancés — styles CSS additionnels</td></tr></tbody></table>
+<h3>Créer un nouveau modèle</h3>
+<ol><li>Cliquez sur <b>+ Nouveau modèle</b></li><li>Sélectionnez le <b>type de document</b> (Facture, Fiche réparation, etc.)</li><li>Donnez-lui un <b>nom</b> (ex : "Facture Pro Bleu")</li><li>Personnalisez les 4 onglets</li><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<p>Pour définir ce modèle comme modèle <b>par défaut</b> pour ce type de document, cochez <b>Modèle par défaut</b>.</p>
+<h3>Dupliquer un modèle</h3>
+<p>Sélectionnez un modèle existant et cliquez sur <b>Dupliquer</b> pour créer une variation rapidement.</p>
+<hr/>
+<h2>6.4 Formats et compatibilité</h2>
+<p>Les rapports sont générés en <b>HTML</b> avec des styles inline, compatibles avec :</p>
+<ul><li>Impression directe** via Qt (sans navigateur)</li><li>Microsoft Print to PDF** (Windows)</li><li>Imprimantes A4** standard</li></ul>
+<blockquote>
+<p><b>Format recommandé</b> : A4, orientation Portrait pour les factures et fiches réparation. Paysage pour les rapports multi-colonnes (état du stock, rapport de ventes).</p></blockquote>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>7. Questions Fréquentes (FAQ)</h1>
+<hr/>
+<h2>Connexion et accès</h2>
+<p><b>Q : J'ai oublié mon mot de passe. Comment le réinitialiser ?</b></p>
+<p>Contactez votre administrateur (compte <code>admin</code>). L'administrateur peut modifier les mots de passe via <b>Administration → Utilisateurs → Modifier l'utilisateur</b>.</p>
+<p>Si l'administrateur a également perdu son accès, contactez le support Alfa Computers Apps à l'adresse indiquée dans le contrat de licence.</p>
+<hr/>
+<p><b>Q : L'application affiche "Accès refusé" quand j'essaie d'ouvrir un module.</b></p>
+<p>Votre rôle ne vous donne pas accès à ce module. Demandez à votre administrateur d'élever vos permissions ou d'attribuer le rôle approprié à votre compte.</p>
+<hr/>
+<p><b>Q : Comment se déconnecter ?</b></p>
+<p>Menu <b>Fichier → Déconnexion</b> ou fermez directement la fenêtre principale (une confirmation sera demandée si des fenêtres sont ouvertes).</p>
+<hr/>
+<h2>Dossiers et réparations</h2>
+<p><b>Q : Je ne peux plus modifier un dossier clôturé. Comment faire une correction ?</b></p>
+<p>Un dossier clôturé est en lecture seule pour garantir l'intégrité des données. Pour une correction :</p>
+<ul><li>Si la facture n'est pas encore émise, annulez-la et recréez-en une.</li><li>Si c'est une erreur grave, créez un <b>avoir</b> (voir module Facturation → Avoirs).</li></ul>
+<hr/>
+<p><b>Q : Un technicien a mal enregistré le kilométrage à l'entrée. Peut-on corriger ?</b></p>
+<p>Tant que le dossier est à l'état CRÉÉ ou DIAGNOSTIC, toutes les informations sont modifiables. À partir de EN_COURS, la modification nécessite un rôle Admin.</p>
+<hr/>
+<p><b>Q : Comment annuler une transition d'état (ex : revenir de EN_COURS à DIAGNOSTIC) ?</b></p>
+<p>Les transitions d'état sont unidirectionnelles par conception (piste d'audit). Contactez un administrateur qui peut forcer un retour via l'interface d'administration avancée.</p>
+<hr/>
+<p><b>Q : L'état "ATTENTE DEVIS" bloque-t-il le démarrage des travaux ?</b></p>
+<p>Oui, c'est intentionnel. Le garage ne peut pas démarrer les travaux sans l'accord explicite du client. Pour débloquer, cliquez sur <b>Accord client reçu</b> dans le dossier.</p>
+<hr/>
+<h2>Facturation</h2>
+<p><b>Q : J'ai émis une facture avec le mauvais montant. Comment corriger ?</b></p>
+<p>Une facture émise ne peut plus être modifiée. Options :</p>
+<ol><li>Annuler** la facture (si non payée) et en créer une nouvelle.</li><li>Émettre un avoir** pour corriger la différence (si partiellement payée).</li></ol>
+<hr/>
+<p><b>Q : Le client veut payer en plusieurs fois. Comment enregistrer ?</b></p>
+<p>Enregistrez plusieurs paiements partiels sur la même facture :</p>
+<ol><li>Premier paiement : facture passe en <b>PARTIELLEMENT PAYÉE</b></li><li>Deuxième paiement (solde) : facture passe en <b>PAYÉE</b></li></ol>
+<hr/>
+<p><b>Q : Comment enregistrer un avoir / remboursement ?</b></p>
+<p>Menu <b>Facturation → Factures → Créer un avoir</b>. Sélectionnez la facture originale et le montant à rembourser.</p>
+<hr/>
+<h2>Stock</h2>
+<p><b>Q : Une pièce apparaît en stock négatif. Comment corriger ?</b></p>
+<p>Utilisez <b>Ajuster le stock</b> sur la fiche pièce pour remettre à zéro ou corriger la quantité. Notez le motif "Correction inventaire" pour la traçabilité.</p>
+<hr/>
+<p><b>Q : Peut-on importer un catalogue de pièces depuis Excel ?</b></p>
+<p>L'import Excel n'est pas disponible dans cette version. Saisissez les pièces manuellement ou contactez Alfa Computers Apps pour un import sur mesure.</p>
+<hr/>
+<h2>Sauvegardes et données</h2>
+<p><b>Q : Où sont stockées les données de l'application ?</b></p>
+<p>La base de données SQLite est dans <code>C:\Users\[votre<i>nom]\AppData\Roaming\garage</i>reparation\garage.db</code> (ou le chemin configuré dans les paramètres).</p>
+<hr/>
+<p><b>Q : À quelle fréquence dois-je créer des snapshots ?</b></p>
+<p>Recommandations :</p>
+<ul><li>Quotidien** : En fin de journée pour les garages à forte activité</li><li>Hebdomadaire** : Minimum pour tous les garages</li><li>Avant chaque mise à jour** de l'application</li></ul>
+<p>Conservez les snapshots sur un <b>disque externe ou réseau</b> en plus du disque local.</p>
+<hr/>
+<p><b>Q : La base de données est endommagée. Que faire ?</b></p>
+<ol><li>Ne pas paniquer — l'application utilise SQLite en mode WAL, très résistant aux corruptions.</li><li>Menu <b>Administration → Gestion de la base → Vérification intégrité</b>.</li><li>Si des erreurs sont détectées, restaurez le dernier snapshot valide.</li><li>Si nécessaire, contactez le support Alfa Computers Apps.</li></ol>
+<hr/>
+<h2>Performance et technique</h2>
+<p><b>Q : L'application est lente au démarrage.</b></p>
+<p>Causes possibles :</p>
+<ul><li>Première ouverture après une longue période : SQLite WAL checkpoint en cours (normal, 5-10s)</li><li>Base de données volumineuse : exécutez <b>VACUUM</b> depuis Administration → Gestion DB</li><li>Disque dur fragmenTé : défragmentez le disque Windows</li></ul>
+<hr/>
+<p><b>Q : L'application plante avec "DLL not found".</b></p>
+<p>Réinstallez l'application avec le fichier <code>GarageReparationSetup_x64.exe</code>. Si le problème persiste, installez Visual C++ Redistributable 2022 depuis le site Microsoft.</p>
+<hr/>
+<p><b>Q : Comment mettre à jour l'application ?</b></p>
+<p>Téléchargez le nouvel installeur depuis Alfa Computers Apps et exécutez-le. L'installeur Inno Setup met à jour les fichiers sans toucher à la base de données.</p>
+<hr/>
+<h2>Support</h2>
+<p>Pour toute question non couverte par ce guide, contactez :</p>
+<p><b>Alfa Computers Apps</b> Support technique : Alfa Computers Apps — Solutions de Gestion sur Mesure</p>
+<blockquote>
+<p>Ce guide est distribué avec le logiciel sous licence propriétaire Alfa Computers Apps. Toute reproduction partielle ou totale est interdite sans autorisation écrite.</p></blockquote>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+
+<h1>8. Devis Commerciaux et Factures Proforma</h1>
+<hr/>
+<h2>8.1 Vue d'ensemble</h2>
+<p>Le module <b>Devis / Proforma</b> couvre le cycle commercial <b>avant-vente</b> :</p>
+<pre><code class="language-">Devis (brouillon) ──► Envoyé ──► Accepté ──► Dossier de Réparation
+                                    └──────► Facture Proforma ──► Facture Client
+                              Refusé (dupliquer pour révision)</code></pre>
+<p>Ce module est accessible aux techniciens (lecture) et aux administrateurs (gestion complète).</p>
+<hr/>
+<h2>8.2 Devis commerciaux</h2>
+<h3>Accéder aux devis</h3>
+<ul><li>Menu <b>Atelier → Devis commerciaux…</b> ou <code>Ctrl+W</code></li></ul>
+<h3>Créer un devis</h3>
+<ol><li>Cliquez sur <b>+ Nouveau devis</b></li><li>Sélectionnez le <b>client</b> dans la liste</li><li>Sélectionnez le <b>véhicule</b> du client (obligatoire pour la conversion en dossier)</li><li>Définissez une <b>date d'expiration</b> (30 jours par défaut)</li><li>Saisissez les <b>notes client</b> (description des travaux demandés)</li><li>Ajoutez les <b>lignes</b> :</li></ol>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Champ</th><th>Description</th></tr></thead><tbody><tr><td>Type</td><td>Service / Pièce / Forfait</td></tr><tr><td>Désignation</td><td>Description de la prestation</td></tr><tr><td>Quantité</td><td>Nombre d'unités</td></tr><tr><td>Prix unitaire HT</td><td>Prix sans TVA</td></tr><tr><td>TVA</td><td>Taux applicable (19% par défaut)</td></tr><tr><td>Remise</td><td>Réduction en % (facultatif)</td></tr></tbody></table>
+<ol><li>Vérifiez les totaux (HT, TVA, TTC) en bas du formulaire</li><li>Cliquez sur <b>Enregistrer</b></li></ol>
+<p>Le devis est créé à l'état <b>BROUILLON</b> avec un numéro automatique (ex : <code>DEV-2026-0001</code>).</p>
+<blockquote>
+<p><b>Conseil</b> : Les notes internes ne sont pas imprimées sur le devis remis au client — utilisez-les pour les détails techniques ou les négociations.</p></blockquote>
+<hr/>
+<h2>8.3 Cycle de vie d'un devis</h2>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>État</th><th>Couleur</th><th>Signification</th></tr></thead><tbody><tr><td><b>BROUILLON</b></td><td>Gris</td><td>En cours de préparation — modifiable</td></tr><tr><td><b>ENVOYÉ</b></td><td>Bleu</td><td>Remis au client pour approbation</td></tr><tr><td><b>ACCEPTÉ</b></td><td>Vert</td><td>Accord du client obtenu</td></tr><tr><td><b>REFUSÉ</b></td><td>Rouge</td><td>Client a refusé le devis</td></tr><tr><td><b>TRANSFORMÉ</b></td><td>Cyan</td><td>Converti en dossier ou proforma</td></tr><tr><td><b>EXPIRÉ</b></td><td>Jaune</td><td>Date d'expiration dépassée sans réponse</td></tr><tr><td><b>ANNULÉ</b></td><td>Sombre</td><td>Annulé manuellement</td></tr></tbody></table>
+<h3>Transitions disponibles</h3>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Depuis</th><th>Action</th><th>Vers</th></tr></thead><tbody><tr><td>BROUILLON</td><td><b>Envoyer au client</b></td><td>ENVOYÉ</td></tr><tr><td>ENVOYÉ</td><td><b>Accepter</b></td><td>ACCEPTÉ</td></tr><tr><td>ENVOYÉ</td><td><b>Refuser</b> (avec motif)</td><td>REFUSÉ</td></tr><tr><td>ACCEPTÉ</td><td><b>→ Dossier</b></td><td>TRANSFORMÉ + Dossier créé</td></tr><tr><td>ACCEPTÉ</td><td><b>→ Proforma</b></td><td>TRANSFORMÉ + Proforma créée</td></tr><tr><td>BROUILLON / ENVOYÉ</td><td><b>Annuler</b></td><td>ANNULÉ</td></tr><tr><td>Tout état</td><td><b>Dupliquer</b></td><td>Nouveau BROUILLON (révision)</td></tr></tbody></table>
+<hr/>
+<h2>8.4 Convertir un devis en dossier de réparation</h2>
+<p>Lorsque le client accepte le devis :</p>
+<ol><li>Sélectionnez le devis dans la liste</li><li>Cliquez sur <b>Accepter</b> (si pas encore fait)</li><li>Cliquez sur <b>→ Dossier</b></li><li>Confirmez dans la boîte de dialogue</li></ol>
+<p>Un <b>Dossier de Réparation</b> est créé automatiquement avec :</p>
+<ul><li>Le client et le véhicule du devis</li><li>Les notes client comme description initiale</li><li>L'état <b>CRÉÉ</b> (prêt pour le diagnostic)</li></ul>
+<blockquote>
+<p><b>Note</b> : Le devis passe à l'état <b>TRANSFORMÉ</b> et reste consultable. Retrouvez le dossier dans <b>Atelier → Dossiers de réparation</b>.</p></blockquote>
+<hr/>
+<h2>8.5 Convertir un devis en facture proforma</h2>
+<p>Pour les clients professionnels qui ont besoin d'un engagement écrit avant paiement :</p>
+<ol><li>Sélectionnez le devis <b>ACCEPTÉ</b></li><li>Cliquez sur <b>→ Proforma</b></li><li>La facture proforma s'ouvre automatiquement</li></ol>
+<p>La proforma reprend toutes les lignes du devis avec les mêmes montants.</p>
+<blockquote>
+<p><b>Rappel</b> : Une facture proforma n'a <b>pas de valeur comptable</b>. Elle sert uniquement d'engagement ou de demande d'acompte. La facture définitive est émise après clôture du dossier.</p></blockquote>
+<hr/>
+<h2>8.6 Factures Proforma</h2>
+<h3>Accéder aux proformas</h3>
+<ul><li>Menu <b>Facturation → Factures proforma…</b></li></ul>
+<h3>Vue d'ensemble d'une proforma</h3>
+<p>La fenêtre d'aperçu proforma affiche :</p>
+<ul><li>Le numéro (ex : <code>PRO-2026-0001</code>)</li><li>Le tableau de lignes avec montants HT et TTC</li><li>Le total TTC</li><li>L'acompte reçu et le solde restant</li><li>Le statut (Émise / Acompte reçu / Liée à facture / Annulée)</li></ul>
+<h3>Enregistrer un acompte</h3>
+<ol><li>Ouvrez la facture proforma</li><li>Cliquez sur <b>Enregistrer un acompte…</b></li><li>Saisissez le montant reçu</li><li>Cliquez sur <b>OK</b></li></ol>
+<p>Le statut passe à <b>ACOMPTE REÇU</b> et le solde restant est mis à jour.</p>
+<h3>Numérotation</h3>
+<p>Les devis et proformas ont leur propre numérotation configurable :</p>
+<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr><th>Document</th><th>Séquence par défaut</th></tr></thead><tbody><tr><td>Devis</td><td><code>DEV-{ANNEE}-0001</code></td></tr><tr><td>Proforma</td><td><code>PRO-{ANNEE}-0001</code></td></tr></tbody></table>
+<p>Configurez le préfixe et le prochain numéro via <b>Administration → Numérotation</b>.</p>
+<hr/>
+<h2>8.7 Imprimer un devis ou une proforma</h2>
+<h3>Devis</h3>
+<ol><li>Sélectionnez le devis dans la liste</li><li>Cliquez sur <b>Imprimer</b></li><li>La boîte de dialogue d'impression système s'ouvre</li></ol>
+<h3>Proforma</h3>
+<ol><li>Ouvrez la proforma (double-clic dans la liste)</li><li>Cliquez sur <b>Imprimer…</b> dans la fenêtre d'aperçu</li></ol>
+<blockquote>
+<p><b>Format</b> : Les documents sont générés en HTML avec styles inline — imprimables en A4 Portrait directement depuis l'application.</p></blockquote>
+<hr/>
+<h2>8.8 Cas pratique — Devis carrosserie</h2>
+<p><b>Scénario</b> : Un client amène sa voiture pour une réparation de carrosserie après un accident.</p>
+<ol><li>Réception<b> : Créer un </b>rendez-vous** ou accueillir directement le client</li><li>Devis** : Créer un devis avec :</li></ol>
+<p>   - Ligne 1 : Débosselage aile avant — 120,000 DT HT    - Ligne 2 : Peinture aile avant (pièce + pose) — 350,000 DT HT    - Ligne 3 : Remplacement phare — 180,000 DT HT</p>
+<ol><li>Envoi<b> : Cliquer sur </b>Envoyer au client** et remettre le document</li><li>Acceptation<b> : Le client accepte — cliquer sur </b>Accepter**</li><li>Dossier<b> : Cliquer sur </b>→ Dossier** pour démarrer les travaux</li><li>Facturation** : En fin de réparation, le dossier génère automatiquement la facture</li></ol>
+<p><b>Pour les flottes professionnelles</b> :</p>
+<ul><li>À l'étape 4, cliquer sur <b>→ Proforma</b> au lieu de Dossier</li><li>Envoyer la proforma au service comptabilité du client pour paiement d'acompte</li><li>Une fois l'acompte reçu, enregistrer l'acompte sur la proforma</li><li>Créer ensuite le dossier de réparation manuellement</li></ul>
+<hr style="border:none;border-top:2px solid #e0e0e0;margin:30px 0;"/>
+</body></html>

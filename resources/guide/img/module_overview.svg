@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 240" style="font-family:'Segoe UI',Arial,sans-serif;">
+  <!-- Central brand -->
+  <rect x="170" y="5" width="220" height="38" rx="6" fill="#0055a5"/>
+  <text x="280" y="20" text-anchor="middle" fill="white" font-weight="bold" font-size="11">Gestion Réparation Voiture</text>
+  <text x="280" y="35" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9">Alfa Computers Apps</text>
+  <!-- Connector lines to modules -->
+  <line x1="170" y1="43" x2="70" y2="80" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="230" y1="43" x2="185" y2="80" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="330" y1="43" x2="375" y2="80" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="390" y1="43" x2="490" y2="80" stroke="#aaa" stroke-width="1.2"/>
+  <!-- Module 1: Réception -->
+  <rect x="5" y="80" width="130" height="70" rx="5" fill="#E3F2FD" stroke="#0067C0" stroke-width="1.5"/>
+  <text x="70" y="97" text-anchor="middle" fill="#0067C0" font-weight="bold" font-size="10">RÉCEPTION</text>
+  <text x="70" y="112" text-anchor="middle" fill="#333" font-size="9">Clients · Véhicules</text>
+  <text x="70" y="125" text-anchor="middle" fill="#333" font-size="9">Rendez-vous</text>
+  <text x="70" y="140" text-anchor="middle" fill="#666" font-size="8.5" font-style="italic">Ctrl+K · Ctrl+V</text>
+  <!-- Module 2: Atelier -->
+  <rect x="143" y="80" width="130" height="70" rx="5" fill="#E8F5E9" stroke="#107C10" stroke-width="1.5"/>
+  <text x="208" y="97" text-anchor="middle" fill="#107C10" font-weight="bold" font-size="10">ATELIER</text>
+  <text x="208" y="112" text-anchor="middle" fill="#333" font-size="9">Dossiers réparation</text>
+  <text x="208" y="125" text-anchor="middle" fill="#333" font-size="9">Bon de travail</text>
+  <text x="208" y="140" text-anchor="middle" fill="#666" font-size="8.5" font-style="italic">Ctrl+D · Ctrl+R</text>
+  <!-- Module 3: Stock -->
+  <rect x="281" y="80" width="130" height="70" rx="5" fill="#FBE9E7" stroke="#D83B01" stroke-width="1.5"/>
+  <text x="346" y="97" text-anchor="middle" fill="#D83B01" font-weight="bold" font-size="10">STOCK</text>
+  <text x="346" y="112" text-anchor="middle" fill="#333" font-size="9">Catalogue pièces</text>
+  <text x="346" y="125" text-anchor="middle" fill="#333" font-size="9">Fournisseurs · Achats</text>
+  <text x="346" y="140" text-anchor="middle" fill="#666" font-size="8.5" font-style="italic">Ctrl+P</text>
+  <!-- Module 4: Facturation -->
+  <rect x="419" y="80" width="135" height="70" rx="5" fill="#EDE7F6" stroke="#5C2D91" stroke-width="1.5"/>
+  <text x="486" y="97" text-anchor="middle" fill="#5C2D91" font-weight="bold" font-size="10">FACTURATION</text>
+  <text x="486" y="112" text-anchor="middle" fill="#333" font-size="9">Factures · Caisse</text>
+  <text x="486" y="125" text-anchor="middle" fill="#333" font-size="9">Créances · Charges</text>
+  <text x="486" y="140" text-anchor="middle" fill="#666" font-size="8.5" font-style="italic">Ctrl+F</text>
+  <!-- Bottom: Administration -->
+  <line x1="280" y1="43" x2="280" y2="165" stroke="#aaa" stroke-width="1.2"/>
+  <rect x="170" y="165" width="220" height="65" rx="5" fill="#F5F5F5" stroke="#323130" stroke-width="1.5"/>
+  <text x="280" y="182" text-anchor="middle" fill="#323130" font-weight="bold" font-size="10">ADMINISTRATION</text>
+  <text x="280" y="197" text-anchor="middle" fill="#333" font-size="9">Société · Utilisateurs · Numérotation</text>
+  <text x="280" y="210" text-anchor="middle" fill="#333" font-size="9">Multi-dossier · Snapshots · Audit</text>
+  <text x="280" y="223" text-anchor="middle" fill="#333" font-size="9">Concepteur de documents · Rapports</text>
+</svg>
