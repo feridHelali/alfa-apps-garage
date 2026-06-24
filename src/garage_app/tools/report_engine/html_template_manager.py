@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import json
+import logging
 from pathlib import Path
 
 from garage_app.settings import APP_DATA_DIR
 from garage_app.tools.report_engine.html_template import HtmlReportTemplate
+
+logger = logging.getLogger(__name__)
 
 _TEMPLATES_DIR = APP_DATA_DIR / "report_templates"
 
@@ -69,8 +73,10 @@ class HtmlTemplateManager:
         for p in sorted(self._dir(type_doc).glob("*.json")):
             try:
                 templates.append(HtmlReportTemplate.load_from(p))
-            except Exception:
-                pass
+            except json.JSONDecodeError as exc:
+                logger.error("Corrupted template JSON %s: %s", p.name, exc)
+            except Exception as exc:
+                logger.error("Failed to load template %s: %s", p.name, exc)
         return templates
 
     def get(self, type_doc: str, template_id: str) -> HtmlReportTemplate | None:
@@ -79,16 +85,19 @@ class HtmlTemplateManager:
             return None
         try:
             return HtmlReportTemplate.load_from(p)
-        except Exception:
+        except json.JSONDecodeError as exc:
+            logger.error("Corrupted template JSON %s: %s", p.name, exc)
+            return None
+        except Exception as exc:
+            logger.error("Failed to load template %s: %s", p.name, exc)
             return None
 
     def get_default(self, type_doc: str) -> HtmlReportTemplate:
         self._ensure_defaults(type_doc)
-        for t in self.list_templates(type_doc):
-            if t.is_default:
-                return t
-        # Fallback: first available, or generate fresh
         templates = self.list_templates(type_doc)
+        default = next((t for t in templates if t.is_default), None)
+        if default:
+            return default
         if templates:
             return templates[0]
         t = HtmlReportTemplate(**_BUILTIN_DEFAULTS.get(type_doc, {"nom": "Défaut", "type_document": type_doc}))

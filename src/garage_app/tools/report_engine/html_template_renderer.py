@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import base64
+import logging
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
 from garage_app.settings import resource_path
 from garage_app.tools.report_engine.html_template import ColonneConfig, HtmlReportTemplate
+
+logger = logging.getLogger(__name__)
 
 _LOGO_PATH = resource_path("assets", "brand", "alfa_computers_logo.svg")
 
@@ -16,6 +19,10 @@ def _logo_b64() -> str:
         return base64.b64encode(_LOGO_PATH.read_bytes()).decode()
     except Exception:
         return ""
+
+
+# Encode once at import time — the logo never changes during a session.
+_CACHED_LOGO_B64: str = _logo_b64()
 
 
 _BASE_CSS = """
@@ -54,6 +61,8 @@ def _fmt(val: Any) -> str:
     if val is None:
         return "—"
     if isinstance(val, (float, Decimal)):
+        # CPython's `:,` always uses ASCII comma/dot (C locale) — system LC_ALL is ignored.
+        # "1,234.567" → "1 234,567 DT" (TND: space=thousands, comma=decimal, 3 millimes)
         return f"{float(val):,.3f}".replace(",", " ").replace(".", ",") + " DT"
     return str(val)
 
@@ -115,7 +124,7 @@ class HtmlTemplateRenderer:
     def _header(self, template: HtmlReportTemplate, titre: str, sous_titre: str) -> str:
         logo_html = ""
         if template.show_logo:
-            b64 = _logo_b64()
+            b64 = _CACHED_LOGO_B64
             if b64:
                 logo_html = (
                     f'<img src="data:image/svg+xml;base64,{b64}" '

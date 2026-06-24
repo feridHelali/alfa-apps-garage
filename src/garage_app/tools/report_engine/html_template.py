@@ -93,9 +93,12 @@ class HtmlReportTemplate:
 
     def __post_init__(self) -> None:
         if not self.colonnes:
+            # Always copy — never hand out the shared module-level list directly.
+            defaults = _DEFAULT_COLONNES.get(self.type_document, _default_colonnes_facture())
             self.colonnes = [
-                ColonneConfig(**c) if isinstance(c, dict) else c
-                for c in _DEFAULT_COLONNES.get(self.type_document, _default_colonnes_facture())
+                ColonneConfig(**c) if isinstance(c, dict)
+                else ColonneConfig(c.champ, c.titre, c.largeur, c.align, c.visible)
+                for c in defaults
             ]
 
     # ── Serialisation ────────────────────────────────────────────────────────
@@ -106,6 +109,7 @@ class HtmlReportTemplate:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HtmlReportTemplate:
+        data = dict(data)  # defensive copy — never mutate the caller's dict
         colonnes_raw = data.pop("colonnes", [])
         t = cls(**data)
         t.colonnes = [ColonneConfig(**c) for c in colonnes_raw]

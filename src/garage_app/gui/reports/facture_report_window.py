@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import logging
 
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
@@ -8,6 +9,8 @@ from garage_app.domain.facturation.facture import Facture
 from garage_app.gui.reports.report_viewer_window import ReportViewerWindow, build_html
 from garage_app.tools.report_engine.html_template_manager import HtmlTemplateManager
 from garage_app.tools.report_engine.html_template_renderer import HtmlTemplateRenderer
+
+logger = logging.getLogger(__name__)
 
 # Simple receipt/invoice SVG icon (white fill, works in Qt's HTML renderer)
 _INVOICE_SVG = base64.b64encode(b"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -47,17 +50,23 @@ _STATUT_LABELS = {
 }
 
 
-def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
-    client_nom = "—"
+def _get_client_nom(facture: Facture, ctx: AppContext, session: UserSession, *, with_phone: bool = False) -> str:
+    """Fetch the client display name; returns '—' on any failure."""
     try:
         clients = ctx.client_service.list_clients(session)
         client = next((c for c in clients if str(c.id) == str(facture.client_id)), None)
         if client:
-            client_nom = f"{client.nom} {client.prenom}".strip()
-            if client.telephone:
-                client_nom += f"<br><span style='color:#6E6E73; font-size:8pt'>{client.telephone}</span>"
+            nom = f"{client.nom} {client.prenom}".strip()
+            if with_phone and client.telephone:
+                nom += f"<br><span style='color:#6E6E73; font-size:8pt'>{client.telephone}</span>"
+            return nom
     except Exception:
         pass
+    return "—"
+
+
+def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
+    client_nom = _get_client_nom(facture, ctx, session, with_phone=True)
 
     emission_str = (
         facture.date_emission.strftime("%d/%m/%Y")
@@ -154,39 +163,12 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
 
 
 def _render_with_template(facture: Facture, ctx: AppContext, session: UserSession) -> str | None:
-    """Try to render via the active HtmlReportTemplate; return None if not available."""
+    """Try to render via the active HtmlReportTemplate; returns None to trigger fallback."""
     try:
-        mgr = HtmlTemplateManager()
-        template = mgr.get_default("facture")
-        renderer = HtmlTemplateRenderer()
-        client_nom = "—"
-        try:
-            clients = ctx.client_service.list_clients(session)
-            client = next((c for c in clients if str(c.id) == str(facture.client_id)), None)
-            if client:
-                client_nom = f"{client.nom} {client.prenom}".strip()
-        except Exception:
-            pass
-
+        template = HtmlTemplateManager().get_default("facture")
+        client_nom = _get_client_nom(facture, ctx, session)
         emission_str = facture.date_emission.strftime("%d/%m/%Y") if facture.date_emission else "—"
-        statut_label = {
-            "brouillon": "BROUILLON",
-            "emise": "ÉMISE",
-            "partiellement_payee": "PART. PAYÉE",
-            "payee": "PAYÉE ✓",
-            "annulee": "ANNULÉE",
-        }.get(facture.statut.value, facture.statut.value.upper())
-
-        lignes = [
-            {
-                "index": i,
-                "designation": lg.designation,
-                "quantite": lg.quantite,
-                "prix_unitaire": float(lg.prix_unitaire),
-                "montant": float(lg.montant.amount),
-            }
-            for i, lg in enumerate(facture.lignes, 1)
-        ]
+        statut_label = _STATUT_LABELS.get(facture.statut.value, facture.statut.value.upper())
         reste = float(facture.montant_ttc.amount) - float(facture.montant_paye)
         context = {
             "titre": f"Facture N° {facture.numero}",
@@ -197,7 +179,16 @@ def _render_with_template(facture: Facture, ctx: AppContext, session: UserSessio
                 ("Date", emission_str),
                 ("Statut", statut_label),
             ],
-            "lignes": lignes,
+            "lignes": [
+                {
+                    "index": i,
+                    "designation": lg.designation,
+                    "quantite": lg.quantite,
+                    "prix_unitaire": float(lg.prix_unitaire),
+                    "montant": float(lg.montant.amount),
+                }
+                for i, lg in enumerate(facture.lignes, 1)
+            ],
             "totaux": {
                 "montant_ht": float(facture.montant_ht.amount),
                 "taux_tva": facture.taux_tva,
@@ -207,10 +198,15 @@ def _render_with_template(facture: Facture, ctx: AppContext, session: UserSessio
                 "reste": reste,
             },
             "mode_paiement": ", ".join(p.mode for p in facture.paiements) if facture.paiements else "",
-            "reference_paiement": (facture.paiements[0].reference if facture.paiements and facture.paiements[0].reference else ""),
+            "reference_paiement": (
+                facture.paiements[0].reference
+                if facture.paiements and facture.paiements[0].reference
+                else ""
+            ),
         }
-        return renderer.render(template, context)
+        return HtmlTemplateRenderer().render(template, context)
     except Exception:
+        logger.warning("Template render failed for facture %s; falling back to hardcoded renderer.", facture.numero, exc_info=True)
         return None
 
 
