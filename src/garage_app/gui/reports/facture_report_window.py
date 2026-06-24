@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import base64
-from datetime import datetime
 
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
@@ -29,6 +28,23 @@ _PIECE_SVG_HTML = (
 )
 
 
+_STATUT_BADGE = {
+    "brouillon":           "badge-warn",
+    "emise":               "badge-warn",
+    "partiellement_payee": "badge-warn",
+    "payee":               "badge-ok",
+    "annulee":             "badge-danger",
+}
+
+_STATUT_LABELS = {
+    "brouillon":           "BROUILLON",
+    "emise":               "ÉMISE",
+    "partiellement_payee": "PART. PAYÉE",
+    "payee":               "PAYÉE ✓",
+    "annulee":             "ANNULÉE",
+}
+
+
 def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
     client_nom = "—"
     try:
@@ -41,7 +57,10 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
     except Exception:
         pass
 
-    today = datetime.now().strftime("%d/%m/%Y")
+    emission_str = (
+        facture.date_emission.strftime("%d/%m/%Y")
+        if facture.date_emission else "—"
+    )
 
     lignes_html = ""
     for i, ligne in enumerate(facture.lignes, 1):
@@ -60,7 +79,8 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
     reste_color = "#A4262C" if reste > 0 else "#107C10"
     reste_label = "Reste à payer" if reste > 0 else "Solde"
 
-    statut_cls = "badge-ok" if facture.statut.value in ("emise", "payee") else "badge-warn"
+    statut_cls = _STATUT_BADGE.get(facture.statut.value, "badge-warn")
+    statut_label = _STATUT_LABELS.get(facture.statut.value, facture.statut.value.upper())
 
     body = f"""
 <div style="display:table; width:100%; margin:14px 0 10px 0;">
@@ -73,9 +93,9 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
       <tr><td style="color:#6E6E73; padding:2px 8px 2px 0; border:none;">N° Facture</td>
           <td style="font-weight:700; padding:2px 0; border:none;">{facture.numero}</td></tr>
       <tr><td style="color:#6E6E73; padding:2px 8px 2px 0; border:none;">Date</td>
-          <td style="padding:2px 0; border:none;">{today}</td></tr>
+          <td style="padding:2px 0; border:none;">{emission_str}</td></tr>
       <tr><td style="color:#6E6E73; padding:2px 8px 2px 0; border:none;">Statut</td>
-          <td style="padding:2px 0; border:none;"><span class="badge {statut_cls}">{facture.statut.value.upper()}</span></td></tr>
+          <td style="padding:2px 0; border:none;"><span class="badge {statut_cls}">{statut_label}</span></td></tr>
     </table>
   </div>
 </div>
@@ -125,7 +145,7 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
 
     return build_html(
         f"Facture N° {facture.numero}",
-        f"Client : {client_nom.split('<')[0]}  |  Émise le {today}",
+        f"Client : {client_nom.split('<')[0]}  |  Émise le {emission_str}",
         body,
         icon_svg_b64=_INVOICE_SVG,
     )

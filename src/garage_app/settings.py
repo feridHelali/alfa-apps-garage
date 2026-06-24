@@ -7,6 +7,19 @@ from pathlib import Path
 APP_VERSION = "1.0.0"
 
 
+def resource_path(*parts: str) -> Path:
+    """Return path to a bundled resource, works both frozen (PyInstaller) and in dev.
+
+    In a PyInstaller onedir bundle the src/ directory level is stripped, so
+    sys._MEIPASS is the bundle root where assets/ and resources/ live.
+    In development the project root is two levels above this file
+    (src/garage_app/settings.py → parents[2]).
+    """
+    if getattr(sys, "frozen", False):
+        return Path(sys._MEIPASS).joinpath(*parts)  # type: ignore[attr-defined]
+    return Path(__file__).parents[2].joinpath(*parts)
+
+
 def _resolve_app_data_dir() -> Path:
     """Return data dir — reads installer-written data_dir.cfg when bundled."""
     if getattr(sys, "frozen", False):

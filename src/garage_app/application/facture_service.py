@@ -64,13 +64,13 @@ class FactureService:
             for op in dossier.operations:
                 if op.montant.amount > 0:
                     facture.lignes.append(LigneFacture(
-                        designation=op.description or op.code_main_oeuvre,
+                        designation=op.description or op.code_main_oeuvre or "Intervention technique",
                         quantite=1,
                         prix_unitaire=op.montant.amount,
                     ))
             for p in dossier.pieces:
                 facture.lignes.append(LigneFacture(
-                    designation=p.designation or p.reference,
+                    designation=p.designation or p.reference or "Pièce",
                     quantite=p.quantite,
                     prix_unitaire=p.prix_unitaire,
                 ))

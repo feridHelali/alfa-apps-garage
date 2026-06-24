@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QIcon, QFont
 from PyQt6.QtCore import QTranslator, QLocale
 
-APP_ICON = Path(__file__).parents[3] / "assets" / "icons" / "app_icon.svg"
-STYLES_DIR = Path(__file__).parents[3] / "assets" / "styles"
+from garage_app.settings import resource_path
+
+APP_ICON = resource_path("assets", "icons", "app_icon.svg")
+STYLES_DIR = resource_path("assets", "styles")
 
 
 class GarageApplication(QApplication):
@@ -34,7 +35,7 @@ class GarageApplication(QApplication):
             self.setStyleSheet(qss_file.read_text(encoding="utf-8"))
 
     def load_language(self, lang: str) -> None:
-        resources_dir = Path(__file__).parents[3] / "resources" / "i18n"
+        resources_dir = resource_path("resources", "i18n")
         qm = resources_dir / f"garage_{lang}.qm"
         if qm.exists() and self._translator.load(str(qm)):
             self.installTranslator(self._translator)

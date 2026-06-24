@@ -33,11 +33,14 @@ class DatabaseInitializer:
         self._session_factory = session_factory
 
     def initialize(self) -> None:
-        is_new = not inspect(self._engine).has_table("users")
         with self._engine.begin() as conn:
             Base.metadata.create_all(conn)
             self._apply_column_migrations(conn)
-        if is_new:
+        # Seed whenever no users exist — handles both fresh install and the case
+        # where a previous first-run crash created the schema but not the seed data.
+        with self._engine.connect() as conn:
+            user_count = conn.execute(text("SELECT COUNT(*) FROM users")).scalar()
+        if user_count == 0:
             with self._session_factory.get_session() as session:
                 SeedRunner(session).run()
 

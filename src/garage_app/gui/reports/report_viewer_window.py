@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import base64
-from pathlib import Path
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QTextDocument
@@ -11,7 +10,9 @@ from PyQt6.QtWidgets import (
     QVBoxLayout, QWidget,
 )
 
-_LOGO_PATH = Path(__file__).parents[4] / "assets" / "brand" / "alfa_computers_logo.svg"
+from garage_app.settings import resource_path
+
+_LOGO_PATH = resource_path("assets", "brand", "alfa_computers_logo.svg")
 
 
 def _logo_uri() -> str:

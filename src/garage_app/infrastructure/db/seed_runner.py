@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import bcrypt
 from sqlalchemy.orm import Session
@@ -10,8 +9,9 @@ from garage_app.infrastructure.db.models.user_model import RoleModel, UserModel
 from garage_app.infrastructure.db.models.societe_model import SocieteModel
 from garage_app.infrastructure.db.models.report_template_model import ReportTemplateModel
 from garage_app.infrastructure.db.models.settings_model import AppSettingsModel
+from garage_app.settings import resource_path
 
-_SEED_FILE = Path(__file__).parents[4] / "resources" / "seed" / "seed_data.json"
+_SEED_FILE = resource_path("resources", "seed", "seed_data.json")
 
 
 class SeedRunner:

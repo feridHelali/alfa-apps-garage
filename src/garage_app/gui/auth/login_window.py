@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from PyQt6.QtCore import pyqtSignal, Qt, QRectF
 from PyQt6.QtGui import QPixmap, QFont, QPainter
 from PyQt6.QtSvg import QSvgRenderer
@@ -12,8 +10,9 @@ from PyQt6.QtWidgets import (
 
 from garage_app.application.auth_service import AuthService, AuthError
 from garage_app.domain.auth.user_session import UserSession
+from garage_app.settings import resource_path
 
-_LOGO = Path(__file__).parents[4] / "assets" / "brand" / "alfa_computers_logo.svg"
+_LOGO = resource_path("assets", "brand", "alfa_computers_logo.svg")
 
 
 class LoginWindow(QDialog):

@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QColor, QFont, QPainter, QPixmap
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtWidgets import QApplication, QSplashScreen
 
-_LOGO_SVG = Path(__file__).parents[3] / "assets" / "brand" / "alfa_computers_logo.svg"
+from garage_app.settings import resource_path
+
+_LOGO_SVG = resource_path("assets", "brand", "alfa_computers_logo.svg")
 
 _W, _H = 520, 300
 
