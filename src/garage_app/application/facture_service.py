@@ -4,6 +4,7 @@ import uuid
 from decimal import Decimal
 
 from garage_app.application.decorators import require_permission
+from garage_app.application.numerotation_service import NumerotationService
 from garage_app.domain.atelier.dossier_reparation import DossierReparation
 from garage_app.domain.atelier.statut_dossier import StatutDossier
 from garage_app.domain.auth.permission import Permission
@@ -22,11 +23,18 @@ class FactureService:
         facture_repo: FactureRepository,
         dossier_repo: DossierReparationRepository,
         bus: InMemoryEventBus,
+        numerotation_service: NumerotationService | None = None,
     ) -> None:
         self._sf = sf
         self._factures = facture_repo
         self._dossiers = dossier_repo
         self._bus = bus
+        self._numerotation = numerotation_service
+
+    def _next_numero_facture(self) -> str:
+        if self._numerotation:
+            return self._numerotation.generer_numero("facture")
+        return self._factures.next_numero()
 
     @require_permission(Permission.VIEW_FACTURES)
     def list_factures(self, session: UserSession) -> list[Facture]:
@@ -54,7 +62,7 @@ class FactureService:
             dossier = self._dossiers.get_by_id(dossier_id)
             if not dossier:
                 raise ValueError(f"Dossier {dossier_id} introuvable.")
-            numero = self._factures.next_numero()
+            numero = self._next_numero_facture()
             facture = Facture(
                 dossier_id=dossier_id,
                 client_id=dossier.client_id,
@@ -120,7 +128,7 @@ class FactureService:
                 statut=StatutDossier.CLOTURE,
                 notes=notes,
             )
-            numero = self._factures.next_numero()
+            numero = self._next_numero_facture()
             facture = Facture(
                 dossier_id=dossier.id,
                 client_id=client_id,

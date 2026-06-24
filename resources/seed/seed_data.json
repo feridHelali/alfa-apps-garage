@@ -36,7 +36,30 @@
   },
   "settings": {
     "language": "fr",
-    "theme": "light"
+    "theme": "light",
+    "numerotation.facture.prefixe":          "F{ANNEE}-",
+    "numerotation.facture.prochain":         "1",
+    "numerotation.facture.longueur":         "4",
+    "numerotation.facture.reset_annuel":     "true",
+    "numerotation.facture.dernier_annee":    "2026",
+    "numerotation.dossier.prefixe":          "REP-",
+    "numerotation.dossier.prochain":         "1",
+    "numerotation.dossier.longueur":         "4",
+    "numerotation.dossier.reset_annuel":     "false",
+    "numerotation.dossier.dernier_annee":    "2026",
+    "numerotation.bon_travail.prefixe":      "BT{ANNEE}/",
+    "numerotation.bon_travail.prochain":     "1",
+    "numerotation.bon_travail.longueur":     "4",
+    "numerotation.bon_travail.reset_annuel": "true",
+    "numerotation.bon_travail.dernier_annee": "2026",
+    "numerotation.facture_achat.prefixe":    "FA-",
+    "numerotation.facture_achat.prochain":   "1",
+    "numerotation.facture_achat.longueur":   "4",
+    "numerotation.facture_achat.reset_annuel": "false",
+    "numerotation.facture_achat.dernier_annee": "2026",
+    "sidebar.compact":                       "false",
+    "app.locale":                            "fr",
+    "app.numerals":                          "western"
   },
   "report_templates": [
     {

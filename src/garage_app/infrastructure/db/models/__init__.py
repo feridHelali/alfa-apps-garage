@@ -17,6 +17,8 @@ from garage_app.infrastructure.db.models.report_template_model import ReportTemp
 from garage_app.infrastructure.db.models.settings_model import AppSettingsModel
 from garage_app.infrastructure.db.models.snapshot_model import SnapshotModel
 from garage_app.infrastructure.db.models.audit_log_model import AuditLogModel
+from garage_app.infrastructure.db.models.facture_achat_model import FactureAchatModel, LigneAchatModel
+from garage_app.infrastructure.db.models.charge_garage_model import ChargeGarageModel
 
 __all__ = [
     "UserModel", "RoleModel", "SocieteModel",
@@ -27,4 +29,5 @@ __all__ = [
     "DevisModel", "FactureModel", "LigneFactureModel", "PaiementModel",
     "SessionCaisseModel", "MouvementCaisseModel", "CreditClientModel",
     "ReportTemplateModel", "AppSettingsModel", "SnapshotModel", "AuditLogModel",
+    "FactureAchatModel", "LigneAchatModel", "ChargeGarageModel",
 ]

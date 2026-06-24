@@ -4,7 +4,8 @@ from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QAction, QIcon, QKeySequence, QPixmap, QPainter, QColor, QFont
 from PyQt6.QtWidgets import (
     QApplication, QDockWidget, QLabel, QMainWindow, QMdiArea, QMenu,
-    QPushButton, QSizePolicy, QStatusBar, QStyle, QToolBar, QToolButton, QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QSizePolicy, QStatusBar, QStyle, QToolBar,
+    QToolButton, QVBoxLayout, QWidget,
 )
 from garage_app.gui.branded_mdi_area import BrandedMdiArea
 
@@ -32,16 +33,20 @@ def _color_icon(hex_color: str, char: str, size: int = 32) -> QIcon:
 
 
 class _NavButton(QToolButton):
-    """Sidebar navigation button — icon on top, label below."""
+    """Sidebar navigation button with full/compact mode."""
 
     def __init__(self, label: str, icon: QIcon, slot) -> None:
         super().__init__()
+        self._label = label
+        self._icon = icon
         self.setIcon(icon)
-        self.setIconSize(QSize(28, 28))
         self.setText(label)
-        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-        self.setFixedHeight(60)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self._set_style()
+        self.clicked.connect(slot)
+        self._compact = False
+
+    def _set_style(self) -> None:
         self.setStyleSheet("""
             QToolButton {
                 border: none;
@@ -54,7 +59,19 @@ class _NavButton(QToolButton):
             QToolButton:hover  { background: rgba(0,0,0,0.06); }
             QToolButton:pressed{ background: rgba(0,0,0,0.10); }
         """)
-        self.clicked.connect(slot)
+
+    def set_compact(self, compact: bool) -> None:
+        self._compact = compact
+        if compact:
+            self.setIconSize(QSize(20, 20))
+            self.setFixedHeight(38)
+            self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+            self.setToolTip(self._label)
+        else:
+            self.setIconSize(QSize(28, 28))
+            self.setFixedHeight(60)
+            self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+            self.setToolTip("")
 
 
 class MainWindow(QMainWindow):
@@ -99,74 +116,132 @@ class MainWindow(QMainWindow):
     # ── Sidebar ─────────────────────────────────────────────────────────────
 
     def _build_sidebar(self) -> None:
-        dock = QDockWidget()
-        dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
-        dock.setTitleBarWidget(QWidget())   # hide title bar
-        dock.setFixedWidth(84)
+        # Read compact preference
+        try:
+            from garage_app.infrastructure.repositories.app_settings_repository import AppSettingsRepository
+            _sr = AppSettingsRepository(self._ctx.session_factory)
+            self._sidebar_compact = _sr.get("sidebar.compact", "false") == "true"
+        except Exception:
+            self._sidebar_compact = False
+
+        # Auto-compact on small screens
+        screen_h = QApplication.primaryScreen().size().height() if QApplication.primaryScreen() else 900
+        if screen_h < 900:
+            self._sidebar_compact = True
+
+        self._dock = QDockWidget()
+        self._dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
+        self._dock.setTitleBarWidget(QWidget())
+
+        self._sidebar_btns: list[_NavButton] = []
 
         container = QWidget()
-        container.setStyleSheet("""
-            QWidget { background: #F3F3F3; border-right: 1px solid #E0E0E0; }
-        """)
+        container.setStyleSheet(
+            "QWidget { background: #F3F3F3; border-right: 1px solid #E0E0E0; }"
+        )
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(4, 8, 4, 8)
+        layout.setContentsMargins(4, 4, 4, 4)
         layout.setSpacing(2)
 
-        # ── Brand label ─────────────────────────────────────────────────────
+        # ── Toggle button ────────────────────────────────────────────────────
+        self._toggle_btn = QPushButton("◀" if not self._sidebar_compact else "▶")
+        self._toggle_btn.setFixedHeight(22)
+        self._toggle_btn.setStyleSheet(
+            "QPushButton { border:none; background:transparent; font-size:10px; color:#5D5D5D; }"
+            "QPushButton:hover { background:rgba(0,0,0,0.06); border-radius:4px; }"
+        )
+        self._toggle_btn.clicked.connect(self._toggle_sidebar)
+        layout.addWidget(self._toggle_btn)
+
+        # ── Brand label ──────────────────────────────────────────────────────
         brand = QLabel("Alfa\nComputers")
         brand.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        brand.setStyleSheet("font-size: 9px; color: #0067C0; font-weight: 700; padding-bottom: 6px; background: transparent; border: none;")
+        brand.setStyleSheet(
+            "font-size: 9px; color: #0067C0; font-weight: 700; "
+            "padding-bottom: 4px; background: transparent; border: none;"
+        )
         layout.addWidget(brand)
-
-        sp = QStyle.StandardPixmap
 
         def btn(label: str, icon: QIcon, slot, perm: Permission | None = None) -> None:
             if perm and not self._can(perm):
                 return
             b = _NavButton(label, icon, slot)
+            b.set_compact(self._sidebar_compact)
+            self._sidebar_btns.append(b)
             layout.addWidget(b)
+
+        def sep() -> None:
+            layout.addSpacing(4)
 
         # Reception
         btn("Clients",    _color_icon("#0067C0", "C"),  self._open_clients,      Permission.VIEW_CLIENTS)
         btn("Véhicules",  _color_icon("#0055a5", "V"),  self._open_vehicules,    Permission.VIEW_CLIENTS)
         btn("Rendez-v.",  _color_icon("#1876CA", "R"),  self._open_rdv,          Permission.VIEW_RENDEZ_VOUS)
-
-        layout.addSpacing(6)
-
+        sep()
         # Atelier
         btn("Dossiers",   _color_icon("#107C10", "D"),  self._open_dossiers,        Permission.VIEW_DOSSIERS)
         btn("Rapide",     _color_icon("#1D7340", "⚡"), self._open_bon_travail_rapide, Permission.MANAGE_FACTURES)
-
-        layout.addSpacing(6)
-
+        sep()
         # Stock
-        btn("Stock",      _color_icon("#D83B01", "S"),  self._open_pieces,       Permission.VIEW_STOCK)
-        btn("Fourniss.",  _color_icon("#A4262C", "F"),  self._open_fournisseurs, Permission.MANAGE_STOCK)
-
-        layout.addSpacing(6)
-
+        btn("Stock",      _color_icon("#D83B01", "S"),  self._open_pieces,         Permission.VIEW_STOCK)
+        btn("Fourniss.",  _color_icon("#A4262C", "F"),  self._open_fournisseurs,   Permission.MANAGE_STOCK)
+        btn("Fact.Ach.",  _color_icon("#8B4513", "A"),  self._open_factures_achat, Permission.MANAGE_STOCK)
+        sep()
         # Facturation
         btn("Factures",   _color_icon("#5C2D91", "F"),  self._open_factures,     Permission.VIEW_FACTURES)
         btn("Caisse",     _color_icon("#00796B", "Ca"), self._open_caisse,        Permission.MANAGE_CAISSE)
         btn("Créances",   _color_icon("#4A148C", "Cr"), self._open_credits,       Permission.VIEW_FACTURES)
-
-        layout.addSpacing(6)
-
+        btn("Charges",    _color_icon("#795548", "€"),  self._open_charges,       Permission.MANAGE_SETTINGS)
+        sep()
         # Admin
-        btn("Société",    _color_icon("#323130", "Ste"), self._open_societe,     Permission.MANAGE_SOCIETE)
-        btn("BDD",        _color_icon("#004578", "DB"),  self._open_db_mgmt,     Permission.MANAGE_SNAPSHOTS)
-        btn("Journal",    _color_icon("#004578", "Log"), self._open_audit,       Permission.MANAGE_USERS)
+        btn("Société",    _color_icon("#323130", "Ste"), self._open_societe,      Permission.MANAGE_SOCIETE)
+        btn("BDD",        _color_icon("#004578", "DB"),  self._open_db_mgmt,      Permission.MANAGE_SNAPSHOTS)
+        btn("Journal",    _color_icon("#004578", "Log"), self._open_audit,        Permission.MANAGE_USERS)
 
         layout.addStretch()
 
         # Logged-in user
         user_lbl = QLabel(self._session.full_name.split()[0])
         user_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        user_lbl.setStyleSheet("font-size: 9px; color: #5D5D5D; padding-top: 4px; background: transparent; border: none;")
+        user_lbl.setStyleSheet(
+            "font-size: 9px; color: #5D5D5D; padding-top: 4px; background: transparent; border: none;"
+        )
         layout.addWidget(user_lbl)
 
-        dock.setWidget(container)
-        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock)
+        # ── Wrap in QScrollArea so it never overflows ─────────────────────────
+        scroll = QScrollArea()
+        scroll.setWidget(container)
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        scroll.setStyleSheet("QScrollArea { border: none; }")
+
+        self._sidebar_width_full = 88
+        self._sidebar_width_compact = 52
+        w = self._sidebar_width_compact if self._sidebar_compact else self._sidebar_width_full
+        self._dock.setFixedWidth(w)
+        scroll.setFixedWidth(w)
+
+        self._dock.setWidget(scroll)
+        self._sidebar_scroll = scroll
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self._dock)
+
+    def _toggle_sidebar(self) -> None:
+        self._sidebar_compact = not self._sidebar_compact
+        self._toggle_btn.setText("▶" if self._sidebar_compact else "◀")
+        w = self._sidebar_width_compact if self._sidebar_compact else self._sidebar_width_full
+        self._dock.setFixedWidth(w)
+        self._sidebar_scroll.setFixedWidth(w)
+        for b in self._sidebar_btns:
+            b.set_compact(self._sidebar_compact)
+        # Persist preference
+        try:
+            from garage_app.infrastructure.repositories.app_settings_repository import AppSettingsRepository
+            AppSettingsRepository(self._ctx.session_factory).set(
+                "sidebar.compact", "true" if self._sidebar_compact else "false"
+            )
+        except Exception:
+            pass
 
     # ── Menu bar ─────────────────────────────────────────────────────────────
 
@@ -198,7 +273,7 @@ class MainWindow(QMainWindow):
                                   Permission.MANAGE_STOCK))
         m.addAction(self._action("Commandes fournisseurs", self._open_commandes, "",
                                   Permission.MANAGE_STOCK))
-        m.addAction(self._action("Facture d'achat…", self._open_facture_achat, "",
+        m.addAction(self._action("Factures d'achat", self._open_factures_achat, "",
                                   Permission.MANAGE_STOCK))
         m.addSeparator()
         m.addAction(self._action("Alertes stock", self._open_stock_alerts, "",
@@ -212,9 +287,15 @@ class MainWindow(QMainWindow):
                                   Permission.MANAGE_CAISSE))
         m.addAction(self._action("Créances clients", self._open_credits, "",
                                   Permission.VIEW_FACTURES))
+        m.addSeparator()
+        m.addAction(self._action("Charges du garage", self._open_charges, "",
+                                  Permission.MANAGE_SETTINGS))
 
         # — Rapports —
         m = mb.addMenu("&Rapports")
+        m.addAction(self._action("Concepteur de documents…", self._open_report_designer, "",
+                                  Permission.MANAGE_REPORTS))
+        m.addSeparator()
         m.addAction(self._action("CA Mensuel…", self._open_rapport_mensuel, "",
                                   Permission.VIEW_FACTURES))
         m.addAction(self._action("Stock Valorisé", self._open_rapport_stock, "",
@@ -248,6 +329,10 @@ class MainWindow(QMainWindow):
                                   Permission.MANAGE_USERS))
         m.addSeparator()
         m.addAction(self._action("Paramètres", self._open_settings, "", Permission.MANAGE_SETTINGS))
+        m.addAction(self._action("Numérotation", self._open_numerotation, "", Permission.MANAGE_SETTINGS))
+        m.addSeparator()
+        m.addAction(self._action("Nouveau dossier…", self._open_nouveau_dossier, "",
+                                  Permission.MANAGE_SNAPSHOTS))
 
         # — Fenêtres —
         m = mb.addMenu("&Fenêtres")
@@ -455,3 +540,31 @@ class MainWindow(QMainWindow):
     def _open_facture_achat(self) -> None:
         from garage_app.gui.stock.facture_achat_window import FactureAchatWindow
         self._registry.open_or_activate(FactureAchatWindow, self._ctx, self._session)
+
+    def _open_factures_achat(self) -> None:
+        from garage_app.gui.stock.facture_achat_list_window import FactureAchatListWindow
+        self._registry.open_or_activate(FactureAchatListWindow, self._ctx, self._session)
+
+    def _open_charges(self) -> None:
+        from garage_app.gui.facturation.charges_window import ChargesWindow
+        self._registry.open_or_activate(ChargesWindow, self._ctx, self._session)
+
+    def _open_numerotation(self) -> None:
+        from garage_app.gui.admin.numerotation_window import NumerotationWindow
+        self._registry.open_or_activate(NumerotationWindow, self._ctx, self._session)
+
+    def _open_report_designer(self) -> None:
+        from garage_app.gui.reports.report_designer_window import ReportDesignerWindow
+        self._registry.open_or_activate(ReportDesignerWindow, self._ctx, self._session)
+
+    def _open_nouveau_dossier(self) -> None:
+        from garage_app.dossier_manager import DossierManager
+        from garage_app.gui.dossier_selector_dialog import NouveauDossierDialog
+        from PyQt6.QtWidgets import QMessageBox
+        dlg = NouveauDossierDialog(DossierManager(), self)
+        if dlg.exec() and dlg.created_path:
+            QMessageBox.information(
+                self, "Dossier créé",
+                f"Nouveau dossier créé :\n{dlg.created_path}\n\n"
+                "Redémarrez l'application pour ouvrir ce dossier.",
+            )

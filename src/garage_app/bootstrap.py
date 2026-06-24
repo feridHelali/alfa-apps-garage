@@ -21,6 +21,9 @@ from garage_app.infrastructure.repositories.societe_repository import SqlAlchemy
 from garage_app.infrastructure.repositories.report_template_repository import SqlAlchemyReportTemplateRepository
 from garage_app.infrastructure.repositories.rendez_vous_repository import SqlAlchemyRendezVousRepository
 from garage_app.infrastructure.repositories.audit_log_repository import AuditLogRepository
+from garage_app.infrastructure.repositories.app_settings_repository import AppSettingsRepository
+from garage_app.infrastructure.repositories.facture_achat_repository import FactureAchatRepository
+from garage_app.infrastructure.repositories.charge_garage_repository import ChargeGarageRepository
 from garage_app.application.auth_service import AuthService
 from garage_app.application.client_service import ClientService
 from garage_app.application.dossier_service import DossierService
@@ -28,12 +31,15 @@ from garage_app.application.stock_service import StockService
 from garage_app.application.fournisseur_service import FournisseurService
 from garage_app.application.commande_service import CommandeService
 from garage_app.application.facture_service import FactureService
+from garage_app.application.facture_achat_service import FactureAchatService
+from garage_app.application.charge_service import ChargeService
 from garage_app.application.caisse_service import CaisseService
 from garage_app.application.credit_service import CreditService
 from garage_app.application.societe_service import SocieteService
 from garage_app.application.report_service import ReportService
 from garage_app.application.snapshot_service import SnapshotService
 from garage_app.application.settings_service import SettingsService
+from garage_app.application.numerotation_service import NumerotationService
 from garage_app.application.audit_service import AuditService
 from garage_app.application.db_management_service import DbManagementService
 from garage_app.application.rendez_vous_service import RendezVousService
@@ -52,20 +58,25 @@ class AppContext:
     fournisseur_service: FournisseurService
     commande_service: CommandeService
     facture_service: FactureService
+    facture_achat_service: FactureAchatService
+    charge_service: ChargeService
     caisse_service: CaisseService
     credit_service: CreditService
     societe_service: SocieteService
     report_service: ReportService
     snapshot_service: SnapshotService
     settings_service: SettingsService
+    numerotation_service: NumerotationService
     rendez_vous_service: RendezVousService
     audit_service: AuditService
     db_management_service: DbManagementService
     analytics_service: AnalyticsService
 
 
-def bootstrap() -> AppContext:
+def bootstrap(db_path: str | None = None) -> AppContext:
     settings = AppSettings()
+    if db_path:
+        settings.db_path = db_path
     AppSettings.ensure_dirs()
 
     engine = create_db_engine(settings.db_path)
@@ -91,6 +102,11 @@ def bootstrap() -> AppContext:
     credit_repo = SqlAlchemyCreditRepository(sf)
     societe_repo = SqlAlchemySocieteRepository(sf)
     template_repo = SqlAlchemyReportTemplateRepository(sf)
+    settings_repo = AppSettingsRepository(sf)
+    facture_achat_repo = FactureAchatRepository(sf)
+    charge_repo = ChargeGarageRepository(sf)
+
+    numerotation_svc = NumerotationService(sf)
 
     return AppContext(
         settings=settings,
@@ -102,13 +118,16 @@ def bootstrap() -> AppContext:
         stock_service=StockService(sf, piece_repo, event_bus),
         fournisseur_service=FournisseurService(sf, fournisseur_repo),
         commande_service=CommandeService(sf, commande_repo, piece_repo, event_bus),
-        facture_service=FactureService(sf, facture_repo, dossier_repo, event_bus),
+        facture_service=FactureService(sf, facture_repo, dossier_repo, event_bus, numerotation_svc),
+        facture_achat_service=FactureAchatService(sf, facture_achat_repo, piece_repo, numerotation_svc),
+        charge_service=ChargeService(charge_repo),
         caisse_service=CaisseService(sf, caisse_repo, event_bus, audit_svc),
         credit_service=CreditService(sf, credit_repo),
         societe_service=SocieteService(sf, societe_repo),
         report_service=ReportService(template_repo),
         snapshot_service=SnapshotService(settings),
         settings_service=SettingsService(settings),
+        numerotation_service=numerotation_svc,
         rendez_vous_service=RendezVousService(rdv_repo, event_bus),
         audit_service=audit_svc,
         db_management_service=DbManagementService(sf, settings, audit_svc),

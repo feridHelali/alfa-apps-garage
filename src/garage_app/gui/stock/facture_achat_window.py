@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import uuid
-from datetime import date
+from datetime import datetime
+from decimal import Decimal
 
-from PyQt6.QtCore import Qt, QDate
+from PyQt6.QtCore import Qt, QDate, pyqtSignal
 from PyQt6.QtWidgets import (
     QAbstractItemView, QComboBox, QDateEdit, QDoubleSpinBox, QFormLayout,
     QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMdiSubWindow, QMessageBox,
@@ -12,25 +13,31 @@ from PyQt6.QtWidgets import (
 
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
+from garage_app.gui.widgets.notification_bar import NotificationBar
 
 
 class FactureAchatWindow(QMdiSubWindow):
-    """Direct purchase-invoice entry — records stock entries without a prior purchase order."""
+    """Direct purchase-invoice entry — creates a FactureAchat and enters stock."""
+
+    saved = pyqtSignal()
 
     def __init__(self, ctx: AppContext, session: UserSession) -> None:
         super().__init__()
         self._ctx = ctx
         self._session = session
-        self.setWindowTitle("Facture d'achat — Entrée stock")
+        self.setWindowTitle("Nouvelle facture d'achat")
         self._build_ui()
         self._load_lookups()
-        self.resize(820, 560)
+        self.resize(820, 580)
 
     def _build_ui(self) -> None:
         root = QWidget()
         vbox = QVBoxLayout(root)
         vbox.setContentsMargins(10, 10, 10, 10)
         vbox.setSpacing(8)
+
+        self._notif = NotificationBar()
+        vbox.addWidget(self._notif)
 
         # ── Header form ──────────────────────────────────────────────────────
         hdr = QGroupBox("En-tête de la facture")
@@ -39,14 +46,19 @@ class FactureAchatWindow(QMdiSubWindow):
 
         self._fourn_cb = QComboBox()
         self._ref = QLineEdit()
-        self._ref.setPlaceholderText("ex. FA-2026-0001")
+        self._ref.setPlaceholderText("Numéro figurant sur la facture fournisseur")
         self._date = QDateEdit(QDate.currentDate())
         self._date.setCalendarPopup(True)
+        self._echeance = QDateEdit()
+        self._echeance.setCalendarPopup(True)
+        self._echeance.setSpecialValueText("—")
+        self._echeance.setDate(QDate.currentDate().addDays(30))
         self._notes = QLineEdit()
 
         form.addRow("Fournisseur *", self._fourn_cb)
-        form.addRow("N° Facture *", self._ref)
-        form.addRow("Date", self._date)
+        form.addRow("N° Facture fournisseur *", self._ref)
+        form.addRow("Date facture", self._date)
+        form.addRow("Date échéance", self._echeance)
         form.addRow("Notes", self._notes)
         vbox.addWidget(hdr)
 
@@ -60,13 +72,13 @@ class FactureAchatWindow(QMdiSubWindow):
 
         self._lines_tbl = QTableWidget(0, 5)
         self._lines_tbl.setHorizontalHeaderLabels(
-            ["Pièce", "Quantité reçue", "Prix unitaire (DT)", "Total (DT)", ""]
+            ["Pièce", "Quantité reçue", "Prix unitaire (DT)", "Total HT (DT)", ""]
         )
         self._lines_tbl.horizontalHeader().setStretchLastSection(True)
-        self._lines_tbl.setColumnWidth(0, 280)
+        self._lines_tbl.setColumnWidth(0, 290)
         self._lines_tbl.setColumnWidth(1, 110)
         self._lines_tbl.setColumnWidth(2, 130)
-        self._lines_tbl.setColumnWidth(3, 100)
+        self._lines_tbl.setColumnWidth(3, 110)
         self._lines_tbl.setColumnWidth(4, 40)
         self._lines_tbl.verticalHeader().setVisible(False)
         self._lines_tbl.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -76,16 +88,20 @@ class FactureAchatWindow(QMdiSubWindow):
 
         # ── Footer ───────────────────────────────────────────────────────────
         foot = QHBoxLayout()
-        self._lbl_total = QLabel("Total : 0,000 DT")
+        self._lbl_total = QLabel("Total HT : 0,000 DT")
         self._lbl_total.setStyleSheet("font-weight: 700; font-size: 11pt;")
-        btn_valider = QPushButton("Valider la facture — Entrée en stock")
+        btn_valider = QPushButton("Enregistrer et valider (entrée stock)")
         btn_valider.setDefault(True)
+        btn_valider.setStyleSheet("background:#107C10; color:white; font-weight:700; padding:6px 16px;")
         btn_valider.clicked.connect(self._valider)
+        btn_sauver = QPushButton("Enregistrer (saisie)")
+        btn_sauver.clicked.connect(self._sauver)
         btn_annuler = QPushButton("Annuler")
         btn_annuler.clicked.connect(self.close)
         foot.addWidget(self._lbl_total)
         foot.addStretch()
         foot.addWidget(btn_annuler)
+        foot.addWidget(btn_sauver)
         foot.addWidget(btn_valider)
         vbox.addLayout(foot)
 
@@ -97,7 +113,7 @@ class FactureAchatWindow(QMdiSubWindow):
             self._session, actifs_seulement=True
         )
         self._fourn_cb.clear()
-        self._fourn_cb.addItem("— Aucun —", None)
+        self._fourn_cb.addItem("— Sélectionnez un fournisseur —", None)
         for f in fournisseurs:
             self._fourn_cb.addItem(f.raison_sociale, str(f.id))
         self._pieces = self._ctx.stock_service.list_pieces(self._session)
@@ -128,7 +144,8 @@ class FactureAchatWindow(QMdiSubWindow):
 
         del_btn = QPushButton("✕")
         del_btn.setFixedWidth(28)
-        del_btn.clicked.connect(lambda _, r=row: self._remove_line(r))
+        r = row
+        del_btn.clicked.connect(lambda _, row_val=r: self._remove_line(row_val))
         self._lines_tbl.setCellWidget(row, 4, del_btn)
 
     def _remove_line(self, row: int) -> None:
@@ -146,49 +163,94 @@ class FactureAchatWindow(QMdiSubWindow):
                 item = self._lines_tbl.item(row, 3)
                 if item:
                     item.setText(f"{line_total:,.3f} DT")
-        self._lbl_total.setText(f"Total : {grand_total:,.3f} DT")
+        self._lbl_total.setText(f"Total HT : {grand_total:,.3f} DT")
 
-    def _valider(self) -> None:
-        ref = self._ref.text().strip()
-        if not ref:
-            QMessageBox.warning(self, "Validation", "Le numéro de facture est obligatoire.")
-            return
-        if self._lines_tbl.rowCount() == 0:
-            QMessageBox.warning(self, "Validation", "Ajoutez au moins une ligne.")
-            return
-
-        # Collect lines
-        lignes: list[tuple[uuid.UUID, int]] = []
+    def _collect_lignes(self) -> list[dict] | None:
+        lignes: list[dict] = []
         for row in range(self._lines_tbl.rowCount()):
             cb = self._lines_tbl.cellWidget(row, 0)
             qte_w = self._lines_tbl.cellWidget(row, 1)
-            if cb and qte_w:
-                piece_id = uuid.UUID(cb.currentData())
-                lignes.append((piece_id, qte_w.value()))
+            prix_w = self._lines_tbl.cellWidget(row, 2)
+            if cb and qte_w and prix_w and cb.currentData():
+                lignes.append({
+                    "piece_id": uuid.UUID(cb.currentData()),
+                    "quantite": qte_w.value(),
+                    "prix_unitaire": Decimal(str(prix_w.value())),
+                })
+        return lignes if lignes else None
 
+    def _validate_header(self) -> bool:
+        if not self._ref.text().strip():
+            self._notif.show_message("Le numéro de facture fournisseur est obligatoire.", "error")
+            return False
+        if not self._fourn_cb.currentData():
+            self._notif.show_message("Sélectionnez un fournisseur.", "error")
+            return False
+        if self._lines_tbl.rowCount() == 0:
+            self._notif.show_message("Ajoutez au moins une ligne.", "error")
+            return False
+        return True
+
+    def _sauver(self) -> None:
+        if not self._validate_header():
+            return
+        lignes = self._collect_lignes()
+        if not lignes:
+            self._notif.show_message("Aucune ligne valide.", "error")
+            return
+        try:
+            fa = self._ctx.facture_achat_service.creer_facture_achat(
+                self._session,
+                fournisseur_id=uuid.UUID(self._fourn_cb.currentData()),
+                numero_fournisseur=self._ref.text().strip(),
+                date_facture=datetime(
+                    self._date.date().year(),
+                    self._date.date().month(),
+                    self._date.date().day(),
+                ),
+                lignes=lignes,
+                notes=self._notes.text().strip(),
+            )
+            self._notif.show_message(f"Facture '{fa.notre_numero}' enregistrée (statut Saisie).", "success")
+            self.saved.emit()
+            self.close()
+        except Exception as e:
+            self._notif.show_message(str(e), "error")
+
+    def _valider(self) -> None:
+        if not self._validate_header():
+            return
+        lignes = self._collect_lignes()
+        if not lignes:
+            self._notif.show_message("Aucune ligne valide.", "error")
+            return
         rep = QMessageBox.question(
-            self,
-            "Confirmer",
-            f"Valider la facture '{ref}' et enregistrer {len(lignes)} entrée(s) de stock ?",
+            self, "Confirmer",
+            f"Enregistrer ET valider la facture '{self._ref.text().strip()}' ?\n"
+            "Cela mettra à jour le stock et le prix d'achat des pièces.",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )
         if rep != QMessageBox.StandardButton.Yes:
             return
-
-        errors: list[str] = []
-        for piece_id, qte in lignes:
-            try:
-                self._ctx.stock_service.entrer_stock(
-                    self._session, piece_id, qte, reference=f"FA:{ref}"
-                )
-            except Exception as e:
-                errors.append(str(e))
-
-        if errors:
-            QMessageBox.warning(self, "Erreurs partielles", "\n".join(errors))
-        else:
+        try:
+            fa = self._ctx.facture_achat_service.creer_facture_achat(
+                self._session,
+                fournisseur_id=uuid.UUID(self._fourn_cb.currentData()),
+                numero_fournisseur=self._ref.text().strip(),
+                date_facture=datetime(
+                    self._date.date().year(),
+                    self._date.date().month(),
+                    self._date.date().day(),
+                ),
+                lignes=lignes,
+                notes=self._notes.text().strip(),
+            )
+            self._ctx.facture_achat_service.valider(self._session, fa.id)
             QMessageBox.information(
                 self, "Succès",
-                f"Facture '{ref}' validée — stock mis à jour pour {len(lignes)} pièce(s)."
+                f"Facture '{fa.notre_numero}' validée — stock mis à jour pour {len(lignes)} pièce(s)."
             )
+            self.saved.emit()
             self.close()
+        except Exception as e:
+            self._notif.show_message(str(e), "error")

@@ -6,6 +6,8 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.facturation.facture import Facture
 from garage_app.gui.reports.report_viewer_window import ReportViewerWindow, build_html
+from garage_app.tools.report_engine.html_template_manager import HtmlTemplateManager
+from garage_app.tools.report_engine.html_template_renderer import HtmlTemplateRenderer
 
 # Simple receipt/invoice SVG icon (white fill, works in Qt's HTML renderer)
 _INVOICE_SVG = base64.b64encode(b"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -151,7 +153,68 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
     )
 
 
+def _render_with_template(facture: Facture, ctx: AppContext, session: UserSession) -> str | None:
+    """Try to render via the active HtmlReportTemplate; return None if not available."""
+    try:
+        mgr = HtmlTemplateManager()
+        template = mgr.get_default("facture")
+        renderer = HtmlTemplateRenderer()
+        client_nom = "—"
+        try:
+            clients = ctx.client_service.list_clients(session)
+            client = next((c for c in clients if str(c.id) == str(facture.client_id)), None)
+            if client:
+                client_nom = f"{client.nom} {client.prenom}".strip()
+        except Exception:
+            pass
+
+        emission_str = facture.date_emission.strftime("%d/%m/%Y") if facture.date_emission else "—"
+        statut_label = {
+            "brouillon": "BROUILLON",
+            "emise": "ÉMISE",
+            "partiellement_payee": "PART. PAYÉE",
+            "payee": "PAYÉE ✓",
+            "annulee": "ANNULÉE",
+        }.get(facture.statut.value, facture.statut.value.upper())
+
+        lignes = [
+            {
+                "index": i,
+                "designation": lg.designation,
+                "quantite": lg.quantite,
+                "prix_unitaire": float(lg.prix_unitaire),
+                "montant": float(lg.montant.amount),
+            }
+            for i, lg in enumerate(facture.lignes, 1)
+        ]
+        reste = float(facture.montant_ttc.amount) - float(facture.montant_paye)
+        context = {
+            "titre": f"Facture N° {facture.numero}",
+            "sous_titre": f"Client : {client_nom}  |  Émise le {emission_str}",
+            "entete_gauche": [("FACTURÉ À", ""), ("Client", client_nom)],
+            "entete_droite": [
+                ("N° Facture", facture.numero),
+                ("Date", emission_str),
+                ("Statut", statut_label),
+            ],
+            "lignes": lignes,
+            "totaux": {
+                "montant_ht": float(facture.montant_ht.amount),
+                "taux_tva": facture.taux_tva,
+                "montant_tva": float(facture.montant_tva.amount),
+                "montant_ttc": float(facture.montant_ttc.amount),
+                "montant_paye": float(facture.montant_paye),
+                "reste": reste,
+            },
+            "mode_paiement": ", ".join(p.mode for p in facture.paiements) if facture.paiements else "",
+            "reference_paiement": (facture.paiements[0].reference if facture.paiements and facture.paiements[0].reference else ""),
+        }
+        return renderer.render(template, context)
+    except Exception:
+        return None
+
+
 class FactureReportWindow(ReportViewerWindow):
     def __init__(self, ctx: AppContext, session: UserSession, facture: Facture) -> None:
-        html = _render(facture, ctx, session)
+        html = _render_with_template(facture, ctx, session) or _render(facture, ctx, session)
         super().__init__(f"Facture N° {facture.numero}", html)

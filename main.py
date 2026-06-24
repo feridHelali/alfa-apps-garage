@@ -27,18 +27,34 @@ def _check_licence(app: QApplication) -> bool:
     return False
 
 
+def _select_dossier() -> str | None:
+    """Return a DB path if the user selects one, None to use the default."""
+    from garage_app.dossier_manager import DossierManager
+    manager = DossierManager()
+    if not manager.has_multiple():
+        return None
+    from garage_app.gui.dossier_selector_dialog import DossierSelectorDialog
+    dlg = DossierSelectorDialog(manager)
+    if dlg.exec() == DossierSelectorDialog.DialogCode.Accepted:
+        return dlg.selected_db_path
+    sys.exit(0)
+
+
 def main() -> None:
     app = GarageApplication(sys.argv)
 
     if not _check_licence(app):
         sys.exit(1)
 
+    # Multi-dossier: show selector when more than one DB is registered
+    db_path = _select_dossier()
+
     splash = SplashScreen()
     splash.show()
     QApplication.processEvents()
 
     splash.update_message("Initialisation de la base de données…")
-    ctx = bootstrap()
+    ctx = bootstrap(db_path=db_path)
 
     splash.update_message("Chargement de l'interface…")
     app.apply_stylesheet("light")
