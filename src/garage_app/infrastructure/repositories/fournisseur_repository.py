@@ -46,10 +46,15 @@ class SqlAlchemyFournisseurRepository(FournisseurRepository):
             else:
                 s.add(FournisseurModel(
                     id=str(f.id),
-                    raison_sociale=f.raison_sociale,
-                    contact_nom=f.contact_nom,
+                    # Legacy columns — kept in sync so NOT NULL constraint is satisfied
+                    nom=f.raison_sociale,
+                    contact=f.contact_nom,
                     telephone=f.telephone,
                     email=f.email,
+                    delai_livraison=f.delai_livraison_jours,
+                    # Current columns
+                    raison_sociale=f.raison_sociale,
+                    contact_nom=f.contact_nom,
                     adresse=f.adresse,
                     delai_livraison_jours=f.delai_livraison_jours,
                     est_actif=f.est_actif,

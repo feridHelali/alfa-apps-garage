@@ -12,10 +12,15 @@ from garage_app.infrastructure.db.base import Base
 class FournisseurModel(Base):
     __tablename__ = "fournisseurs"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    raison_sociale: Mapped[str] = mapped_column(String(150), nullable=False, default="")
-    contact_nom: Mapped[str] = mapped_column(String(100), default="")
+    # Legacy columns (original schema, NOT NULL, no server default — must be provided on INSERT)
+    nom: Mapped[str] = mapped_column(String(100), default="")
+    contact: Mapped[str] = mapped_column(String(100), default="")
     telephone: Mapped[str] = mapped_column(String(30), default="")
     email: Mapped[str] = mapped_column(String(150), default="")
+    delai_livraison: Mapped[int] = mapped_column(Integer, default=7)
+    # Current columns (added via migration)
+    raison_sociale: Mapped[str] = mapped_column(String(150), nullable=False, default="")
+    contact_nom: Mapped[str] = mapped_column(String(100), default="")
     adresse: Mapped[str] = mapped_column(Text, default="")
     delai_livraison_jours: Mapped[int] = mapped_column(Integer, default=7)
     est_actif: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
