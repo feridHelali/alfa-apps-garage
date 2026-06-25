@@ -18,10 +18,16 @@
   ],
   "users": [
     {
-      "username": "admin",
-      "password": "Admin@2025!",
+      "username": "superadmin",
+      "password": "SuperAdmin@2025!",
       "full_name": "Super Administrateur",
       "role": "superadmin"
+    },
+    {
+      "username": "admin",
+      "password": "Admin@2025!",
+      "full_name": "Administrateur",
+      "role": "admin"
     }
   ],
   "societe": {

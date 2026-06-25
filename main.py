@@ -54,7 +54,17 @@ def main() -> None:
     QApplication.processEvents()
 
     splash.update_message("Initialisation de la base de données…")
-    ctx = bootstrap(db_path=db_path)
+    try:
+        ctx = bootstrap(db_path=db_path)
+    except Exception as exc:
+        splash.close()
+        QMessageBox.critical(
+            None,
+            "Erreur d'initialisation",
+            f"Impossible d'initialiser la base de données :\n\n{exc}\n\n"
+            "Vérifiez les permissions d'accès au dossier de données.",
+        )
+        sys.exit(1)
 
     splash.update_message("Chargement de l'interface…")
     app.apply_stylesheet("light")
