@@ -49,8 +49,9 @@ class CaisseService:
             self._audit.log_business(
                 f"Session caisse ouverte par {session.full_name} "
                 f"(solde ouverture: {solde_ouverture} TND)",
-                user_id=session.user_id,
-                username=session.username,
+                session=session,
+                entity_type="SessionCaisse",
+                entity_id=str(sc.id),
             )
         return sc
 
@@ -98,13 +99,13 @@ class CaisseService:
             ecart = sc.fermer(solde_reel)
             self._repo.save(sc)
         if self._audit:
-            level = "WARNING" if abs(ecart) > Decimal("0.001") else "INFO"
             self._audit.log_business(
                 f"Session caisse fermée par {session.full_name}. "
                 f"Théorique: {sc.solde_theorique:.3f} TND, "
                 f"Réel: {solde_reel:.3f} TND, Écart: {ecart:.3f} TND.",
-                user_id=session.user_id,
-                username=session.username,
+                session=session,
+                entity_type="SessionCaisse",
+                entity_id=str(sc.id),
             )
         return sc, ecart
 

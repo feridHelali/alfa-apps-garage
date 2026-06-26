@@ -36,6 +36,11 @@ class SqlAlchemyFournisseurRepository(FournisseurRepository):
         with self._sf.get_session() as s:
             m = s.get(FournisseurModel, str(f.id))
             if m:
+                # Legacy columns — kept in sync so NOT NULL constraint is satisfied
+                m.nom = f.raison_sociale
+                m.contact = f.contact_nom
+                m.delai_livraison = f.delai_livraison_jours
+                # Current columns
                 m.raison_sociale = f.raison_sociale
                 m.contact_nom = f.contact_nom
                 m.telephone = f.telephone
@@ -44,21 +49,22 @@ class SqlAlchemyFournisseurRepository(FournisseurRepository):
                 m.delai_livraison_jours = f.delai_livraison_jours
                 m.est_actif = f.est_actif
             else:
-                s.add(FournisseurModel(
+                m = FournisseurModel(
                     id=str(f.id),
-                    # Legacy columns — kept in sync so NOT NULL constraint is satisfied
-                    nom=f.raison_sociale,
-                    contact=f.contact_nom,
                     telephone=f.telephone,
                     email=f.email,
-                    delai_livraison=f.delai_livraison_jours,
-                    # Current columns
                     raison_sociale=f.raison_sociale,
                     contact_nom=f.contact_nom,
                     adresse=f.adresse,
                     delai_livraison_jours=f.delai_livraison_jours,
                     est_actif=f.est_actif,
-                ))
+                )
+                # Set legacy NOT NULL columns via attribute assignment so SQLAlchemy's
+                # dirty-tracking guarantees they appear in the INSERT statement.
+                m.nom = f.raison_sociale
+                m.contact = f.contact_nom
+                m.delai_livraison = f.delai_livraison_jours
+                s.add(m)
 
     def delete(self, entity_id: uuid.UUID) -> None:
         with self._sf.get_session() as s:

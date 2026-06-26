@@ -100,6 +100,8 @@ class SqlAlchemyFactureRepository(FactureRepository):
                     montant_ttc=float(f.montant_ttc.amount),
                     solde_restant=float(f.solde_restant),
                     statut=f.statut.value,
+                    statut_paiement="impayee",
+                    mode_paiement="",
                     est_flotte=f.est_flotte,
                     notes=f.notes,
                 )
