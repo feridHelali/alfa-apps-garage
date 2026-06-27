@@ -18,6 +18,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.planification.rendez_vous import RendezVous
 from garage_app.domain.planification.client import Client
 from garage_app.domain.planification.vehicule import Vehicule
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 _STATUT_LABELS = {
@@ -256,11 +257,13 @@ class RendezVousWindow(QMdiSubWindow):
         tb.setMovable(False)
 
         self._btn_new = QPushButton("+ Nouveau")
+        self._btn_new.setIcon(_icon("new"))
         self._btn_new.setEnabled(self._can_manage)
         self._btn_new.clicked.connect(self._new_rdv)
         tb.addWidget(self._btn_new)
 
         self._btn_edit = QPushButton("Modifier")
+        self._btn_edit.setIcon(_icon("edit"))
         self._btn_edit.setEnabled(False)
         self._btn_edit.clicked.connect(self._edit_rdv)
         tb.addWidget(self._btn_edit)
@@ -268,16 +271,19 @@ class RendezVousWindow(QMdiSubWindow):
         tb.addSeparator()
 
         self._btn_confirm = QPushButton("Confirmer")
+        self._btn_confirm.setIcon(_icon("ok"))
         self._btn_confirm.setEnabled(False)
         self._btn_confirm.clicked.connect(self._confirmer)
         tb.addWidget(self._btn_confirm)
 
         self._btn_termine = QPushButton("Terminer")
+        self._btn_termine.setIcon(_icon("check"))
         self._btn_termine.setEnabled(False)
         self._btn_termine.clicked.connect(self._terminer)
         tb.addWidget(self._btn_termine)
 
         self._btn_cancel = QPushButton("Annuler")
+        self._btn_cancel.setIcon(_icon("cancel"))
         self._btn_cancel.setEnabled(False)
         self._btn_cancel.clicked.connect(self._annuler)
         tb.addWidget(self._btn_cancel)
@@ -285,6 +291,7 @@ class RendezVousWindow(QMdiSubWindow):
         tb.addSeparator()
 
         self._btn_delete = QPushButton("Supprimer")
+        self._btn_delete.setIcon(_icon("delete"))
         self._btn_delete.setEnabled(False)
         self._btn_delete.setStyleSheet("QPushButton { color: #C0392B; }")
         self._btn_delete.clicked.connect(self._supprimer)

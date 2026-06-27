@@ -16,6 +16,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.tools.report_engine.html_template import ColonneConfig, HtmlReportTemplate
 from garage_app.tools.report_engine.html_template_manager import HtmlTemplateManager
 from garage_app.tools.report_engine.html_template_renderer import SAMPLE_CONTEXTS, HtmlTemplateRenderer
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _DOC_TYPES = [
     ("facture", "Facture client"),
@@ -321,17 +322,17 @@ class ReportDesignerWindow(QMdiSubWindow):
 
         tb_layout.addStretch()
 
-        self._btn_new = QPushButton("+ Nouveau")
+        self._btn_new = QPushButton(_icon("new"), "+ Nouveau")
         self._btn_new.clicked.connect(self._new_template)
-        self._btn_dup = QPushButton("Dupliquer")
+        self._btn_dup = QPushButton(_icon("new"), "Dupliquer")
         self._btn_dup.clicked.connect(self._duplicate_template)
-        self._btn_save = QPushButton("Enregistrer")
+        self._btn_save = QPushButton(_icon("save"), "Enregistrer")
         self._btn_save.setStyleSheet("font-weight:600; color:#0055a5;")
         self._btn_save.clicked.connect(self._save_template)
-        self._btn_del = QPushButton("Supprimer")
+        self._btn_del = QPushButton(_icon("delete"), "Supprimer")
         self._btn_del.setStyleSheet("color:#A4262C;")
         self._btn_del.clicked.connect(self._delete_template)
-        self._btn_default = QPushButton("Définir par défaut")
+        self._btn_default = QPushButton(_icon("check"), "Définir par défaut")
         self._btn_default.clicked.connect(self._set_default)
 
         for btn in [self._btn_new, self._btn_dup, self._btn_save,

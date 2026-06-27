@@ -10,6 +10,7 @@ from garage_app.application.numerotation_service import TYPES_DOC, NumerotationC
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.gui.widgets.notification_bar import NotificationBar
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _LABELS = {
     "facture":        "Facture client",
@@ -105,10 +106,10 @@ class NumerotationWindow(QMdiSubWindow):
         vbox.addWidget(grp)
 
         foot = QHBoxLayout()
-        btn_save = QPushButton("Enregistrer")
+        btn_save = QPushButton(_icon("save"), "Enregistrer")
         btn_save.setDefault(True)
         btn_save.clicked.connect(self._save)
-        btn_cancel = QPushButton("Fermer")
+        btn_cancel = QPushButton(_icon("close"), "Fermer")
         btn_cancel.clicked.connect(self.close)
         foot.addStretch()
         foot.addWidget(btn_cancel)

@@ -19,27 +19,29 @@ Tous les rapports sont accessibles via le menu **Rapports**.
 |---|---|---|
 | **Fiche Réparation** | Rapports → Fiche Réparation… | Rapport détaillé d'un dossier |
 | **Bon de Travail** | Depuis le dossier | Document remis au technicien |
-| **Dossiers en cours** | Rapports → Dossiers en cours | Tableau de bord des dossiers actifs |
 
 ### Rapports Stock
 
 | Rapport | Accès | Description |
 |---|---|---|
-| **État du Stock** | Rapports → État du Stock | Inventaire complet avec alertes |
-| **Mouvements de Stock** | Rapports → Mouvements… | Entrées/sorties par période |
+| **Stock Valorisé** | Rapports → Stock Valorisé | Inventaire complet avec valeurs achat/vente |
+| **Alertes Stock** | Rapports → Alertes Stock | Pièces sous le seuil minimum |
+| **Fiche Stock (Pièce)** | Rapports → Fiche Stock (Pièce)… | Fiche détaillée d'une référence |
+| **Fiche Fournisseur** | Rapports → Fiche Fournisseur… | Historique achats + créances fournisseur |
 
 ### Rapports Facturation
 
 | Rapport | Accès | Description |
 |---|---|---|
 | **Facture Client** | Depuis la facture | Document de facturation officiel |
-| **Rapport de Ventes** | Rapports → Ventes… | CA par période et par type |
-| **Créances** | Rapports → Créances | Liste des impayés |
-| **Bilan Mensuel** | Rapports → Bilan… | CA vs Charges = Résultat net |
+| **CA Mensuel** | Rapports → CA Mensuel… | Chiffre d'affaires mois par mois |
+| **Créances Clients** | Rapports → Créances Clients | Liste des impayés par client |
 
 ---
 
-## 6.2 Imprimer un rapport
+## 6.2 Impression des rapports
+
+### Impression directe
 
 Pour tout rapport :
 
@@ -50,13 +52,38 @@ Pour tout rapport :
 5. Choisissez l'imprimante et les options
 6. Validez
 
-> **Conseil** : Pour créer un PDF, choisissez **Microsoft Print to PDF** ou **PDF Creator** comme imprimante.
+### Aperçu avant impression
+
+Cliquez sur **Aperçu avant impression** pour voir exactement ce qui sera imprimé avant d'envoyer à l'imprimante.
+
+### Créer un PDF
+
+Choisissez **Microsoft Print to PDF** comme imprimante pour créer un fichier PDF.
 
 ---
 
-## 6.3 Concepteur de Documents
+## 6.3 Format d'impression — Économie d'encre
 
-Menu **Rapports → Concepteur de documents…** (admin uniquement)
+Tous les rapports et documents (factures, fiches, états de stock…) sont générés avec un style **sans fond coloré** :
+
+| Élément | Style |
+|---|---|
+| En-tête du document | Ligne de séparation seulement — pas de fond coloré |
+| Titre de section | **Gras** + Souligné |
+| En-têtes de colonnes | **Gras** + bordure basse épaisse |
+| Ligne Total TTC | **Gras** + Souligné |
+| Reste à payer | ***Gras Italique*** |
+| Badges de statut | Encadrés en noir — pas de fond coloré |
+
+> **Avantage** : Cette conception économise significativement l'encre d'impression. Une cartouche dure 3 à 4 fois plus longtemps qu'avec des fonds colorés. Idéal pour les garages qui impriment de nombreuses factures quotidiennement.
+
+> **Compatibilité** : Les rapports sont générés en HTML compatible avec toutes les imprimantes A4 standard. Format recommandé : A4 Portrait pour les factures et fiches individuelles, A4 Paysage pour les états multi-colonnes.
+
+---
+
+## 6.4 Concepteur de Documents
+
+**Menu Rapports → Concepteur de documents…** (admin uniquement)
 
 Le Concepteur de Documents vous permet de personnaliser l'apparence de tous vos documents imprimables sans aucune compétence en programmation.
 
@@ -82,20 +109,19 @@ Personnalisez la partie haute du document :
 
 | Option | Description |
 |---|---|
-| **Couleur principale** | Couleur de fond de l'en-tête (bandeau) |
-| **Afficher le logo** | Active/désactive le logo Alfa Computers |
+| **Afficher le logo** | Active/désactive le logo société |
 | **Afficher le nom** | Affiche la raison sociale |
 | **Afficher le slogan** | Affiche "Solutions de Gestion sur Mesure" |
 
-> **Conseil** : Choisissez une couleur cohérente avec l'identité visuelle de votre garage (ex : bleu `#0055a5` pour un garage Renault, rouge pour Toyota...).
+> **Note** : La couleur de bande n'est plus appliquée en fond (impression économique). Elle peut être utilisée pour le CSS personnalisé.
 
 ### Onglet Colonnes
 
 Gérez les colonnes affichées dans le tableau de lignes :
 
 - **Cocher/décocher** : affiche ou masque une colonne
-- **Titre** : renommez l'en-tête de colonne (ex : "Désignation" → "Description de la pièce")
-- **Largeur** : ajustez la largeur relative (en %)
+- **Titre** : renommez l'en-tête de colonne
+- **Largeur** : ajustez la largeur en pixels (-1 = étirable)
 - **Alignement** : Gauche, Centre, ou Droite
 
 ### Onglet Totaux
@@ -106,23 +132,23 @@ Activez ou désactivez les lignes de totaux en bas du tableau :
 |---|---|
 | **Afficher HT** | Total Hors Taxes |
 | **Afficher TVA** | Montant de la TVA |
-| **Afficher TTC** | Total Toutes Taxes Comprises |
+| **Afficher TTC** | Total Toutes Taxes Comprises (gras + souligné) |
 | **Afficher Payé** | Montant déjà payé |
-| **Afficher Reste** | Solde restant à payer |
+| **Afficher Reste** | Solde restant à payer (gras italique) |
 
 ### Onglet Pied de page
 
 | Option | Description |
 |---|---|
 | **Texte légal** | Mentions légales (ex : matricule fiscal, conditions) |
-| **Numéro de page** | Affiche "Page X / Y" en bas |
+| **Numéro de page** | Affiche "Page 1" en bas |
 | **CSS personnalisé** | Pour les utilisateurs avancés — styles CSS additionnels |
 
 ### Créer un nouveau modèle
 
 1. Cliquez sur **+ Nouveau modèle**
 2. Sélectionnez le **type de document** (Facture, Fiche réparation, etc.)
-3. Donnez-lui un **nom** (ex : "Facture Pro Bleu")
+3. Donnez-lui un **nom** (ex : "Facture Garage Ben Salah")
 4. Personnalisez les 4 onglets
 5. Cliquez sur **Enregistrer**
 
@@ -131,15 +157,3 @@ Pour définir ce modèle comme modèle **par défaut** pour ce type de document,
 ### Dupliquer un modèle
 
 Sélectionnez un modèle existant et cliquez sur **Dupliquer** pour créer une variation rapidement.
-
----
-
-## 6.4 Formats et compatibilité
-
-Les rapports sont générés en **HTML** avec des styles inline, compatibles avec :
-
-- **Impression directe** via Qt (sans navigateur)
-- **Microsoft Print to PDF** (Windows)
-- **Imprimantes A4** standard
-
-> **Format recommandé** : A4, orientation Portrait pour les factures et fiches réparation. Paysage pour les rapports multi-colonnes (état du stock, rapport de ventes).

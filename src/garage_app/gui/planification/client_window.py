@@ -16,6 +16,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.planification.client import Client
 from garage_app.domain.planification.vehicule import Vehicule
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 # ── Client list model ────────────────────────────────────────────────────────
@@ -176,6 +177,7 @@ class ClientWindow(QMdiSubWindow):
 
         btn_row = QHBoxLayout()
         self._btn_new_client = QPushButton("+ Nouveau client")
+        self._btn_new_client.setIcon(_icon("new"))
         self._btn_new_client.clicked.connect(self._new_client)
         btn_row.addWidget(self._btn_new_client)
         btn_row.addStretch()
@@ -214,6 +216,7 @@ class ClientWindow(QMdiSubWindow):
 
         client_btns = QHBoxLayout()
         self._btn_save_client = QPushButton("Enregistrer client")
+        self._btn_save_client.setIcon(_icon("save"))
         self._btn_save_client.clicked.connect(self._save_client)
         client_btns.addStretch()
         client_btns.addWidget(self._btn_save_client)
@@ -226,12 +229,15 @@ class ClientWindow(QMdiSubWindow):
 
         veh_bar = QHBoxLayout()
         self._btn_add_veh = QPushButton("+ Ajouter véhicule")
+        self._btn_add_veh.setIcon(_icon("new"))
         self._btn_add_veh.clicked.connect(self._add_vehicule)
         self._btn_add_veh.setEnabled(False)
         self._btn_edit_veh = QPushButton("Modifier")
+        self._btn_edit_veh.setIcon(_icon("edit"))
         self._btn_edit_veh.clicked.connect(self._edit_vehicule)
         self._btn_edit_veh.setEnabled(False)
         self._btn_del_veh = QPushButton("Supprimer")
+        self._btn_del_veh.setIcon(_icon("delete"))
         self._btn_del_veh.clicked.connect(self._delete_vehicule)
         self._btn_del_veh.setEnabled(False)
         veh_bar.addWidget(self._btn_add_veh)

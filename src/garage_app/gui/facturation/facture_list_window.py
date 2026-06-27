@@ -14,6 +14,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.facturation.facture import Facture, ModePaiement, StatutFacture
 from garage_app.domain.shared.value_objects import Money
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _STATUT_COLORS = {
     StatutFacture.BROUILLON:          ("#5D5D5D", "#F3F3F3"),
@@ -106,9 +107,9 @@ class FactureListWindow(QMdiSubWindow):
         self._filtre = QComboBox()
         self._filtre.addItems(["Toutes", "Impayées", "Payées", "Annulées"])
         self._filtre.currentIndexChanged.connect(self._load)
-        btn_detail = QPushButton("Ouvrir détail")
+        btn_detail = QPushButton(_icon("open"), "Ouvrir détail")
         btn_detail.clicked.connect(self._open_detail)
-        btn_annuler = QPushButton("Annuler facture")
+        btn_annuler = QPushButton(_icon("cancel"), "Annuler facture")
         btn_annuler.clicked.connect(self._annuler)
         bar.addWidget(lbl)
         bar.addWidget(self._filtre)

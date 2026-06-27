@@ -1,64 +1,85 @@
 # 5. Administration
 
+> Toutes les fonctions d'administration sont regroupées dans le menu **Administration**. Les fonctions marquées 🔑 **Admin** sont accessibles aux administrateurs et superadministrateurs. Les fonctions marquées 🔐 **Superadmin** sont réservées au superadministrateur uniquement.
+
 ---
 
-## 5.1 Informations de la société
+## Section Admin 🔑
 
-Menu **Administration → Société**
+*Accès : rôle `admin` ou `superadmin`*
+
+---
+
+### 5.1 Informations de la société
+
+**Menu Administration → Société** — ou — **Administration → Paramètres**, onglet *Société*
 
 Configurez les informations qui apparaissent sur tous vos documents (factures, bons de travail, fiches réparation) :
 
 | Champ | Exemple |
 |---|---|
 | Raison sociale | Garage Ben Salah |
-| Forme juridique | SARL |
-| Capital | 20 000,000 DT |
-| Matricule fiscal | 1234567/A/M/000 |
+| SIRET / Matricule fiscal | 1234567/A/M/000 |
 | Adresse | 12 Rue Ibn Khaldoun, Tunis 1001 |
 | Téléphone | 71 123 456 |
 | Email | contact@garage-bensalah.tn |
-| Site web | www.garage-bensalah.tn |
-| RIB / IBAN | TN59 1234 5678 9012 3456 7890 |
-| Banque | STB — Agence Bab Bhar |
-| Mentions légales | Toute facture non réglée... |
+| Clé de licence | (fournie par Alfa Computers Apps) |
+| Logo | Image PNG, JPG ou SVG — s'affiche sur les documents |
 
-> **Important** : Le **matricule fiscal** est obligatoire sur les factures en Tunisie. Assurez-vous de le saisir correctement.
+> **Important** : Le **matricule fiscal** est obligatoire sur les factures en Tunisie. Assurez-vous de le saisir correctement avant d'émettre la première facture.
+
+> **Conseil** : Vous pouvez accéder rapidement à la fiche Société depuis **Administration → Paramètres** (onglet *Société*) sans ouvrir une fenêtre séparée.
 
 ---
 
-## 5.2 Gestion des utilisateurs
+### 5.2 Gestion des utilisateurs
 
-Menu **Administration → Utilisateurs** (admin uniquement)
+**Menu Administration → Utilisateurs**
 
-### Créer un utilisateur
+#### Créer un utilisateur
 
 1. Cliquez sur **+ Nouvel utilisateur**
 2. Remplissez :
-   - **Nom d'utilisateur** (identifiant de connexion)
-   - **Nom complet** et **Prénom**
+   - **Identifiant** (login de connexion, ex : `ali.technicien`)
+   - **Nom complet**
    - **Mot de passe** (minimum 8 caractères, 1 majuscule, 1 chiffre)
    - **Rôle** : Technicien, Admin, ou Superadmin
 3. Cliquez sur **Créer**
 
-### Rôles et permissions
+#### Rôles et permissions
 
 | Rôle | Modules accessibles |
 |---|---|
-| **Technicien** | Réception (lecture), Atelier, Stock (lecture), Rapports dossiers |
-| **Admin** | Tous les modules — Facturation, Utilisateurs, Société, Numérotation |
-| **Superadmin** | Admin + Gestion DB, Journal d'audit, Snapshots |
+| **Technicien** | Réception (lecture), Atelier, Stock (lecture), Devis (lecture), Rapports dossiers |
+| **Admin** | Tous les modules — Facturation, Devis, Société, Utilisateurs, Numérotation, Paramètres |
+| **Superadmin** | Admin + Gestion BDD, Journal d'audit, Snapshots, onglet Base de données dans Paramètres |
 
-### Désactiver un utilisateur
+#### Modifier un utilisateur
 
-Sélectionnez l'utilisateur et cliquez sur **Désactiver**. Un utilisateur désactivé ne peut plus se connecter, mais son historique est conservé.
+1. Sélectionnez l'utilisateur dans la liste
+2. Cliquez sur **Modifier**
+3. Modifiez le nom complet ou le rôle
+4. Cliquez sur **OK**
+
+#### Changer le mot de passe
+
+1. Sélectionnez l'utilisateur
+2. Cliquez sur **Changer mot de passe**
+3. Saisissez et confirmez le nouveau mot de passe
+
+#### Désactiver un utilisateur
+
+Sélectionnez l'utilisateur et cliquez sur **Désactiver**.
+
+Un utilisateur désactivé ne peut plus se connecter, mais son historique est conservé dans tous les dossiers et factures.
 
 > **Conseil** : Ne supprimez jamais un utilisateur (cela pourrait rompre l'historique des dossiers). Désactivez-le simplement quand il quitte le garage.
 
 ---
 
-## 5.3 Numérotation des documents
+### 5.3 Numérotation des documents
 
-Menu **Administration → Numérotation**
+**Menu Administration → Numérotation**
 
 Configurez le format des numéros pour chaque type de document :
 
@@ -68,82 +89,142 @@ Configurez le format des numéros pour chaque type de document :
 | Facture client | `FAC-{YYYY}-{NNN}` | FAC-2026-128 |
 | Facture d'achat | `ACH-{YYYY}-{NNN}` | ACH-2026-015 |
 | Bon de travail | `BT-{YYYY}-{NNN}` | BT-2026-003 |
+| Devis | `DEV-{YYYY}-{NNNN}` | DEV-2026-0012 |
+| Proforma | `PRO-{YYYY}-{NNNN}` | PRO-2026-0003 |
 
 **Champs de format :**
 - `{YYYY}` : Année sur 4 chiffres
 - `{YY}` : Année sur 2 chiffres
 - `{MM}` : Mois
-- `{NNN}` : Séquence numérique (nombre de zéros = largeur)
+- `{NNN}` / `{NNNN}` : Séquence numérique (nombre de zéros = largeur)
 
-> **Important** : Ne modifiez pas la numérotation en cours d'exercice pour éviter les doublons.
+> **Important** : Ne modifiez pas la numérotation en cours d'exercice pour éviter les doublons. En cas de changement d'année, la séquence repart automatiquement à 1.
 
 ---
 
-## 5.4 Gestion des sauvegardes
+### 5.4 Paramètres de l'application
 
-Menu **Administration → Gestion de la base de données** (superadmin uniquement)
+**Menu Administration → Paramètres**
 
-### Créer un snapshot
+La fenêtre Paramètres regroupe les réglages de l'application en plusieurs onglets :
 
-1. Cliquez sur **Créer un snapshot**
-2. Saisissez un **commentaire** descriptif (ex : "Avant migration v2.0")
-3. Cliquez sur **Créer**
+#### Onglet Affichage
 
-Le snapshot est enregistré dans `~/.garage_reparation/snapshots/` avec un horodatage.
+| Paramètre | Options |
+|---|---|
+| Langue | Français (défaut) / Arabe (à venir) |
+| Thème | Clair (défaut) / Sombre (à venir) |
 
-### Restaurer un snapshot
+> Redémarrez l'application pour que le changement de thème prenne effet.
 
-> **Attention** : La restauration écrase toutes les données actuelles.
+#### Onglet Numérotation
+
+Raccourci vers la fenêtre de numérotation des documents (voir §5.3).
+
+#### Onglet Société 🔑
+
+Accès direct aux informations de la société (raison sociale, logo, adresse, etc.) sans ouvrir une fenêtre séparée. Équivalent à **Administration → Société**.
+
+#### Onglet Base de données 🔐
+
+*Visible uniquement pour le Superadmin.*
+
+Regroupe les outils de maintenance de la base de données SQLite et la gestion des snapshots. Voir **Section Superadmin** ci-dessous pour le détail.
+
+---
+
+## Section Superadmin 🔐
+
+*Accès : rôle `superadmin` uniquement*
+
+> **Principe de sécurité** : Les fonctions Superadmin ont un impact direct sur l'intégrité des données. Elles ne doivent être utilisées que par une personne de confiance (gérant, responsable informatique, technicien Alfa Computers Apps). Ne communiquez jamais les identifiants Superadmin au personnel du garage.
+
+---
+
+### 5.5 Gestion de la base de données
+
+**Menu Administration → Gestion de la base de données** — ou — **Administration → Paramètres**, onglet *Base de données*
+
+#### Statistiques SQLite
+
+La fenêtre affiche en temps réel :
+- **Taille** du fichier de base de données
+- **Nombre de pages** × taille de page
+- **Fragmentation** (%) — plus elle est haute, plus un VACUUM est utile
+
+#### Maintenance
+
+| Action | Quand l'utiliser |
+|---|---|
+| **VACUUM** | Libère l'espace fragmenté. Recommandé 1 fois par mois. L'application peut ralentir quelques secondes. |
+| **Checkpoint WAL** | Force l'écriture du journal WAL dans le fichier principal. Utile avant une sauvegarde externe. |
+| **Vérifier l'intégrité** | Contrôle la cohérence de la base. À exécuter si l'application a planté ou après une coupure de courant. |
+
+#### Snapshots / Sauvegardes
+
+Un snapshot est une copie complète de la base de données à un instant donné.
+
+**Créer un snapshot :**
+1. Cliquez sur **Créer snapshot**
+2. La copie est enregistrée dans `~/.garage_reparation/snapshots/` avec un horodatage automatique
+
+**Restaurer un snapshot :**
+
+> **ATTENTION** : La restauration **écrase toutes les données actuelles** sans possibilité d'annulation. Créez toujours un snapshot de la situation actuelle AVANT de restaurer.
 
 1. Sélectionnez le snapshot dans la liste
 2. Cliquez sur **Restaurer**
-3. Confirmez l'action dans la boîte de dialogue
+3. Confirmez dans la boîte de dialogue
+4. **Redémarrez l'application** immédiatement après
 
-### Maintenance de la base
+**Supprimer un snapshot :**
+1. Sélectionnez le snapshot
+2. Cliquez sur **Supprimer**
 
-| Action | Description |
-|---|---|
-| **VACUUM** | Compacte la base (libère l'espace disque) |
-| **WAL Checkpoint** | Force l'écriture du journal WAL |
-| **Vérification intégrité** | Contrôle la cohérence de la base |
+> **Conseil** : Conservez au minimum les 5 derniers snapshots. Copiez-les régulièrement sur un disque externe ou un dossier réseau.
 
-> **Conseil** : Exécutez VACUUM une fois par mois et créez toujours un snapshot avant toute intervention technique importante.
+**Fréquence recommandée :**
+- **Quotidien** : En fin de journée pour les garages à forte activité
+- **Hebdomadaire** : Minimum pour tous les garages
+- **Avant chaque mise à jour** de l'application
 
 ---
 
-## 5.5 Journal d'audit
+### 5.6 Journal d'audit
 
-Menu **Administration → Journal d'audit** (superadmin uniquement)
+**Menu Administration → Journal d'audit**
 
-Le journal d'audit enregistre **toutes les actions critiques** effectuées dans l'application :
+Le journal d'audit enregistre **toutes les actions critiques** effectuées dans l'application, avec horodatage et identité de l'utilisateur. Il est **en lecture seule** — aucun utilisateur, même superadmin, ne peut le modifier.
 
 | Colonne | Description |
 |---|---|
-| Date/Heure | Horodatage précis de l'action |
-| Utilisateur | Qui a fait l'action |
+| Date/Heure | Horodatage précis (secondes) |
+| Utilisateur | Identifiant de l'utilisateur |
 | Catégorie | AUTH, DOSSIER, FACTURE, STOCK, DB, USER… |
 | Niveau | INFO, WARNING, ERROR |
-| Description | Détail de l'action |
+| Description | Détail complet de l'action |
 
-### Filtrer le journal
+#### Filtrer le journal
 
 - Par **période** (de → à)
-- Par **catégorie**
+- Par **catégorie** (AUTH, STOCK, FACTURE, DB, USER…)
 - Par **utilisateur**
 - Par **niveau** (erreurs uniquement, etc.)
 
-> **Note légale** : Le journal d'audit est en lecture seule — il ne peut pas être modifié ni supprimé par aucun utilisateur.
+> **Utilisation légale** : En cas de litige ou d'audit comptable, le journal d'audit fournit une traçabilité complète et infalsifiable de toutes les opérations.
 
 ---
 
-## 5.6 Paramètres
+## Récapitulatif des accès
 
-Menu **Administration → Paramètres**
-
-| Paramètre | Description |
-|---|---|
-| Thème | Clair (défaut) — sombre (à venir) |
-| Langue | Français (défaut) — Arabe (à venir) |
-| Devise par défaut | TND (défaut), EUR, USD, CAD |
-| Taux TVA standard | 19% (Tunisie) |
-| Imprimante par défaut | Sélectionner l'imprimante locale |
+| Fonctionnalité | Admin 🔑 | Superadmin 🔐 |
+|---|---|---|
+| Société (infos, logo) | ✓ | ✓ |
+| Utilisateurs | ✓ | ✓ |
+| Numérotation | ✓ | ✓ |
+| Paramètres — Affichage | ✓ | ✓ |
+| Paramètres — Société | ✓ | ✓ |
+| Paramètres — Base de données | ✗ | ✓ |
+| Gestion BDD (menu dédié) | ✗ | ✓ |
+| Journal d'audit | ✗ | ✓ |
+| Snapshots | ✗ | ✓ |

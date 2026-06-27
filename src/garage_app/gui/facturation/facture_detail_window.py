@@ -14,6 +14,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.facturation.facture import Facture, ModePaiement, Paiement, StatutFacture
 from garage_app.domain.shared.value_objects import Money
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _STATUT_LABELS = {
     StatutFacture.BROUILLON:           "Brouillon",
@@ -126,7 +127,7 @@ class FactureDetailWindow(QMdiSubWindow):
 
         # action buttons
         btn_row = QHBoxLayout()
-        self._btn_encaisser = QPushButton("Encaisser…")
+        self._btn_encaisser = QPushButton(_icon("save"), "Encaisser…")
         self._btn_encaisser.setDefault(True)
         self._btn_encaisser.clicked.connect(self._encaisser)
         btn_row.addWidget(self._btn_encaisser)

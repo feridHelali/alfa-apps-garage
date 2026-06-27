@@ -15,7 +15,7 @@ def _render(lignes: list[dict]) -> str:
             f"""<tr>
               <td>{l["reference"]}</td>
               <td>{l["designation"]}</td>
-              <td class="num" style="color:#A4262C;font-weight:700;">{l["quantite"]}</td>
+              <td class="num" style="font-weight:700;">{l["quantite"]}</td>
               <td class="num">{l["seuil"]}</td>
               <td class="num">{l["a_commander"]}</td>
               <td>{l["fournisseur"]}</td>
@@ -25,7 +25,7 @@ def _render(lignes: list[dict]) -> str:
     body = f"""
 <div class="section">
   <h2>Alertes stock — {len(lignes)} référence(s)</h2>
-  <p style="color:#A4262C;font-weight:600;">
+  <p style="font-weight:700;">
     {"⚠ " + str(len(lignes)) + " référence(s) en rupture ou sous le seuil d'alerte." if lignes else "✓ Aucune alerte stock."}
   </p>
   <table>

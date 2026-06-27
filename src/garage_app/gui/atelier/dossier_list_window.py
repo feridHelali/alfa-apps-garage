@@ -16,6 +16,7 @@ from garage_app.domain.atelier.dossier_reparation import DossierReparation
 from garage_app.domain.atelier.statut_dossier import StatutDossier
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
 from garage_app.gui.window_registry import open_sub
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _DossierModel(QAbstractTableModel):
@@ -179,10 +180,10 @@ class DossierListWindow(QMdiSubWindow):
         self._table_widget.table.doubleClicked.connect(self._open_dossier)
 
         btn_row = QHBoxLayout()
-        btn_new = QPushButton("+ Nouveau dossier")
+        btn_new = QPushButton(_icon("new"), "+ Nouveau dossier")
         btn_new.clicked.connect(self._new_dossier)
         btn_row.addWidget(btn_new)
-        btn_refresh = QPushButton(QIcon.fromTheme("view-refresh"), "Actualiser")
+        btn_refresh = QPushButton(_icon("refresh"), "Actualiser")
         btn_refresh.clicked.connect(self._load)
         btn_row.addWidget(btn_refresh)
         btn_row.addStretch()

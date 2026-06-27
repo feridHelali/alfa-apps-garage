@@ -11,17 +11,9 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QListWidget,
-    QListWidgetItem,
-    QMdiSubWindow,
-    QPushButton,
-    QSplitter,
-    QTextBrowser,
-    QToolBar,
-    QVBoxLayout,
-    QWidget,
+    QFileDialog, QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
+    QMdiSubWindow, QPushButton, QSplitter, QTextBrowser, QToolBar,
+    QVBoxLayout, QWidget,
 )
 
 from garage_app.tools.guide_generator.md_renderer import render as md_render
@@ -71,6 +63,10 @@ class GuideWindow(QMdiSubWindow):
         btn_print.setFixedHeight(24)
         btn_print.clicked.connect(self._print)
         toolbar.addWidget(btn_print)
+        btn_pdf = QPushButton("Exporter PDF…")
+        btn_pdf.setFixedHeight(24)
+        btn_pdf.clicked.connect(self._export_pdf)
+        toolbar.addWidget(btn_pdf)
         root.addWidget(toolbar)
 
         # splitter: chapter list | content
@@ -124,3 +120,17 @@ class GuideWindow(QMdiSubWindow):
         dlg = QPrintDialog(printer, self)
         if dlg.exec() == QPrintDialog.DialogCode.Accepted:
             self._browser.print(printer)
+
+    def _export_pdf(self) -> None:
+        row = self._chapter_list.currentRow()
+        chapter_name = _CHAPTERS[row][1] if 0 <= row < len(_CHAPTERS) else "guide"
+        default_name = f"Guide_{chapter_name.replace(' ', '_').replace('.', '')}.pdf"
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Exporter en PDF", default_name, "PDF (*.pdf)"
+        )
+        if not path:
+            return
+        printer = QPrinter(QPrinter.PrinterMode.HighResolution)
+        printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
+        printer.setOutputFileName(path)
+        self._browser.print(printer)

@@ -16,6 +16,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.stock.piece import Piece
 from garage_app.gui.widgets.master_detail_widget import MasterDetailWidget
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _PieceModel(QAbstractTableModel):
@@ -82,12 +83,12 @@ class PieceCatalogWindow(QMdiSubWindow):
         mv.setSpacing(4)
 
         btn_row = QHBoxLayout()
-        btn_new = QPushButton("+ Nouvelle pièce")
+        btn_new = QPushButton(_icon("new"), "+ Nouvelle pièce")
         btn_new.clicked.connect(self._new_piece)
-        self._btn_del = QPushButton("Supprimer")
+        self._btn_del = QPushButton(_icon("delete"), "Supprimer")
         self._btn_del.clicked.connect(self._delete_piece)
         self._btn_del.setEnabled(False)
-        self._btn_stock = QPushButton("Ajuster stock")
+        self._btn_stock = QPushButton(_icon("edit"), "Ajuster stock")
         self._btn_stock.clicked.connect(self._ajuster_stock)
         self._btn_stock.setEnabled(False)
         btn_row.addWidget(btn_new)
@@ -213,7 +214,7 @@ class _PieceDetailForm(QWidget):
         form.addRow("Seuil alerte", self._seuil)
         form.addRow("Fournisseur préféré", self._fourn)
 
-        btn_save = QPushButton("Enregistrer")
+        btn_save = QPushButton(_icon("save"), "Enregistrer")
         btn_save.setDefault(True)
         btn_save.clicked.connect(self._save)
         form.addRow("", btn_save)

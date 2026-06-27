@@ -94,7 +94,7 @@ L'import Excel n'est pas disponible dans cette version. Saisissez les pièces ma
 
 **Q : Où sont stockées les données de l'application ?**
 
-La base de données SQLite est dans `C:\Users\[votre_nom]\AppData\Roaming\garage_reparation\garage.db` (ou le chemin configuré dans les paramètres).
+La base de données SQLite est dans `C:\Users\[votre_nom]\.garage_reparation\garage.db`. Les snapshots sont dans `C:\Users\[votre_nom]\.garage_reparation\snapshots\`.
 
 ---
 
@@ -112,7 +112,7 @@ Conservez les snapshots sur un **disque externe ou réseau** en plus du disque l
 **Q : La base de données est endommagée. Que faire ?**
 
 1. Ne pas paniquer — l'application utilise SQLite en mode WAL, très résistant aux corruptions.
-2. Menu **Administration → Gestion de la base → Vérification intégrité**.
+2. *(Superadmin)* Menu **Administration → Gestion de la base de données** → cliquez **Vérifier l'intégrité** — ou depuis **Administration → Paramètres**, onglet *Base de données*.
 3. Si des erreurs sont détectées, restaurez le dernier snapshot valide.
 4. Si nécessaire, contactez le support Alfa Computers Apps.
 
@@ -124,8 +124,8 @@ Conservez les snapshots sur un **disque externe ou réseau** en plus du disque l
 
 Causes possibles :
 - Première ouverture après une longue période : SQLite WAL checkpoint en cours (normal, 5-10s)
-- Base de données volumineuse : exécutez **VACUUM** depuis Administration → Gestion DB
-- Disque dur fragmenTé : défragmentez le disque Windows
+- Base de données volumineuse : *(Superadmin)* exécutez **VACUUM** depuis **Administration → Paramètres**, onglet *Base de données*
+- Disque dur fragmenté : défragmentez le disque Windows
 
 ---
 

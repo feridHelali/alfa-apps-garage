@@ -18,6 +18,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.devis.devis import Devis
 from garage_app.domain.devis.statut_devis import StatutDevis
 from garage_app.domain.shared.exceptions import BusinessRuleError
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _DevisTableModel(QAbstractTableModel):
@@ -101,7 +102,7 @@ class DevisListWindow(QMdiSubWindow):
 
         # toolbar
         toolbar = QHBoxLayout()
-        btn_new = QPushButton("+ Nouveau devis")
+        btn_new = QPushButton(_icon("new"), "+ Nouveau devis")
         btn_new.setEnabled(session.can(Permission.MANAGE_DEVIS))
         btn_new.clicked.connect(self._new_devis)
 
@@ -131,15 +132,15 @@ class DevisListWindow(QMdiSubWindow):
 
         # action buttons
         actions = QHBoxLayout()
-        self._btn_open = QPushButton("Ouvrir / Modifier")
-        self._btn_send = QPushButton("Envoyer au client")
-        self._btn_accept = QPushButton("Accepter")
-        self._btn_refuse = QPushButton("Refuser")
-        self._btn_convert_dossier = QPushButton("→ Dossier")
-        self._btn_convert_proforma = QPushButton("→ Proforma")
-        self._btn_duplicate = QPushButton("Dupliquer")
-        self._btn_cancel = QPushButton("Annuler")
-        self._btn_print = QPushButton("Imprimer")
+        self._btn_open = QPushButton(_icon("edit"), "Ouvrir / Modifier")
+        self._btn_send = QPushButton(_icon("forward"), "Envoyer au client")
+        self._btn_accept = QPushButton(_icon("ok"), "Accepter")
+        self._btn_refuse = QPushButton(_icon("cancel"), "Refuser")
+        self._btn_convert_dossier = QPushButton(_icon("forward"), "→ Dossier")
+        self._btn_convert_proforma = QPushButton(_icon("forward"), "→ Proforma")
+        self._btn_duplicate = QPushButton(_icon("new"), "Dupliquer")
+        self._btn_cancel = QPushButton(_icon("cancel"), "Annuler")
+        self._btn_print = QPushButton(_icon("print"), "Imprimer")
 
         for btn in (
             self._btn_open, self._btn_send, self._btn_accept, self._btn_refuse,

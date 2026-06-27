@@ -10,6 +10,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.stock.piece import Piece
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _AlertModel(QAbstractTableModel):
@@ -77,7 +78,7 @@ class StockAlertWindow(QMdiSubWindow):
         hdr = QHBoxLayout()
         self._lbl_summary = QLabel("")
         self._lbl_summary.setStyleSheet("font-weight: 600; color: #D83B01;")
-        btn_refresh = QPushButton("Actualiser")
+        btn_refresh = QPushButton(_icon("refresh"), "Actualiser")
         btn_refresh.clicked.connect(self._load)
         hdr.addWidget(self._lbl_summary)
         hdr.addStretch()

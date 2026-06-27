@@ -68,8 +68,8 @@ class HtmlReportTemplate:
     is_default: bool = False
 
     # Header band
-    couleur_bande: str = "#007AFF"
-    couleur_texte_bande: str = "#ffffff"
+    couleur_bande: str = "#1C1C1E"
+    couleur_texte_bande: str = "#1C1C1E"
     show_logo: bool = True
     show_societe: bool = True
     show_slogan: bool = False

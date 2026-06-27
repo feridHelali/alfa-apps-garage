@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
 )
 
 from garage_app.settings import resource_path
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _LOGO_PATH = resource_path("assets", "brand", "alfa_computers_logo.svg")
 
@@ -32,22 +33,19 @@ body {
     padding: 0;
 }
 .header {
-    background: #007AFF;
-    color: white;
-    padding: 12px 16px;
-    border-radius: 6px 6px 0 0;
+    border-bottom: 2px solid #1C1C1E;
+    padding: 10px 16px 8px 16px;
 }
 .header h1 { margin: 0; font-size: 14pt; font-weight: 700; }
-.header .subtitle { font-size: 9pt; opacity: 0.85; margin-top: 2px; }
+.header .subtitle { font-size: 9pt; margin-top: 2px; font-style: italic; }
 .section {
     margin: 12px 0;
     padding: 0 4px;
 }
 .section h2 {
     font-size: 11pt;
-    font-weight: 600;
-    color: #007AFF;
-    border-bottom: 1px solid #D1D1D6;
+    font-weight: 700;
+    text-decoration: underline;
     padding-bottom: 4px;
     margin-bottom: 8px;
 }
@@ -57,30 +55,28 @@ table {
     font-size: 9pt;
 }
 th {
-    background: #F2F2F7;
-    color: #6E6E73;
-    font-weight: 600;
+    font-weight: 700;
     text-align: left;
     padding: 5px 8px;
-    border-bottom: 1px solid #D1D1D6;
+    border-bottom: 2px solid #1C1C1E;
 }
 td {
     padding: 5px 8px;
-    border-bottom: 1px solid #E5E5EA;
+    border-bottom: 1px solid #D1D1D6;
 }
 tr:last-child td { border-bottom: none; }
 .num { text-align: right; }
-.total-row td { font-weight: 700; background: #F9F9FB; }
+.total-row td { font-weight: 700; font-style: italic; border-top: 1px solid #1C1C1E; }
 .badge {
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 1px 6px;
+    border: 1px solid #1C1C1E;
     font-size: 8pt;
     font-weight: 600;
 }
-.badge-ok    { background: #D1FAE5; color: #065F46; }
-.badge-warn  { background: #FEF3C7; color: #92400E; }
-.badge-danger{ background: #FEE2E2; color: #991B1B; }
+.badge-ok    { font-style: italic; }
+.badge-warn  { text-decoration: underline; }
+.badge-danger{ font-weight: 700; text-decoration: underline; }
 .kpi-grid {
     display: table;
     width: 100%;
@@ -90,19 +86,18 @@ tr:last-child td { border-bottom: none; }
     display: table-cell;
     text-align: center;
     padding: 10px;
-    border: 1px solid #E5E5EA;
-    border-radius: 6px;
+    border: 1px solid #D1D1D6;
     width: 25%;
 }
-.kpi .val { font-size: 14pt; font-weight: 700; color: #007AFF; }
-.kpi .lbl { font-size: 8pt; color: #6E6E73; margin-top: 2px; }
+.kpi .val { font-size: 14pt; font-weight: 700; }
+.kpi .lbl { font-size: 8pt; margin-top: 2px; }
 .footer {
     margin-top: 16px;
     font-size: 8pt;
-    color: #AEAEB2;
-    border-top: 1px solid #E5E5EA;
+    border-top: 1px solid #D1D1D6;
     padding-top: 6px;
     text-align: center;
+    font-style: italic;
 }
 """
 
@@ -111,7 +106,7 @@ def build_html(title: str, subtitle: str, body: str, icon_svg_b64: str = "") -> 
     logo_uri = _logo_uri()
     logo_html = (
         f'<img src="{logo_uri}" '
-        'style="height:34px; float:right; margin-top:2px; margin-left:12px; opacity:0.92;">'
+        'style="height:34px; float:right; margin-top:2px; margin-left:12px;">'
         if logo_uri else ""
     )
     icon_html = (
@@ -154,8 +149,8 @@ class ReportViewerWindow(QMdiSubWindow):
         bar_layout.setContentsMargins(8, 4, 8, 4)
         lbl = QLabel(title)
         lbl.setStyleSheet("font-weight: 600; font-size: 10pt;")
-        btn_print = QPushButton("Imprimer…")
-        btn_preview = QPushButton("Aperçu avant impression")
+        btn_print = QPushButton(_icon("print"), "Imprimer…")
+        btn_preview = QPushButton(_icon("print"), "Aperçu avant impression")
         btn_print.clicked.connect(self._print)
         btn_preview.clicked.connect(self._preview)
         bar_layout.addWidget(lbl)

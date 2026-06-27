@@ -13,6 +13,7 @@ from garage_app.domain.facturation.charge_garage import (
     CategorieCharge, ChargeGarage, StatutCharge,
 )
 from garage_app.gui.widgets.notification_bar import NotificationBar
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _STATUT_LABELS = {
     StatutCharge.SAISIE:  "En attente",
@@ -42,19 +43,19 @@ class ChargesWindow(QMdiSubWindow):
 
         # Toolbar
         bar = QHBoxLayout()
-        btn_new = QPushButton("+ Nouvelle charge")
+        btn_new = QPushButton(_icon("new"), "+ Nouvelle charge")
         btn_new.clicked.connect(self._new_charge)
-        btn_edit = QPushButton("Modifier")
+        btn_edit = QPushButton(_icon("edit"), "Modifier")
         btn_edit.clicked.connect(self._edit_charge)
-        btn_pay = QPushButton("Marquer payée")
+        btn_pay = QPushButton(_icon("ok"), "Marquer payée")
         btn_pay.clicked.connect(self._pay_selected)
-        btn_reconduire = QPushButton("Reconduire")
+        btn_reconduire = QPushButton(_icon("forward"), "Reconduire")
         btn_reconduire.clicked.connect(self._reconduire_selected)
-        btn_annuler = QPushButton("Annuler")
+        btn_annuler = QPushButton(_icon("cancel"), "Annuler")
         btn_annuler.clicked.connect(self._annuler_selected)
-        btn_suppr = QPushButton("Supprimer")
+        btn_suppr = QPushButton(_icon("delete"), "Supprimer")
         btn_suppr.clicked.connect(self._delete_selected)
-        btn_refresh = QPushButton("↺")
+        btn_refresh = QPushButton(_icon("refresh"), "↺")
         btn_refresh.setFixedWidth(32)
         btn_refresh.clicked.connect(self._load)
         bar.addWidget(btn_new)

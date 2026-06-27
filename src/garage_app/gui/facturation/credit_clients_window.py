@@ -16,6 +16,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.facturation.caisse import CreditClient
 from garage_app.domain.shared.value_objects import Money
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _CreditModel(QAbstractTableModel):
@@ -81,9 +82,9 @@ class CreditClientsWindow(QMdiSubWindow):
         bar = QHBoxLayout()
         self._lbl_total = QLabel("")
         self._lbl_total.setStyleSheet("font-weight: 700; font-size: 11pt; color: #D83B01;")
-        btn_rembourser = QPushButton("Rembourser…")
+        btn_rembourser = QPushButton(_icon("forward"), "Rembourser…")
         btn_rembourser.clicked.connect(self._rembourser)
-        btn_refresh = QPushButton("Actualiser")
+        btn_refresh = QPushButton(_icon("refresh"), "Actualiser")
         btn_refresh.clicked.connect(self._load)
         bar.addWidget(self._lbl_total)
         bar.addStretch()

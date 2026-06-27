@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 # Simple receipt/invoice SVG icon (white fill, works in Qt's HTML renderer)
 _INVOICE_SVG = base64.b64encode(b"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <path fill="white" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
+  <path fill="#1C1C1E" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
 </svg>""").decode()
 
 # Wrench icon for "main d'oeuvre" sections
@@ -138,17 +138,17 @@ def _render(facture: Facture, ctx: AppContext, session: UserSession) -> str:
         <td style="padding:5px 12px; color:#6E6E73; border-bottom:1px solid #F2F2F7;">TVA ({facture.taux_tva} %)</td>
         <td class="num" style="padding:5px 12px; border-bottom:1px solid #F2F2F7;">{facture.montant_tva.format()}</td>
       </tr>
-      <tr style="background:#F9F9FB;">
-        <td style="padding:7px 12px; font-weight:700; border-bottom:1px solid #E5E5EA;">Total TTC</td>
-        <td class="num" style="padding:7px 12px; font-weight:700; font-size:11pt; border-bottom:1px solid #E5E5EA;">{facture.montant_ttc.format()}</td>
+      <tr>
+        <td style="padding:7px 12px; font-weight:700; border-bottom:1px solid #D1D1D6; text-decoration:underline;">Total TTC</td>
+        <td class="num" style="padding:7px 12px; font-weight:700; font-size:11pt; border-bottom:1px solid #D1D1D6; text-decoration:underline;">{facture.montant_ttc.format()}</td>
       </tr>
       <tr>
-        <td style="padding:5px 12px; color:#6E6E73;">Montant payé</td>
-        <td class="num" style="padding:5px 12px; color:#107C10;">{facture.montant_paye:.3f} DT</td>
+        <td style="padding:5px 12px;">Montant payé</td>
+        <td class="num" style="padding:5px 12px; font-weight:700;">{facture.montant_paye:.3f} DT</td>
       </tr>
       <tr>
-        <td style="padding:5px 12px; font-weight:700; color:{reste_color};">{reste_label}</td>
-        <td class="num" style="padding:5px 12px; font-weight:700; color:{reste_color};">{reste:.3f} DT</td>
+        <td style="padding:5px 12px; font-weight:700; font-style:italic;">{reste_label}</td>
+        <td class="num" style="padding:5px 12px; font-weight:700; font-style:italic;">{reste:.3f} DT</td>
       </tr>
     </table>
   </div>

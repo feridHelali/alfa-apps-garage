@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
 
 from garage_app.application.db_management_service import DbManagementService
 from garage_app.domain.auth.user_session import UserSession
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 def _human_size(n: int) -> str:
@@ -60,17 +61,17 @@ class DbManagementWindow(QWidget):
         maint_box = QGroupBox("Maintenance")
         ml = QVBoxLayout(maint_box)
 
-        btn_vacuum = QPushButton("VACUUM (compresser)")
+        btn_vacuum = QPushButton(_icon("drive"), "VACUUM (compresser)")
         btn_vacuum.setToolTip("Récupère l'espace fragmenté. L'application peut être lente quelques secondes.")
         btn_vacuum.clicked.connect(self._do_vacuum)
         ml.addWidget(btn_vacuum)
 
-        btn_wal = QPushButton("Checkpoint WAL")
+        btn_wal = QPushButton(_icon("refresh"), "Checkpoint WAL")
         btn_wal.setToolTip("Force l'écriture du journal WAL dans la DB principale.")
         btn_wal.clicked.connect(self._do_wal)
         ml.addWidget(btn_wal)
 
-        btn_integrity = QPushButton("Vérifier l'intégrité")
+        btn_integrity = QPushButton(_icon("check"), "Vérifier l'intégrité")
         btn_integrity.clicked.connect(self._do_integrity)
         ml.addWidget(btn_integrity)
 
@@ -95,15 +96,15 @@ class DbManagementWindow(QWidget):
         sl2.addWidget(self._snap_list)
 
         btn_row = QHBoxLayout()
-        btn_create = QPushButton("Créer snapshot")
+        btn_create = QPushButton(_icon("snapshot"), "Créer snapshot")
         btn_create.clicked.connect(self._do_create_snap)
         btn_row.addWidget(btn_create)
 
-        btn_restore = QPushButton("Restaurer")
+        btn_restore = QPushButton(_icon("restore"), "Restaurer")
         btn_restore.clicked.connect(self._do_restore)
         btn_row.addWidget(btn_restore)
 
-        btn_del = QPushButton("Supprimer")
+        btn_del = QPushButton(_icon("delete"), "Supprimer")
         btn_del.clicked.connect(self._do_delete_snap)
         btn_row.addWidget(btn_del)
         sl2.addLayout(btn_row)

@@ -13,6 +13,7 @@ from garage_app.domain.auth.permission import Permission
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.devis.devis import FactureProforma
 from garage_app.domain.shared.exceptions import BusinessRuleError
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _ProformaTableModel(QAbstractTableModel):
@@ -83,7 +84,7 @@ class ProformaListWindow(QMdiSubWindow):
         toolbar = QHBoxLayout()
         toolbar.addWidget(QLabel("Liste des factures proforma"))
         toolbar.addStretch()
-        btn_refresh = QPushButton("Actualiser")
+        btn_refresh = QPushButton(_icon("refresh"), "Actualiser")
         btn_refresh.clicked.connect(self._reload)
         toolbar.addWidget(btn_refresh)
         root.addLayout(toolbar)
@@ -100,8 +101,8 @@ class ProformaListWindow(QMdiSubWindow):
         root.addWidget(self._table)
 
         actions = QHBoxLayout()
-        self._btn_open = QPushButton("Ouvrir / Imprimer")
-        self._btn_acompte = QPushButton("Enregistrer un acompte…")
+        self._btn_open = QPushButton(_icon("print"), "Ouvrir / Imprimer")
+        self._btn_acompte = QPushButton(_icon("save"), "Enregistrer un acompte…")
         self._btn_open.clicked.connect(self._open_selected)
         self._btn_acompte.clicked.connect(self._acompte)
         actions.addWidget(self._btn_open)

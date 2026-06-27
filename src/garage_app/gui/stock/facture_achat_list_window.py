@@ -10,6 +10,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.facturation.facture_achat import FactureAchat, StatutAchat
 from garage_app.gui.widgets.notification_bar import NotificationBar
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _STATUT_LABELS = {
     StatutAchat.SAISIE:   "Saisie",
@@ -40,15 +41,15 @@ class FactureAchatListWindow(QMdiSubWindow):
 
         # Toolbar
         bar = QHBoxLayout()
-        btn_new = QPushButton("+ Nouvelle facture d'achat")
+        btn_new = QPushButton(_icon("new"), "+ Nouvelle facture d'achat")
         btn_new.clicked.connect(self._open_new)
-        btn_valider = QPushButton("Valider")
+        btn_valider = QPushButton(_icon("check"), "Valider")
         btn_valider.clicked.connect(self._valider_selected)
-        btn_payer = QPushButton("Marquer payée")
+        btn_payer = QPushButton(_icon("ok"), "Marquer payée")
         btn_payer.clicked.connect(self._payer_selected)
-        btn_annuler = QPushButton("Annuler")
+        btn_annuler = QPushButton(_icon("cancel"), "Annuler")
         btn_annuler.clicked.connect(self._annuler_selected)
-        btn_refresh = QPushButton("↺")
+        btn_refresh = QPushButton(_icon("refresh"), "↺")
         btn_refresh.setFixedWidth(32)
         btn_refresh.clicked.connect(self._load)
         bar.addWidget(btn_new)

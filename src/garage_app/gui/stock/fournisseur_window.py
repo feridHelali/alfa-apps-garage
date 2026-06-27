@@ -12,6 +12,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.stock.fournisseur import Fournisseur
 from garage_app.gui.widgets.master_detail_widget import MasterDetailWidget
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _FournisseurModel(QAbstractTableModel):
@@ -72,9 +73,9 @@ class FournisseurWindow(QMdiSubWindow):
         mv.setSpacing(4)
 
         btn_row = QHBoxLayout()
-        self._btn_new = QPushButton("+ Nouveau")
+        self._btn_new = QPushButton(_icon("new"), "+ Nouveau")
         self._btn_new.clicked.connect(self._new_fournisseur)
-        self._btn_toggle = QPushButton("Désactiver")
+        self._btn_toggle = QPushButton(_icon("user"), "Désactiver")
         self._btn_toggle.clicked.connect(self._toggle_actif)
         self._btn_toggle.setEnabled(False)
         btn_row.addWidget(self._btn_new)
@@ -169,7 +170,7 @@ class _FournisseurDetailForm(QWidget):
         form.addRow("Adresse", self._adresse)
         form.addRow("Délai livraison", self._delai)
 
-        btn_save = QPushButton("Enregistrer")
+        btn_save = QPushButton(_icon("save"), "Enregistrer")
         btn_save.setDefault(True)
         btn_save.clicked.connect(self._save)
         form.addRow("", btn_save)

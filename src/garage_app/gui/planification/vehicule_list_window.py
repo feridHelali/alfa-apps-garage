@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
 
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 def _fmt_date(dt: datetime | None) -> str:
@@ -107,6 +108,7 @@ class VehiculeListWindow(QMdiSubWindow):
         # ── Toolbar ──────────────────────────────────────────────────────────
         bar = QHBoxLayout()
         self._btn_refresh = QPushButton("Actualiser")
+        self._btn_refresh.setIcon(_icon("refresh"))
         self._btn_refresh.clicked.connect(self._load)
         self._btn_carnet = QPushButton("Carnet de Route…")
         self._btn_carnet.clicked.connect(self._open_carnet)

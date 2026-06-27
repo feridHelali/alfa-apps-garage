@@ -17,6 +17,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.stock.commande_fournisseur import CommandeFournisseur, LigneCommande, StatutCommande
 from garage_app.gui.widgets.searchable_table import SearchableTableWidget
 from garage_app.gui.widgets.status_badge import StatusBadge
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _STATUT_COLORS = {
     StatutCommande.BROUILLON:           ("#5D5D5D", "#F3F3F3"),
@@ -113,7 +114,7 @@ class CommandeWindow(QMdiSubWindow):
 
         # ── toolbar ─────────────────────────────────────────────────────────
         bar = QHBoxLayout()
-        btn_new = QPushButton("+ Nouvelle commande")
+        btn_new = QPushButton(_icon("new"), "+ Nouvelle commande")
         btn_new.clicked.connect(self._new_commande)
         bar.addWidget(btn_new)
         bar.addStretch()
@@ -258,10 +259,10 @@ class _CommandeDetailPanel(QWidget):
 
         # action buttons
         btn_row = QHBoxLayout()
-        self._btn_envoyer = QPushButton("Envoyer")
+        self._btn_envoyer = QPushButton(_icon("forward"), "Envoyer")
         self._btn_envoyer.setDefault(True)
-        self._btn_recevoir = QPushButton("Recevoir tout")
-        self._btn_annuler = QPushButton("Annuler commande")
+        self._btn_recevoir = QPushButton(_icon("ok"), "Recevoir tout")
+        self._btn_annuler = QPushButton(_icon("cancel"), "Annuler commande")
         self._btn_envoyer.clicked.connect(self.action_envoyer)
         self._btn_recevoir.clicked.connect(self.action_recevoir_tout)
         self._btn_annuler.clicked.connect(self.action_annuler)
@@ -329,7 +330,7 @@ class _NouvelleCommandeDialog(QDialog):
         gv.addWidget(self._lines_tbl)
         self._pieces = pieces
 
-        add_btn = QPushButton("+ Ajouter une ligne")
+        add_btn = QPushButton(_icon("new"), "+ Ajouter une ligne")
         add_btn.clicked.connect(self._add_line)
         gv.addWidget(add_btn)
         layout.addWidget(grp)

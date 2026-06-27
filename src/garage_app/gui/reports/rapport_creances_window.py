@@ -16,7 +16,7 @@ def _render(data: dict) -> str:
             f"""<tr>
               <td>{l["client"]}</td>
               <td>{l["telephone"]}</td>
-              <td class="num" style="color:#A4262C;font-weight:700;">{l["solde"]:.3f} DT</td>
+              <td class="num" style="font-weight:700;">{l["solde"]:.3f} DT</td>
             </tr>"""
             for l in lignes
         )

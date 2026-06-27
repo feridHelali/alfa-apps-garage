@@ -12,6 +12,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user import User
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.atelier.statut_dossier import StatutDossier, StatutTache
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _TechnicienModel(QAbstractTableModel):
@@ -85,6 +86,7 @@ class TechnicienWindow(QMdiSubWindow):
         # Toolbar
         btn_row = QHBoxLayout()
         self._btn_refresh = QPushButton("Actualiser")
+        self._btn_refresh.setIcon(_icon("refresh"))
         self._btn_refresh.clicked.connect(self._load)
         btn_row.addWidget(self._btn_refresh)
         btn_row.addStretch()

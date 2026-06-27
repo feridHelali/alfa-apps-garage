@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
 from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.shared.value_objects import Money
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _QUICK_SVG = base64.b64encode(b"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <path fill="white" d="M7 2v11h3v9l7-12h-4l4-8z"/>
@@ -192,9 +193,9 @@ class BonTravailRapideWindow(QMdiSubWindow):
         gv.addWidget(self._table)
 
         ligne_btns = QHBoxLayout()
-        btn_add = QPushButton("+ Ajouter ligne")
+        btn_add = QPushButton(_icon("new"), "+ Ajouter ligne")
         btn_add.clicked.connect(self._add_ligne)
-        btn_rm = QPushButton("Supprimer ligne sélectionnée")
+        btn_rm = QPushButton(_icon("delete"), "Supprimer ligne sélectionnée")
         btn_rm.clicked.connect(self._remove_ligne)
         ligne_btns.addWidget(btn_add)
         ligne_btns.addWidget(btn_rm)

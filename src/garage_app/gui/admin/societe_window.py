@@ -13,6 +13,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.societe.societe import Societe
 from garage_app.gui.widgets.notification_bar import NotificationBar
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class SocieteWindow(QMdiSubWindow):
@@ -39,7 +40,7 @@ class SocieteWindow(QMdiSubWindow):
         self._logo_label.setFixedSize(120, 80)
         self._logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._logo_label.setStyleSheet("border: 1px solid #c0c0c0; background: #f8f8f8;")
-        btn_logo = QPushButton(QIcon.fromTheme("document-open"), "Choisir…")
+        btn_logo = QPushButton(_icon("logo"), "Choisir…")
         btn_logo.clicked.connect(self._pick_logo)
         logo_layout.addWidget(self._logo_label)
         logo_layout.addWidget(btn_logo)
@@ -63,7 +64,7 @@ class SocieteWindow(QMdiSubWindow):
         form.addRow("Clé de licence :", self._licence)
         layout.addLayout(form)
 
-        btn_save = QPushButton(QIcon.fromTheme("document-save"), "Enregistrer")
+        btn_save = QPushButton(_icon("save"), "Enregistrer")
         btn_save.clicked.connect(self._save)
         layout.addWidget(btn_save)
 

@@ -14,6 +14,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.permission import ROLE_PERMISSIONS
 from garage_app.domain.auth.user import User
 from garage_app.domain.auth.user_session import UserSession
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 _ROLE_LABELS = {
     "superadmin": "Super Admin",
@@ -213,23 +214,23 @@ class UserManagementWindow(QMdiSubWindow):
 
         # Toolbar buttons
         btn_row = QHBoxLayout()
-        self._btn_new = QPushButton("+ Nouvel utilisateur")
+        self._btn_new = QPushButton(_icon("new"), "+ Nouvel utilisateur")
         self._btn_new.clicked.connect(self._new_user)
         btn_row.addWidget(self._btn_new)
 
-        self._btn_edit = QPushButton("Modifier")
+        self._btn_edit = QPushButton(_icon("edit"), "Modifier")
         self._btn_edit.setEnabled(False)
         self._btn_edit.clicked.connect(self._edit_user)
         btn_row.addWidget(self._btn_edit)
 
-        self._btn_pwd = QPushButton("Changer mot de passe")
+        self._btn_pwd = QPushButton(_icon("password"), "Changer mot de passe")
         self._btn_pwd.setEnabled(False)
         self._btn_pwd.clicked.connect(self._change_password)
         btn_row.addWidget(self._btn_pwd)
 
         btn_row.addStretch()
 
-        self._btn_toggle = QPushButton("Désactiver")
+        self._btn_toggle = QPushButton(_icon("user"), "Désactiver")
         self._btn_toggle.setEnabled(False)
         self._btn_toggle.clicked.connect(self._toggle_active)
         btn_row.addWidget(self._btn_toggle)

@@ -21,6 +21,7 @@ from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.devis.devis import Devis, LigneDevis
 from garage_app.domain.devis.statut_devis import StatutDevis, TypeLigne
 from garage_app.domain.shared.value_objects import Money
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _LignesModel(QAbstractTableModel):
@@ -235,9 +236,9 @@ class DevisFormWindow(QDialog):
         lines_layout.addWidget(self._table)
 
         line_btns = QHBoxLayout()
-        self._btn_add_line = QPushButton("+ Ajouter")
-        self._btn_edit_line = QPushButton("Modifier")
-        self._btn_del_line = QPushButton("Supprimer")
+        self._btn_add_line = QPushButton(_icon("new"), "+ Ajouter")
+        self._btn_edit_line = QPushButton(_icon("edit"), "Modifier")
+        self._btn_del_line = QPushButton(_icon("delete"), "Supprimer")
         line_btns.addWidget(self._btn_add_line)
         line_btns.addWidget(self._btn_edit_line)
         line_btns.addWidget(self._btn_del_line)

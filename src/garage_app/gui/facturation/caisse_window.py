@@ -14,6 +14,7 @@ from garage_app.bootstrap import AppContext
 from garage_app.domain.auth.user_session import UserSession
 from garage_app.domain.facturation.caisse import MouvementCaisse, SessionCaisse
 from garage_app.domain.shared.value_objects import Money
+from garage_app.gui.widgets.icon_helper import icon as _icon
 
 
 class _MouvementsModel(QAbstractTableModel):
@@ -78,7 +79,7 @@ class CaisseWindow(QMdiSubWindow):
         hdr = QHBoxLayout()
         self._lbl_statut = QLabel("Aucune session ouverte")
         self._lbl_statut.setStyleSheet("font-size: 12pt; font-weight: 700;")
-        btn_refresh = QPushButton("Actualiser")
+        btn_refresh = QPushButton(_icon("refresh"), "Actualiser")
         btn_refresh.clicked.connect(self._load)
         hdr.addWidget(self._lbl_statut)
         hdr.addStretch()
@@ -109,13 +110,13 @@ class CaisseWindow(QMdiSubWindow):
 
         # Action buttons
         btn_row = QHBoxLayout()
-        self._btn_ouvrir = QPushButton("Ouvrir session")
+        self._btn_ouvrir = QPushButton(_icon("open"), "Ouvrir session")
         self._btn_ouvrir.clicked.connect(self._ouvrir)
-        self._btn_encaisser = QPushButton("Encaisser")
+        self._btn_encaisser = QPushButton(_icon("save"), "Encaisser")
         self._btn_encaisser.clicked.connect(self._encaisser)
-        self._btn_decaisser = QPushButton("Décaisser")
+        self._btn_decaisser = QPushButton(_icon("delete"), "Décaisser")
         self._btn_decaisser.clicked.connect(self._decaisser)
-        self._btn_fermer = QPushButton("Fermer session")
+        self._btn_fermer = QPushButton(_icon("close"), "Fermer session")
         self._btn_fermer.clicked.connect(self._fermer)
         for b in [self._btn_ouvrir, self._btn_encaisser, self._btn_decaisser, self._btn_fermer]:
             btn_row.addWidget(b)
